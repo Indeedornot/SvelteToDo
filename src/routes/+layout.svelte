@@ -1,17 +1,13 @@
 <script>
-	import '../app.postcss';
+	import '../app.css';
 </script>
 
 <div class="flex flex-col w-full h-full">
-  <div class="header h-[66px] bg-secondary">
+	<div class="header h-[66px] bg-secondary"></div>
 
-  </div>
-
-  <div class="flex-grow w-full">
-    <slot />
-  </div>
-
-
+	<div class="flex-grow w-full">
+		<slot />
+	</div>
 </div>
 
 <style>

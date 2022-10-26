@@ -9,9 +9,9 @@ module.exports = {
 				accent: 'rgb(var(--color-accent) / <alpha-value>)',
 				'font-primary': 'rgb(var(--color-text-primary) / <alpha-value>)',
 				'font-secondary': 'rgb(var(--color-text-secondary) / <alpha-value>)',
-				'font-accent': 'rgb(var(--color-text-accent) / <alpha-value>)',
-			},
-		},
+				'font-accent': 'rgb(var(--color-text-accent) / <alpha-value>)'
+			}
+		}
 	},
 	plugins: []
 };
