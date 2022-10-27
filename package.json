@@ -50,6 +50,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@storybook/addon-svelte-csf": "^2.0.8"
+		"@storybook/addon-svelte-csf": "^2.0.8",
+		"svelte-icons": "^2.1.0"
 	}
 }

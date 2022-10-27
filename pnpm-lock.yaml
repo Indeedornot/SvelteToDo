@@ -28,6 +28,7 @@ specifiers:
   storybook-dark-mode: ^1.1.2
   svelte: ^3.52.0
   svelte-check: ^2.7.1
+  svelte-icons: ^2.1.0
   svelte-loader: ^3.1.3
   svelte-preprocess: ^4.10.7
   tailwindcss: 3.1.8
@@ -37,6 +38,7 @@ specifiers:
 
 dependencies:
   '@storybook/addon-svelte-csf': 2.0.8_ptiv7ze2mlw2flnp5echdqy2ra
+  svelte-icons: 2.1.0
 
 devDependencies:
   '@babel/core': 7.19.6
@@ -10337,6 +10339,10 @@ packages:
     dependencies:
       svelte: 3.52.0
     dev: true
+
+  /svelte-icons/2.1.0:
+    resolution: {integrity: sha512-rHPQjweEc9fGSnvM0/4gA3pDHwyZyYsC5KhttCZRhSMJfLttJST5Uq0B16Czhw+HQ+HbSOk8kLigMlPs7gZtfg==}
+    dev: false
 
   /svelte-loader/3.1.3_svelte@3.52.0:
     resolution: {integrity: sha512-B7HsKRrWaGB9RFef1t7JXbQ1npG/6J/Tka/ehv6pkxJx+QU9Dd8Sdi415IfhogpWEmH95VgsaWNrNU2GeBJ1VQ==}
