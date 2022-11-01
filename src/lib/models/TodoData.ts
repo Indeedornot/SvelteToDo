@@ -2,6 +2,8 @@ export type TodoTabData = {
 	id: number;
 	title: string;
 	todoItems: TodoItemData[];
+	createdAt: Date;
+	updatedAt: Date;
 };
 
 export const TodoTabConstr = {
@@ -14,6 +16,8 @@ export type TodoItemData = {
 	id: number;
 	title: string;
 	status: string;
+	createdAt: Date;
+	updatedAt: Date;
 };
 
 export const TodoItemConstr = {
@@ -21,3 +25,11 @@ export const TodoItemConstr = {
 		maxlength: 50
 	}
 };
+
+export type TodoDisplay = {
+	id: number;
+	title: string;
+	todoTabs: TodoTabData[];
+	createdAt: Date;
+	updatedAt: Date;
+}

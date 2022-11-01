@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@babel/core': ^7.19.6
   '@popperjs/core': ^2.11.6
+  '@prisma/client': ^4.5.0
   '@storybook/addon-actions': ^6.5.13
   '@storybook/addon-essentials': ^6.5.13
   '@storybook/addon-interactions': ^6.5.13
@@ -26,6 +27,7 @@ specifiers:
   postcss-load-config: ^4.0.1
   prettier: ^2.6.2
   prettier-plugin-tailwindcss: ^0.1.13
+  prisma: ^4.5.0
   storybook-dark-mode: ^1.1.2
   svelte: ^3.52.0
   svelte-check: ^2.7.1
@@ -41,6 +43,7 @@ specifiers:
 devDependencies:
   '@babel/core': 7.19.6
   '@popperjs/core': 2.11.6
+  '@prisma/client': 4.5.0_prisma@4.5.0
   '@storybook/addon-actions': 6.5.13_6l5554ty5ajsajah6yazvrjhoe
   '@storybook/addon-essentials': 6.5.13_po5pdbf5nar2oyx726agl7aqpm
   '@storybook/addon-interactions': 6.5.13_27siih7a7s4vcri2orpbmde7m4
@@ -64,6 +67,7 @@ devDependencies:
   postcss-load-config: 4.0.1_postcss@8.4.18
   prettier: 2.7.1
   prettier-plugin-tailwindcss: 0.1.13_prettier@2.7.1
+  prisma: 4.5.0
   storybook-dark-mode: 1.1.2_6l5554ty5ajsajah6yazvrjhoe
   svelte: 3.52.0
   svelte-check: 2.9.2_jxwr764rmz25ygvzgcepcz57t4
@@ -1910,6 +1914,29 @@ packages:
 
   /@popperjs/core/2.11.6:
     resolution: {integrity: sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==}
+    dev: true
+
+  /@prisma/client/4.5.0_prisma@4.5.0:
+    resolution: {integrity: sha512-B2cV0OPI1smhdYUxsJoLYQLoMlLH06MUxgFUWQnHodGMX98VRVXKmQE/9OcrTNkqtke5RC+YU24Szxd04tZA2g==}
+    engines: {node: '>=14.17'}
+    requiresBuild: true
+    peerDependencies:
+      prisma: '*'
+    peerDependenciesMeta:
+      prisma:
+        optional: true
+    dependencies:
+      '@prisma/engines-version': 4.5.0-43.0362da9eebca54d94c8ef5edd3b2e90af99ba452
+      prisma: 4.5.0
+    dev: true
+
+  /@prisma/engines-version/4.5.0-43.0362da9eebca54d94c8ef5edd3b2e90af99ba452:
+    resolution: {integrity: sha512-o7LyVx8PPJBLrEzLl6lpxxk2D5VnlM4Fwmrbq0NoT6pr5aa1OuHD9ZG+WJY6TlR/iD9bhmo2LNcxddCMr5Rv2A==}
+    dev: true
+
+  /@prisma/engines/4.5.0:
+    resolution: {integrity: sha512-4t9ir2SbQQr/wMCNU4YpHWp5hU14J2m3wHUZnGJPpmBF8YtkisxyVyQsKd1e6FyLTaGq8LOLhm6VLYHKqKNm+g==}
+    requiresBuild: true
     dev: true
 
   /@rollup/pluginutils/4.2.1:
@@ -9964,6 +9991,15 @@ packages:
   /pretty-hrtime/1.0.3:
     resolution: {integrity: sha512-66hKPCr+72mlfiSjlEB1+45IjXSqvVAIy6mocupoww4tBFE9R9IhwwUGoI4G++Tc9Aq+2rxOt0RFU6gPcrte0A==}
     engines: {node: '>= 0.8'}
+    dev: true
+
+  /prisma/4.5.0:
+    resolution: {integrity: sha512-9Aeg4qiKlv9Wsjz4NO8k2CzRzlvS3A4FYVJ5+28sBBZ0eEwbiVOE/Jj7v6rZC1tFW2s4GSICQOAyuOjc6WsNew==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    requiresBuild: true
+    dependencies:
+      '@prisma/engines': 4.5.0
     dev: true
 
   /process-nextick-args/2.0.1:
