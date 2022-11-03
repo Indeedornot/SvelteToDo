@@ -16,7 +16,7 @@
 	<div class="flex items-center px-[12px] text-[14px] text-font-primary">
 		<textarea
 			class="stylelessTextArea overflow-hidden whitespace-nowrap"
-			maxlength={TodoItemConstr.title}
+			maxlength={TodoItemConstr.title.maxlength}
 			bind:value={title}
 		/>
 	</div>

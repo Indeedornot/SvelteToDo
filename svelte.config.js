@@ -8,8 +8,6 @@ const config = {
 	preprocess: [
 		preprocess({
 			postcss: true,
-			typescript: true,
-			sourcemap: true
 		})
 	],
 

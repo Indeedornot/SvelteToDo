@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import IoMdArrowDropdown from 'svelte-icons/io/IoMdArrowDropdown.svelte';
 	import { clickOutside } from '$lib/helpers/ClickOutside.js';
 
@@ -14,7 +14,7 @@
 	let showTooltip = false;
 	export let status = '';
 	let statuses = ['Draft', 'Completed', 'In Progress', 'Archived', 'Abandoned'];
-	const setStatus = (newStatus) => {
+	const setStatus = (newStatus: string) => {
 		status = newStatus;
 	};
 
