@@ -1,16 +1,14 @@
 <script lang="ts">
 	import TodoTab from './TodoTab.svelte';
 	import MdFilterList from 'svelte-icons/md/MdFilterList.svelte';
-	import type { TodoTabData } from '$lib/TodoData';
+	import type { TodoDisplayData } from '$lib/models/TodoData';
 	import '$lib/styles/Scrollbar.css';
 
-	export let todos: TodoTabData[];
+	export let todos: TodoDisplayData;
 </script>
 
 <div class="flex h-full w-full flex-col bg-secondary">
-	<div
-		class="flex h-[40px] w-full flex-shrink-0 items-center border-y-2 border-accent px-[24px] text-font-secondary"
-	>
+	<div class="flex h-[40px] w-full flex-shrink-0 items-center border-y-2 border-accent px-[24px] text-font-secondary">
 		<div class="mr-[8px] h-[24px] w-[24px]">
 			<MdFilterList />
 		</div>
@@ -23,7 +21,7 @@
 		/>
 	</div>
 	<div class="body styled-scrollbar flex w-full flex-grow overflow-x-scroll py-[8px] px-[24px]">
-		{#each todos as todo (todo.id)}
+		{#each todos.todoTabs as todo (todo.id)}
 			<TodoTab {...todo} bind:title={todo.title} bind:todoItems={todo.todoItems} />
 		{/each}
 	</div>

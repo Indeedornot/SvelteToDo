@@ -1,3 +1,5 @@
+import type { TodoItemData, TodoTabData } from './TodoData';
+
 export const TodoDisplayJson = `
 [
     {
@@ -97,6 +99,11 @@ export const TodoItemJson = `
         "status": "Completed"
     }`;
 
-export const TodoTabSample = JSON.parse(TodoTabJson);
-export const TodoItemDataSample = JSON.parse(TodoItemJson);
-export const TodoDisplayDataSample = JSON.parse(TodoDisplayJson);
+/** Contains 1 TodoTabData */
+export const TodoTabSample: TodoTabData = JSON.parse(TodoTabJson);
+
+/** Contains 1 TodoItem */
+export const TodoItemDataSample: TodoItemData = JSON.parse(TodoItemJson);
+
+/** Contains 5 TodoTabs */
+export const TodoDisplayDataSample: TodoTabData[] = JSON.parse(TodoDisplayJson);

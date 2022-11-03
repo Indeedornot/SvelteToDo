@@ -12,19 +12,23 @@
 
 	function addTodoItem() {
 		console.log('add todo item');
-		todoItems = [...todoItems, { id: todoItems.length, title: 'New Todo Item', status: 'Draft' }];
+		let todo: TodoItemData = {
+			id: -1,
+			title: 'New Todo Item',
+			status: 'Draft',
+			todoTabId: id
+		};
+		todoItems = [...todoItems, todo];
 	}
 </script>
 
-<div
-	class="flex h-full w-[350px] flex-none flex-col rounded-md border border-2 border-accent bg-primary"
->
+<div class="flex h-full w-[350px] flex-none flex-col rounded-md border border-2 border-accent bg-primary">
 	<div class="h-[42px] flex-shrink-0 px-[12px] pt-[8px] pb-[2px] text-[16px] font-bold">
 		<div class="flex items-center text-font-primary">
 			<textarea
 				contenteditable="true"
 				class="stylelessTextArea overflow-hidden whitespace-nowrap p-[4px]"
-				maxlength={TodoTabConstr.title}
+				maxlength={TodoTabConstr.title.maxlength}
 				bind:value={title}
 			/>
 		</div>
