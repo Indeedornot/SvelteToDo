@@ -2,8 +2,10 @@ export type TodoTabData = {
 	id: number;
 	title: string;
 	todoItems: TodoItemData[];
+	todoDisplayId: number;
 	createdAt?: Date;
 	updatedAt?: Date;
+	sortOrder: number;
 };
 
 export const TodoTabConstr = {
@@ -19,6 +21,7 @@ export type TodoItemData = {
 	todoTabId: number;
 	createdAt?: Date;
 	updatedAt?: Date;
+	sortOrder: number;
 };
 
 export const TodoItemConstr = {
@@ -34,3 +37,6 @@ export type TodoDisplayData = {
 	createdAt?: Date;
 	updatedAt?: Date;
 };
+
+export type TodoItemDndData = CustomEvent<DndEvent<TodoItemData>>;
+export type TodoTabDndData = CustomEvent<DndEvent<TodoTabData>>;

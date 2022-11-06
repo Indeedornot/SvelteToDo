@@ -10,14 +10,6 @@
 	const extraOpts = {
 		modifiers: [{ name: 'offset', options: { offset: [0, 2] } }]
 	};
-
-	let showTooltip = false;
-	export let status = '';
-	let statuses = ['Draft', 'Completed', 'In Progress', 'Archived', 'Abandoned'];
-	const setStatus = (newStatus: string) => {
-		status = newStatus;
-	};
-
 	const closeTooltip = () => {
 		showTooltip = false;
 	};
@@ -26,6 +18,16 @@
 	};
 	const toggleTooltip = () => {
 		showTooltip = !showTooltip;
+	};
+
+	export let onChoose: (status: string) => void;
+	export let status = '';
+
+	let showTooltip = false;
+	let statuses = ['Draft', 'Completed', 'In Progress', 'Archived', 'Abandoned'];
+	const setStatus = (newStatus: string) => {
+		status = newStatus;
+		onChoose && onChoose(newStatus);
 	};
 </script>
 

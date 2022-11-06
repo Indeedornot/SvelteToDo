@@ -16,8 +16,9 @@ model TodoTab {
   id            Int         @id @default(autoincrement())
   title         String
   todoItems     TodoItem[]
-  todoDisplay   TodoDisplay @relation(fields: [todoDisplayId], references: [id])
+  todoDisplay   TodoDisplay @relation(fields: [todoDisplayId], references: [id], onDelete: Cascade)
   todoDisplayId Int
+  sortOrder     Int
   updatedAt     DateTime    @updatedAt
   createdAt     DateTime    @default(now())
 }
@@ -26,8 +27,9 @@ model TodoItem {
   id        Int      @id @default(autoincrement())
   title     String   @default("")
   status    String   @default("Draft")
-  todoTab   TodoTab  @relation(fields: [todoTabId], references: [id])
+  todoTab   TodoTab  @relation(fields: [todoTabId], references: [id], onDelete: Cascade)
   todoTabId Int
+  sortOrder Int
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
 }

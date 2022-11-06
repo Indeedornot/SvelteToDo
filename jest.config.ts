@@ -14,7 +14,6 @@ const config: Config = {
 	moduleFileExtensions: ['js', 'ts', 'svelte'],
 	moduleNameMapper: {
 		//$lib
-		// eslint-disable-next-line no-useless-escape
 		'^\\$lib/(.*)': '<rootDir>/src/lib/$1'
 	}
 };
