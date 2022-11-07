@@ -43,7 +43,7 @@ export const GET: RequestHandler = async ({ url }) => {
 	// console.log('GET Params', params);
 	// return json({ params });
 
-	const todoDisplay = (await prisma.todoDisplay.findFirst({
+	let todoDisplay = await prisma.todoDisplay.findFirst({
 		include: {
 			todoTabs: {
 				include: {
@@ -51,8 +51,32 @@ export const GET: RequestHandler = async ({ url }) => {
 				}
 			}
 		}
-	})) as TodoDisplayData;
-	console.log('todoDisplay', todoDisplay);
+	});
 
-	return json(todoDisplay);
+	if (!todoDisplay) {
+		let newDisplay = await prisma.todoDisplay.create({
+			data: {
+				title: 'Default'
+			}
+		});
+
+		todoDisplay = {
+			id: newDisplay.id,
+			title: newDisplay.title,
+			todoTabs: [],
+			updatedAt: newDisplay.updatedAt,
+			createdAt: newDisplay.createdAt
+		};
+	}
+
+	const todoDisplayData: TodoDisplayData = {
+		id: todoDisplay.id,
+		title: todoDisplay.title,
+		todoTabs: [],
+		updatedAt: todoDisplay.updatedAt,
+		createdAt: todoDisplay.createdAt
+	};
+	console.log('todoDisplay', todoDisplayData);
+
+	return json(todoDisplayData);
 };
