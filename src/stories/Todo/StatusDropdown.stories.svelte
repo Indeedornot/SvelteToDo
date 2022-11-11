@@ -1,5 +1,5 @@
 <script>
-	import StatusDropdown from '../../components/Todo/StatusDropdown.svelte';
+	import StatusDropdown from '$components/Todo/Item/StatusDropdown.svelte';
 	import { Meta, Template, Story } from '@storybook/addon-svelte-csf';
 
 	let status = 'todo';

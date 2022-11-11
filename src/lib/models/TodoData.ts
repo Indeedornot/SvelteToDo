@@ -10,7 +10,7 @@ export type TodoTabData = {
 
 export const TodoTabConstr = {
 	title: {
-		maxlength: 100
+		maxlength: 20
 	}
 };
 
@@ -37,6 +37,3 @@ export type TodoDisplayData = {
 	createdAt?: Date;
 	updatedAt?: Date;
 };
-
-export type TodoItemDndData = CustomEvent<DndEvent<TodoItemData>>;
-export type TodoTabDndData = CustomEvent<DndEvent<TodoTabData>>;

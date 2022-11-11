@@ -1,36 +1,54 @@
 import { json } from '@sveltejs/kit';
-import type { RequestHandler } from './$types';
-import PrismaClient from '$lib/prisma/prisma';
+
+import { isUndefined } from '$lib/helpers/jsUtils';
 import type { TodoDisplayData } from '$lib/models/TodoData';
-const prisma = new PrismaClient();
+import prisma from '$lib/prisma/prisma';
+
+import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ request }) => {
 	const data: { id: number; title: string } = await request.json();
-	if (!data.title) return new Response('Missing title', { status: 400 });
-	if (!data.id) return new Response('Missing id', { status: 400 });
+	if (isUndefined(data.title)) return new Response('Missing title', { status: 400 });
+	if (isUndefined(data.id)) return new Response('Missing id', { status: 400 });
 
-	let todoDisplay;
+	let todoDisplay: TodoDisplayData;
 	if (data.id == -1) {
 		//add new tab
-		todoDisplay = await prisma.todoDisplay.create({
+		const newDisplay = await prisma.todoDisplay.create({
 			data: {
 				title: data.title
 			}
 		});
+		todoDisplay = {
+			id: newDisplay.id,
+			title: newDisplay.title,
+			todoTabs: []
+		};
 	} else {
-		const existingTab = await prisma.todoDisplay.findFirst({ where: { id: data.id } });
-		if (!existingTab) return new Response('Tab not found', { status: 400 });
+		const existsDisplay = (await prisma.todoDisplay.count({ where: { id: data.id } })) == 1;
+		if (!existsDisplay) return new Response('Tab not found', { status: 400 });
 		todoDisplay = await prisma.todoDisplay.update({
 			where: {
 				id: data.id
 			},
 			data: {
 				title: data.title
+			},
+			include: {
+				todoTabs: {
+					include: {
+						todoItems: true
+					}
+				}
 			}
 		});
 	}
 
-	const todoDisplayData: TodoDisplayData = { id: todoDisplay.id, title: todoDisplay.title, todoTabs: [] };
+	const todoDisplayData: TodoDisplayData = {
+		id: todoDisplay.id,
+		title: todoDisplay.title,
+		todoTabs: todoDisplay.todoTabs || []
+	};
 	return json(todoDisplayData);
 };
 
@@ -54,7 +72,7 @@ export const GET: RequestHandler = async ({ url }) => {
 	});
 
 	if (!todoDisplay) {
-		let newDisplay = await prisma.todoDisplay.create({
+		const newDisplay = await prisma.todoDisplay.create({
 			data: {
 				title: 'Default'
 			}
@@ -72,11 +90,10 @@ export const GET: RequestHandler = async ({ url }) => {
 	const todoDisplayData: TodoDisplayData = {
 		id: todoDisplay.id,
 		title: todoDisplay.title,
-		todoTabs: [],
+		todoTabs: todoDisplay.todoTabs || [],
 		updatedAt: todoDisplay.updatedAt,
 		createdAt: todoDisplay.createdAt
 	};
-	console.log('todoDisplay', todoDisplayData);
 
 	return json(todoDisplayData);
 };

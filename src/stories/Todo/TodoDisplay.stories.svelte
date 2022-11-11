@@ -1,5 +1,5 @@
 <script>
-	import TodoDisplay from '../../components/Todo/TodoDisplay.svelte';
+	import TodoDisplay from '$components/Todo/Display/TodoDisplay.svelte';
 	import { Meta, Template, Story } from '@storybook/addon-svelte-csf';
 	import { TodoDisplayDataSample } from '$lib/models/SampleData';
 </script>

@@ -1,7 +1,7 @@
 import type { Optional } from '$lib/helpers/optionalProperty';
 import type { TodoDisplayData, TodoItemData, TodoTabData } from '$lib/models/TodoData';
-const host = 'http://localhost:5173';
 
+const host = 'http://localhost:5173';
 const getIp = (relativePath: string): string => {
 	return host + relativePath;
 };
@@ -29,7 +29,7 @@ export const postTodoDisplay = async (data: Optional<TodoDisplayData, 'todoTabs'
 //**Tabs */
 export const getTodoTab = async (id: number): Promise<TodoTabData> => {
 	const queryParam = new URLSearchParams({ id: id.toString() });
-	return fetch(getIp(`/api/todoTab/${queryParam}`), {
+	return fetch(getIp(`/api/todoTab/?${queryParam}`), {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json'
@@ -38,7 +38,7 @@ export const getTodoTab = async (id: number): Promise<TodoTabData> => {
 };
 export const getTodoTabs = async (todoDisplayId: number): Promise<TodoTabData[]> => {
 	const queryParam = new URLSearchParams({ todoDisplayId: todoDisplayId.toString() });
-	return fetch(getIp(`/api/todoTab/${queryParam}`), {
+	return fetch(getIp(`/api/todoTab/?${queryParam}`), {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json'
@@ -67,7 +67,7 @@ export const deleteTodoTab = async (id: number): Promise<void> => {
 //**Items */
 export const getTodoItem = async (id: number): Promise<TodoItemData> => {
 	const queryParam = new URLSearchParams({ id: id.toString() });
-	return fetch(getIp(`/api/todoItem/${queryParam}`), {
+	return fetch(getIp(`/api/todoItem/?${queryParam}`), {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json'
@@ -76,7 +76,7 @@ export const getTodoItem = async (id: number): Promise<TodoItemData> => {
 };
 export const getTodoItems = async (todoTabId: number): Promise<TodoItemData[]> => {
 	const queryParam = new URLSearchParams({ todoTabId: todoTabId.toString() });
-	return fetch(getIp(`/api/todoItem/${queryParam}`), {
+	return fetch(getIp(`/api/todoItem/?${queryParam}`), {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json'
