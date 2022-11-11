@@ -1,8 +1,8 @@
 <script lang="ts">
-	import IoMdArrowDropdown from 'svelte-icons/io/IoMdArrowDropdown.svelte';
 	import { clickOutside } from '$lib/helpers/ClickOutside.js';
-
+	import IoMdArrowDropdown from 'svelte-icons/io/IoMdArrowDropdown.svelte';
 	import { createPopperActions } from 'svelte-popperjs';
+
 	const [popperRef, popperContent] = createPopperActions({
 		placement: 'bottom',
 		strategy: 'fixed'
@@ -43,7 +43,7 @@
 {#if showTooltip}
 	<div
 		use:popperContent={extraOpts}
-		class="tooltip rounded-md border-2 border-accent bg-secondary text-[12px] text-font-primary child-hover:bg-accent"
+		class="tooltip rounded-md border border-accent bg-secondary text-[12px] text-font-primary child-hover:bg-accent"
 	>
 		{#each statuses as stat}
 			<button on:click={() => setStatus(stat)}>{stat}</button>

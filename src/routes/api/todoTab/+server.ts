@@ -1,42 +1,44 @@
 import { error, json } from '@sveltejs/kit';
-import type { RequestHandler } from './$types';
-import PrismaClient from '$lib/prisma/prisma';
+
+import { areSomeUndefined } from '$lib/helpers/jsUtils';
 import type { TodoTabData } from '$lib/models/TodoData';
-import type { TodoTab } from '.prisma/client';
-const prisma = new PrismaClient();
+import prisma from '$lib/prisma/prisma';
+
+import type { RequestHandler } from './$types';
 
 //! Doesnt return the todoItems
 export const POST: RequestHandler = async ({ request }) => {
 	const data: TodoTabData = await request.json();
-	if (!data.title || !data.id) return new Response('Missing title or id', { status: 400 });
+	if (areSomeUndefined([data.id, data.title])) return new Response('Missing title or id', { status: 400 });
 
-	let todoTab: TodoTab;
+	let todoTab: TodoTabData;
 	if (data.id == -1) {
 		//add new item
-		todoTab = await prisma.todoTab.create({
+		const newTab = await prisma.todoTab.create({
 			data: {
 				title: data.title,
 				sortOrder: data.sortOrder,
-				todoDisplayId: data.todoDisplayId
+				todoDisplayId: data.todoDisplayId,
+				todoItems: {
+					create: data.todoItems || []
+				}
+			},
+			include: {
+				todoItems: true
 			}
 		});
 
-		if (data.todoItems && data.todoItems.length > 0) {
-			for (const i in data.todoItems) {
-				await prisma.todoItem.create({
-					data: {
-						title: data.todoItems[i].title,
-						status: data.todoItems[i].status,
-						todoTabId: todoTab.id,
-						sortOrder: data.todoItems[i].sortOrder
-					}
-				});
-			}
-		}
+		todoTab = {
+			id: newTab.id,
+			title: newTab.title,
+			sortOrder: newTab.sortOrder,
+			todoDisplayId: newTab.todoDisplayId,
+			todoItems: newTab.todoItems || []
+		};
 	} else {
 		//update existing item
-		const existingTab = await prisma.todoTab.findFirst({ where: { id: data.id } });
-		if (!existingTab) return new Response('Tab not found', { status: 400 });
+		const existsTab = (await prisma.todoTab.count({ where: { id: data.id } })) == 1;
+		if (!existsTab) return new Response('Tab not found', { status: 400 });
 
 		todoTab = await prisma.todoTab.update({
 			where: {
@@ -44,27 +46,24 @@ export const POST: RequestHandler = async ({ request }) => {
 			},
 			data: {
 				title: data.title,
-				sortOrder: data.sortOrder
+				sortOrder: data.sortOrder,
+				todoDisplayId: data.todoDisplayId
+			},
+			include: {
+				todoItems: true
 			}
 		});
 	}
 
-	const todoTabData: TodoTabData = {
-		id: todoTab.id,
-		title: todoTab.title,
-		sortOrder: todoTab.sortOrder,
-		todoDisplayId: todoTab.todoDisplayId,
-		todoItems: []
-	};
-	return json(todoTabData);
+	return json(todoTab);
 };
 
 export const DELETE: RequestHandler = async ({ request }) => {
 	const data: { id: number } = await request.json();
 	if (!data.id) return new Response('Missing id', { status: 400 });
 
-	const existingItem = await prisma.todoTab.findFirst({ where: { id: data.id } });
-	if (!existingItem) return new Response('Item not found', { status: 400 });
+	const existsTab = (await prisma.todoTab.count({ where: { id: data.id } })) == 1;
+	if (!existsTab) return new Response('Item not found', { status: 400 });
 	await prisma.todoTab.delete({
 		where: {
 			id: data.id
@@ -76,7 +75,6 @@ export const DELETE: RequestHandler = async ({ request }) => {
 
 export const GET: RequestHandler = async ({ url }) => {
 	const params = url.searchParams;
-	console.log('GET Params', params);
 
 	if (params.has('id')) {
 		const id = parseInt(params.get('id')!);
@@ -89,7 +87,6 @@ export const GET: RequestHandler = async ({ url }) => {
 				todoItems: true
 			}
 		});
-		console.log('todoTab', todoTab);
 		return json(todoTab);
 	} else if (params.has('todoDisplayId')) {
 		const todoDisplayId = parseInt(params.get('todoDisplayId')!);
@@ -99,7 +96,6 @@ export const GET: RequestHandler = async ({ url }) => {
 				todoDisplayId: todoDisplayId
 			}
 		});
-		console.log('todoTabs', todoTabs);
 		return json(todoTabs);
 	}
 
