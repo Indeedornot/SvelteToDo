@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { clickOutside } from '$lib/helpers/ClickOutside.js';
+	import { clickOutside } from '$lib/helpers/clickOutside.js';
 	import IoMdArrowDropdown from 'svelte-icons/io/IoMdArrowDropdown.svelte';
 	import { createPopperActions } from 'svelte-popperjs';
 

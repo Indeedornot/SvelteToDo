@@ -1,13 +1,11 @@
 <script lang="ts">
-	import TodoItem from '$components/Todo/Item/TodoItem.svelte';
-	import TodoTabFooter from '$components/Todo/Tab/TodoTabFooter.svelte';
-	import TodoTabHeader from '$components/Todo/Tab/TodoTabHeader.svelte';
+	import { TodoItem, TodoTabFooter, TodoTabHeader } from '$components/Todo';
 	import { isUndefinedOrEmpty } from '$lib/helpers/jsUtils';
 	import { adjustSortOrder, sortBySortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoItemData } from '$lib/models/TodoData';
 	import { deleteTodoItem, postTodoItem, postTodoTab } from '$lib/prisma/apiCalls';
+	import '$lib/styles/ContentEditable.css';
 	import '$lib/styles/Scrollbar.css';
-	import '$lib/styles/TextArea.css';
 
 	export let id: number;
 	export let title: string;

@@ -1,14 +1,12 @@
 <script lang="ts">
-	import TodoItem from '$components/Todo/Item/TodoItem.svelte';
-	import TodoTabFooter from '$components/Todo/Tab/TodoTabFooter.svelte';
-	import TodoTabHeader from '$components/Todo/Tab/TodoTabHeader.svelte';
+	import { TodoItem, TodoTabFooter, TodoTabHeader } from '$components/Todo';
 	import { isUndefined, isUndefinedOrEmpty } from '$lib/helpers/jsUtils';
 	import { adjustSortOrder, sortBySortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoItemData } from '$lib/models/TodoData';
 	import type { TodoItemDndData, TodoItemDndEvent } from '$lib/models/TodoDndData';
 	import { deleteTodoItem, postTodoItem, postTodoTab } from '$lib/prisma/apiCalls';
+	import '$lib/styles/ContentEditable.css';
 	import '$lib/styles/Scrollbar.css';
-	import '$lib/styles/TextArea.css';
 	import { dndzone } from 'svelte-dnd-action';
 
 	export let id: number;

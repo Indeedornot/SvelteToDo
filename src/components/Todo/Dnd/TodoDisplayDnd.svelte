@@ -1,7 +1,5 @@
 <script lang="ts">
-	import TodoDisplayHeader from '$components/Todo/Display/TodoDisplayHeader.svelte';
-	import TodoDisplaySearchbar from '$components/Todo/Display/TodoDisplaySearchbar.svelte';
-	import TodoTabDnd from '$components/Todo/Dnd/TodoTabDnd.svelte';
+	import { TodoDisplayHeader, TodoDisplaySearchbar, TodoTabDnd } from '$components/Todo';
 	import { isUndefinedOrEmpty } from '$lib/helpers/jsUtils';
 	import { adjustSortOrder, sortBySortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoTabData } from '$lib/models/TodoData';

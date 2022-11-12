@@ -1,9 +1,10 @@
 <script lang="ts">
-	import StatusDropdown from '$components/Todo/Item/StatusDropdown.svelte';
-	import { stopTyping } from '$lib/helpers/onStopTyping';
+	import { StatusDropdown } from '$components/Todo';
+	import { maxLength, stopTyping, truncateEditable } from '$lib/helpers/contentEditable';
 	import { TodoItemConstr } from '$lib/models/TodoData';
 	import { postTodoItem } from '$lib/prisma/apiCalls';
-	import '$lib/styles/TextArea.css';
+	import '$lib/styles/ContentEditable.css';
+	import '$lib/styles/Scrollbar.css';
 	import FaMinus from 'svelte-icons/fa/FaMinus.svelte';
 
 	export let id: number;
@@ -41,16 +42,15 @@
 		</div>
 	</div>
 	<div class="h-full items-center pl-[8px] text-[14px] text-font-primary">
-		<textarea
-			class="stylelessTextArea w-full overflow-hidden whitespace-nowrap rounded py-1
-			px-[4px] transition-colors duration-200 ease-linear hover:bg-accent focus:bg-accent"
-			maxlength={TodoItemConstr.title.maxlength}
-			bind:value={title}
+		<div
+			class="single-line content-editable w-full text-ellipsis rounded py-1 px-[4px] 
+			transition-colors duration-200 ease-linear hover:bg-accent focus:bg-accent"
+			contenteditable="true"
+			bind:innerHTML={title}
 			use:stopTyping
-			rows="1"
 			on:stopTyping={postTodo}
+			use:maxLength={TodoItemConstr.title.maxlength}
+			use:truncateEditable
 		/>
 	</div>
 </div>
-
-<!--TODO: Make status change background on hover-->

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import '$lib/styles/Scrollbar.css';
-	import '$lib/styles/TextArea.css';
 	import GoPlus from 'svelte-icons/go/GoPlus.svelte';
 
 	export let onAdd: () => void;
