@@ -4,7 +4,7 @@
 	import { adjustSortOrder, sortBySortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoItemData } from '$lib/models/TodoData';
 	import type { TodoItemDndData, TodoItemDndEvent } from '$lib/models/TodoDndData';
-	import { deleteTodoItem, postTodoItem, postTodoTab } from '$lib/prisma/apiCalls';
+	import { deleteTodoItem, postTodoItem, postTodoItems, postTodoTab } from '$lib/prisma/apiCalls';
 	import '$lib/styles/ContentEditable.css';
 	import '$lib/styles/Scrollbar.css';
 	import { dndzone } from 'svelte-dnd-action';
@@ -48,10 +48,8 @@
 			return;
 		}
 
-		for (let i = changedItem; i < items.length; i++) {
-			items[i].sortOrder = i;
-			await postTodoItem(items[i]);
-		}
+		adjustSortOrder(items);
+		await postTodoItems(items.slice(changedItem, items.length));
 
 		dndItems = items;
 	};

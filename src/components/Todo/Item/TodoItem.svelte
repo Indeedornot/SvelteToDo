@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { StatusDropdown } from '$components/Todo';
 	import { maxLength, stopTyping, truncateEditable } from '$lib/helpers/contentEditable';
-	import { TodoItemConstr } from '$lib/models/TodoData';
+	import { TodoItemConstr } from '$lib/models/TodoDataConstr';
 	import { postTodoItem } from '$lib/prisma/apiCalls';
 	import '$lib/styles/ContentEditable.css';
 	import '$lib/styles/Scrollbar.css';

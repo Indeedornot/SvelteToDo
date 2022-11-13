@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { maxLength, stopTyping, truncateEditable } from '$lib/helpers/contentEditable';
-	import { TodoTabConstr } from '$lib/models/TodoData';
+	import { TodoTabConstr } from '$lib/models/TodoDataConstr';
 	import '$lib/styles/ContentEditable.css';
 	import '$lib/styles/Scrollbar.css';
 	import FaMinus from 'svelte-icons/fa/FaMinus.svelte';

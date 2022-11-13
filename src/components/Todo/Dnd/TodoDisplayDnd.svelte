@@ -4,7 +4,7 @@
 	import { adjustSortOrder, sortBySortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoTabData } from '$lib/models/TodoData';
 	import type { TodoTabDndData, TodoTabDndEvent } from '$lib/models/TodoDndData';
-	import { deleteTodoTab, postTodoDisplay, postTodoTab } from '$lib/prisma/apiCalls';
+	import { deleteTodoTab, postTodoDisplay, postTodoTab, postTodoTabs } from '$lib/prisma/apiCalls';
 	import '$lib/styles/Scrollbar.css';
 	import { dndzone } from 'svelte-dnd-action';
 
@@ -36,11 +36,8 @@
 		}
 
 		// items[changedItem].todoDisplayId = id;
-		console.log(changedItem);
-		for (let i = changedItem; i < items.length; i++) {
-			items[i].sortOrder = i;
-			await postTodoTab(todoTabs[i]);
-		}
+		adjustSortOrder(items);
+		await postTodoTabs(items.slice(changedItem, items.length));
 
 		console.log(items);
 		dndTabs = items;

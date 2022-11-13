@@ -1,22 +1,21 @@
-export type TodoDisplayData = {
+export type TodoDisplayApiData = {
 	id: number;
 	title: string;
-	todoTabs: TodoTabData[];
+	todoTabs?: TodoTabApiData[];
 	createdAt?: Date;
 	updatedAt?: Date;
 };
 
-export type TodoTabData = {
+export type TodoTabApiData = {
 	id: number;
 	title: string;
 	sortOrder: number;
 	todoDisplayId: number;
-	todoItems: TodoItemData[];
+	todoItems?: TodoItemApiData[];
 	createdAt?: Date;
 	updatedAt?: Date;
 };
-
-export type TodoItemData = {
+export type TodoItemApiData = {
 	id: number;
 	title: string;
 	sortOrder: number;

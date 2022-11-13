@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { maxLength, stopTyping, truncateEditable } from '$lib/helpers/contentEditable';
-	import { TodoTabConstr } from '$lib/models/TodoData';
-	import '$lib/styles/Scrollbar.css';
+	import { TodoTabConstr } from '$lib/models/TodoDataConstr';
 	import '$lib/styles/ContentEditable.css';
+	import '$lib/styles/Scrollbar.css';
 	import GoPlus from 'svelte-icons/go/GoPlus.svelte';
 	import MdFilterList from 'svelte-icons/md/MdFilterList.svelte';
 

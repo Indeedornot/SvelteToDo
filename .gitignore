@@ -13,3 +13,4 @@ coverage
 prisma/*
 !prisma/schema.prisma
 src/stories/sample
+.vscode

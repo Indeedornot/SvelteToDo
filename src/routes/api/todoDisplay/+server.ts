@@ -1,32 +1,55 @@
-import { json } from '@sveltejs/kit';
+import { error, json } from '@sveltejs/kit';
 
-import { isUndefined } from '$lib/helpers/jsUtils';
-import type { TodoDisplayData } from '$lib/models/TodoData';
-import prisma from '$lib/prisma/prisma';
+import type { TodoDisplay, TodoItem, TodoTab } from '@prisma/client';
+
+import { isUndefined, parseJson } from '$lib/helpers/jsUtils';
+import type { TodoDisplayApiData } from '$lib/prisma/TodoApiData';
+import { validateTodoDisplay } from '$lib/server/DataValidation';
+import prisma from '$lib/server/prisma';
 
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ request }) => {
-	const data: { id: number; title: string } = await request.json();
-	if (isUndefined(data.title)) return new Response('Missing title', { status: 400 });
-	if (isUndefined(data.id)) return new Response('Missing id', { status: 400 });
+	//#region Parse request
+	const parsed = await parseJson<TodoDisplayApiData>(request);
+	if (!isUndefined(parsed.error)) return error(400, parsed.error);
 
-	let todoDisplay: TodoDisplayData;
-	if (data.id == -1) {
-		//add new tab
-		const newDisplay = await prisma.todoDisplay.create({
+	const data: TodoDisplayApiData = parsed.data!;
+	const validErr = validateTodoDisplay(data);
+	if (validErr) return error(validErr.code, validErr.error);
+
+	//#endregion
+
+	let todoDisplay: TodoDisplay & { todoTabs?: (TodoTab & { todoItems?: TodoItem[] })[] };
+
+	//add new tab
+	if (data.id === -1) {
+		todoDisplay = await prisma.todoDisplay.create({
 			data: {
-				title: data.title
+				title: data.title,
+				todoTabs: {
+					create: data.todoTabs?.map((tab) => ({
+						title: tab.title,
+						sortOrder: tab.sortOrder,
+						todoItems: {
+							create: tab.todoItems
+						}
+					}))
+				}
+			},
+			include: {
+				todoTabs: {
+					include: {
+						todoItems: true
+					}
+				}
 			}
 		});
-		todoDisplay = {
-			id: newDisplay.id,
-			title: newDisplay.title,
-			todoTabs: []
-		};
-	} else {
+	}
+	//update existing tab
+	else {
 		const existsDisplay = (await prisma.todoDisplay.count({ where: { id: data.id } })) == 1;
-		if (!existsDisplay) return new Response('Tab not found', { status: 400 });
+		if (!existsDisplay) return error(400, 'Tab not found');
 		todoDisplay = await prisma.todoDisplay.update({
 			where: {
 				id: data.id
@@ -44,12 +67,8 @@ export const POST: RequestHandler = async ({ request }) => {
 		});
 	}
 
-	const todoDisplayData: TodoDisplayData = {
-		id: todoDisplay.id,
-		title: todoDisplay.title,
-		todoTabs: todoDisplay.todoTabs || []
-	};
-	return json(todoDisplayData);
+	const returnData: TodoDisplayApiData = todoDisplayWithoutUndefined(todoDisplay);
+	return json(returnData);
 };
 
 // export const DELETE: RequestHandler = async ({ request }) => {
@@ -87,13 +106,19 @@ export const GET: RequestHandler = async ({ url }) => {
 		};
 	}
 
-	const todoDisplayData: TodoDisplayData = {
-		id: todoDisplay.id,
-		title: todoDisplay.title,
-		todoTabs: todoDisplay.todoTabs || [],
-		updatedAt: todoDisplay.updatedAt,
-		createdAt: todoDisplay.createdAt
-	};
+	const returnData: TodoDisplayApiData = todoDisplayWithoutUndefined(todoDisplay);
+	return json(returnData);
+};
 
-	return json(todoDisplayData);
+const todoDisplayWithoutUndefined = (
+	todoDisplay: TodoDisplay & { todoTabs?: (TodoTab & { todoItems?: TodoItem[] })[] }
+) => {
+	return {
+		...todoDisplay,
+		todoTabs:
+			todoDisplay.todoTabs?.map((tab) => ({
+				...tab,
+				todoItems: tab.todoItems || []
+			})) || []
+	};
 };
