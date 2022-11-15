@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { maxLength, stopTyping, truncateEditable } from '$lib/helpers/contentEditable';
-	import { TodoTabConstr } from '$lib/models/TodoDataConstr';
+	import { TodoDisplayConstr } from '$lib/models/TodoDataConstr';
 	import '$lib/styles/Scrollbar.css';
 
 	export let onStopTyping: () => void;
@@ -16,7 +16,7 @@
 		bind:innerHTML={title}
 		use:stopTyping
 		on:stopTyping={onStopTyping}
-		use:maxLength={TodoTabConstr.title.maxlength}
+		use:maxLength={TodoDisplayConstr.title.maxLength}
 		use:truncateEditable
 	/>
 </div>

@@ -6,8 +6,7 @@
 	import GoPlus from 'svelte-icons/go/GoPlus.svelte';
 	import MdFilterList from 'svelte-icons/md/MdFilterList.svelte';
 
-	export let searchQuery: string;
-	export let onSearch: () => void;
+	export let searchQuery: string = '';
 	export let onAdd: () => void;
 </script>
 
@@ -25,16 +24,14 @@
 			placeholder="Filter by keyword or by field"
 			contenteditable="true"
 			bind:innerHTML={searchQuery}
-			use:stopTyping
-			on:stopTyping={onSearch}
-			use:maxLength={TodoTabConstr.title.maxlength}
+			use:maxLength={TodoTabConstr.title.maxLength}
 			use:truncateEditable
 		/>
 	</div>
 
 	<div class="flex aspect-square h-full flex-none justify-center py-1 px-1">
 		<button
-			class="h-full w-full rounded bg-secondary text-font-secondary outline-none transition-colors duration-150 ease-linear hover:bg-primary focus:outline-none"
+			class="h-full w-full rounded border border-border text-font-secondary outline-none transition-colors duration-150 ease-linear hover:bg-primary focus:outline-none"
 			type="button"
 			on:click={onAdd}
 		>

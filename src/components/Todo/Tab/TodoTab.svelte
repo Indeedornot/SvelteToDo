@@ -11,6 +11,7 @@
 
 	export let data: TodoTabData;
 	export let searchQuery: string;
+	export let onDelete: (id: number) => void;
 	let isDragging = false;
 	export let isDragged = false;
 
@@ -21,7 +22,14 @@
 		};
 	});
 
-	export let onDelete: (id: number) => void;
+	const getDisplayTodoItems = (items: TodoItemDndData[]) => {
+		items = sortBySortOrder(items);
+		if (isUndefinedOrEmpty(searchQuery)) return items;
+		return items.filter((item) => item.title.toLowerCase().includes(searchQuery.toLowerCase()));
+	};
+
+	let displayItems: TodoItemDndData[] = getDisplayTodoItems(dndItems);
+	$: displayItems = getDisplayTodoItems(dndItems);
 
 	//runs on drag in and drag out
 	const handleDndConsider = (e: TodoItemDndEvent) => {
@@ -82,23 +90,17 @@
 		await postTodoTab(data);
 	};
 
-	const getDisplayTodoItems = (items: TodoItemDndData[]) => {
-		items = sortBySortOrder(items);
-		if (isUndefinedOrEmpty(searchQuery)) return items;
-		return items.filter((item) => item.title.toLowerCase().includes(searchQuery.toLowerCase()));
-	};
-
 	$: searchQuery, (dndItems = dndItems); //needed to cause rerender on searchQuery change
 	$: data.todoItems = dndItems; //needed for parent to update
-	//#endregion
 </script>
 
 <div class="flex h-full flex-none flex-col rounded-md border border-border bg-primary sm:w-full xs:w-[350px]">
 	<TodoTabHeader
 		onDelete={() => onDelete(data.id)}
-		onStopTyping={() => postTodo()}
+		onStopTyping={postTodo}
 		bind:title={data.title}
 		bind:isDragged
+		itemCount={displayItems.length}
 	/>
 	<div
 		class="styled-scrollbar flex-shrink flex-grow overflow-auto px-[10px] pt-[2px] child:mb-[8px]"
@@ -106,9 +108,9 @@
 		on:consider={handleDndConsider}
 		on:finalize={handleDndFinalize}
 	>
-		{#each getDisplayTodoItems(dndItems) as todoItem (todoItem.dndId)}
+		{#each displayItems as todoItem (todoItem.dndId)}
 			<TodoItem bind:data={todoItem} onDelete={delTodoItem} bind:isDragged={isDragging} />
 		{/each}
 	</div>
-	<TodoTabFooter onAdd={() => addTodoItem()} />
+	<TodoTabFooter onAdd={addTodoItem} />
 </div>

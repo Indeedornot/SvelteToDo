@@ -1,5 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
+	// @ts-ignore
 	import FaMoon from 'svelte-icons/fa/FaMoon.svelte';
 	import FaSun from 'svelte-icons/fa/FaSun.svelte';
 

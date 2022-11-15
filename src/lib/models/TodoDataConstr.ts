@@ -6,12 +6,12 @@ export const TodoDisplayConstr = {
 
 export const TodoTabConstr = {
 	title: {
-		maxlength: 20
+		maxLength: 20
 	}
 };
 
 export const TodoItemConstr = {
 	title: {
-		maxlength: 50
+		maxLength: 50
 	}
 };

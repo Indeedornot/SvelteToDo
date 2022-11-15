@@ -9,7 +9,7 @@
 	import { dndzone } from 'svelte-dnd-action';
 
 	export let data: TodoDisplayData;
-	let searchQuery: string = '';
+	let searchQuery: string;
 	export let isDragging = false;
 
 	let dndTabs: TodoTabDndData[] = data.todoTabs.map((item) => {
@@ -61,6 +61,7 @@
 	};
 	const postTodo = async () => {
 		await postTodoDisplay(data);
+		console.log(data);
 	};
 
 	const getDisplayTodoTabs = (tabs: TodoTabDndData[]) => {
@@ -76,10 +77,10 @@
 </script>
 
 <div class="flex h-full w-full flex-col bg-accent">
-	<TodoDisplayHeader onStopTyping={postTodo} title={data.title} />
-	<TodoDisplaySearchbar onAdd={addTodoTab} onSearch={() => {}} bind:searchQuery />
+	<TodoDisplayHeader onStopTyping={postTodo} bind:title={data.title} />
+	<TodoDisplaySearchbar onAdd={addTodoTab} bind:searchQuery />
 	<div
-		class="styled-scrollbar flex w-full flex-grow overflow-x-scroll py-[8px] child:mr-[8px] sm:px-[16px] md:px-[24px] lg:px-[32px]"
+		class="styled-scrollbar todotabs flex w-full flex-grow overflow-x-scroll py-[8px] sm:px-[16px] md:px-[24px] lg:px-[32px]"
 		use:dndzone={{ items: dndTabs, type: 'display', dragDisabled: !isDragging }}
 		on:consider={handleDndConsider}
 		on:finalize={handleDndFinalize}
@@ -89,3 +90,9 @@
 		{/each}
 	</div>
 </div>
+
+<style>
+	.todotabs > :global(*:not(:last-child)) {
+		margin-right: 8px;
+	}
+</style>

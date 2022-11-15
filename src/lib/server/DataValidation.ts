@@ -12,7 +12,7 @@ export const validateTodoDisplay = (display: TodoDisplayApiData): { code: number
 };
 
 export const validateTodoTab = (tab: TodoTabApiData): { code: number; error: string } | undefined => {
-	if (!isValidTitle(tab.title, TodoTabConstr.title.maxlength)) return { code: 400, error: 'Invalid title' };
+	if (!isValidTitle(tab.title, TodoTabConstr.title.maxLength)) return { code: 400, error: 'Invalid title' };
 	if (!isValidId(tab.id)) return { code: 400, error: 'Invalid id' };
 	if (!isValidId(tab.todoDisplayId)) return { code: 400, error: 'Invalid todoDisplayId' };
 	if (!isValidSortOrder(tab.sortOrder)) return { code: 400, error: 'Invalid sortOrder' };
@@ -24,7 +24,7 @@ export const validateTodoTab = (tab: TodoTabApiData): { code: number; error: str
 
 export const validateTodoItem = (item: TodoItemApiData): { code: number; error: string } | undefined => {
 	if (!isValidStatus(item.status)) return { code: 400, error: 'Invalid status' };
-	if (!isValidTitle(item.title, TodoItemConstr.title.maxlength)) return { code: 400, error: 'Invalid title' };
+	if (!isValidTitle(item.title, TodoItemConstr.title.maxLength)) return { code: 400, error: 'Invalid title' };
 	if (!isValidId(item.todoTabId)) return { code: 400, error: 'Invalid todoTabId' };
 	if (!isValidSortOrder(item.sortOrder)) return { code: 400, error: 'Invalid sortOrder' };
 	if (!isValidId(item.id)) return { code: 400, error: 'Invalid id' };
