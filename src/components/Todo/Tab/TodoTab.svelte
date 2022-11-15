@@ -41,8 +41,6 @@
 	const handleDndFinalize = async (e: TodoItemDndEvent) => {
 		let items: TodoItemDndData[] = e.detail.items;
 
-		isDragging = false;
-
 		let newItem = items.filter((item) => item.todoTabId !== data.id)[0];
 		if (!isUndefined(newItem)) {
 			newItem.todoTabId = data.id;
@@ -51,15 +49,13 @@
 
 		//first incorect sortOrder or Item (edge case)
 		let changedItem = items.findIndex((item, index) => item.sortOrder !== index);
-		if (changedItem === -1) {
-			dndItems = items;
-			return;
+		if (changedItem !== -1) {
+			items = adjustSortOrder(items);
+			await postTodoItems(items.slice(changedItem, items.length));
 		}
 
-		adjustSortOrder(items);
-		await postTodoItems(items.slice(changedItem, items.length));
-
 		dndItems = items;
+		isDragging = false;
 	};
 
 	const addTodoItem = async () => {

@@ -27,7 +27,9 @@
 		<div
 			class="box-border flex h-full w-4/12 flex-none cursor-grab rounded-b bg-accent hover:bg-primary"
 			on:mousedown={onDrag}
-			on:touchstart={onDrag}
+			on:mouseup={() => {
+				isDragged = false;
+			}}
 			class:dragging={isDragged}
 		/>
 	</div>
