@@ -1,10 +1,10 @@
 //use onFocus and onBlur to toggle class truncate
 export function truncateEditable(node: HTMLElement) {
 	const handleFocus = () => {
-		node.classList.remove('text-elipsis');
+		node.classList.remove('text-ellipsis');
 	};
 	const handleBlur = () => {
-		node.classList.add('text-elipsis');
+		node.classList.add('text-ellipsis');
 	};
 
 	node.addEventListener('focus', handleFocus);

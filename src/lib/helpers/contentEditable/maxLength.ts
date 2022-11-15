@@ -5,8 +5,8 @@ export function maxLength(node: HTMLElement, maxLength: number) {
 		const caretPosition = saveCursorPos(node);
 		const target = event.target as HTMLDivElement;
 		const text = target.innerText;
-		if (text.length > maxLength) {
-			target.innerText = text.slice(0, maxLength);
+		if (text.length > maxLength - 1) {
+			target.innerText = text.slice(0, maxLength - 1);
 			restoreCursorPos(target, caretPosition);
 			node.focus();
 		}

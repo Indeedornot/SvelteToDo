@@ -12,7 +12,7 @@
 </script>
 
 <div
-	class="flex h-[40px] w-full flex-shrink-0 flex-row items-center overflow-y-hidden border-y-2 border-accent text-font-secondary sm:px-[16px] md:px-[24px] lg:px-[32px]"
+	class="flex h-[40px] w-full flex-shrink-0 flex-row items-center overflow-y-hidden border-y border-border text-font-secondary sm:px-[16px] md:px-[24px] lg:px-[32px]"
 >
 	<div class="mr-[8px] h-[24px] w-[24px]">
 		<MdFilterList />

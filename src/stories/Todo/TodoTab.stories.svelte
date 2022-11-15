@@ -1,5 +1,5 @@
 <script>
-	import TodoTab from '$components/Todo/Dnd/TodoTabDnd.svelte';
+	import TodoTab from '$components/Todo/Tab/TodoTab.svelte';
 	import { Meta, Template, Story } from '@storybook/addon-svelte-csf';
 	import { TodoTabSample } from '$lib/models/SampleData';
 </script>

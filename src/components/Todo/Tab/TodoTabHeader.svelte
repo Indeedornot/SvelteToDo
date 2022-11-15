@@ -8,12 +8,25 @@
 	export let onDelete: () => void;
 	export let onStopTyping: () => void;
 	export let title: string;
+	export let isDragged: boolean = false;
+	const onDrag = (e: Event) => {
+		e.preventDefault();
+		isDragged = true;
+	};
 </script>
 
-<div class="h-[42px] flex-row px-[12px] pt-[8px] pb-[2px] text-[16px] font-bold">
-	<div class="flex h-full w-full flex-none flex-row items-center text-font-primary">
+<div class="flex h-[42px] flex-col pb-[2px] text-[16px] font-bold">
+	<div class="flex h-[10px] w-full flex-none items-end justify-center pb-[2px]">
 		<div
-			class="single-line content-editable mr-[3px] flex flex-grow text-ellipsis rounded py-[4px] pl-[4px] transition-colors duration-200 ease-linear
+			class="box-border flex h-full w-4/12 flex-none cursor-grab rounded-b bg-accent hover:bg-secondary"
+			on:mousedown={onDrag}
+			on:touchstart={onDrag}
+			class:dragging={isDragged}
+		/>
+	</div>
+	<div class="flex max-h-full w-full flex-shrink-0 flex-grow flex-row items-center px-[12px] text-font-primary">
+		<div
+			class="single-line content-editable mr-[15px] flex flex-grow text-ellipsis rounded py-[2px] pl-[4px] transition-colors duration-200 ease-linear
 			hover:bg-secondary focus:bg-secondary"
 			contenteditable="true"
 			bind:innerHTML={title}
@@ -23,7 +36,7 @@
 			use:truncateEditable
 		/>
 
-		<div class="flex aspect-square h-full flex-none justify-center p-0.5">
+		<div class="m-0 box-border aspect-square h-full justify-center p-0.5">
 			<button
 				class="h-full w-full rounded p-1.5 text-font-secondary shadow outline-none transition-colors duration-200 ease-linear hover:bg-secondary"
 				type="button"
@@ -34,3 +47,43 @@
 		</div>
 	</div>
 </div>
+
+<!-- 
+<div class="flex h-[42px] flex-col pb-[2px] text-[16px] font-bold">
+	<div
+		class="flex h-[10px] w-full flex-none cursor-grab hover:bg-secondary"
+		on:mousedown={onDrag}
+		on:touchstart={onDrag}
+		class:dragging={isDragged}
+	/>
+	<div
+		class="flex max-h-full w-full flex-shrink-0 flex-grow flex-row items-center px-[12px] text-font-primary"
+	>
+		<div
+			class="single-line content-editable mr-[15px] flex flex-grow text-ellipsis rounded py-[2px] pl-[4px] transition-colors duration-200 ease-linear
+			hover:bg-secondary focus:bg-secondary"
+			contenteditable="true"
+			bind:innerHTML={title}
+			use:stopTyping
+			on:stopTyping={onStopTyping}
+			use:maxLength={TodoTabConstr.title.maxlength}
+			use:truncateEditable
+		/>
+
+		<div class="m-0 box-border aspect-square h-full justify-center p-0.5">
+			<button
+				class="h-full w-full rounded p-1.5 text-font-secondary shadow outline-none transition-colors duration-200 ease-linear hover:bg-secondary"
+				type="button"
+				on:click={onDelete}
+			>
+				<FaMinus />
+			</button>
+		</div>
+	</div>
+</div> 
+-->
+<style>
+	.dragging {
+		cursor: grabbing;
+	}
+</style>

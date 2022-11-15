@@ -36,8 +36,9 @@
 	on:click={toggleTooltip}
 	use:clickOutside
 	on:clickoutside={closeTooltip}
-	class="aspect-square h-full"
+	class="flex h-full items-center"
 >
+	{status}
 	<IoMdArrowDropdown />
 </button>
 {#if showTooltip}
