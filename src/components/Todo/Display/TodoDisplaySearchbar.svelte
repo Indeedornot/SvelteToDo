@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { maxLength, stopTyping, truncateEditable } from '$lib/helpers/contentEditable';
+	import { maxLength, truncateEditable } from '$lib/helpers/contentEditable';
 	import { TodoTabConstr } from '$lib/models/TodoDataConstr';
 	import '$lib/styles/ContentEditable.css';
 	import '$lib/styles/Scrollbar.css';
@@ -23,8 +23,8 @@
 			class="single-line content-editable w-full text-ellipsis bg-transparent px-[8px]"
 			placeholder="Filter by keyword or by field"
 			contenteditable="true"
-			bind:innerHTML={searchQuery}
-			use:maxLength={TodoTabConstr.title.maxLength}
+			bind:textContent={searchQuery}
+			use:maxLength={{ maxLength: TodoTabConstr.title.maxLength }}
 			use:truncateEditable
 		/>
 	</div>

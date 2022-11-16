@@ -1,17 +1,3 @@
-[contenteditable='true'].single-line {
-	white-space: nowrap;
-	overflow: hidden;
-}
-
-[contenteditable='true'].single-line :global(br) {
-	display: none;
-}
-
-[contenteditable='true'].single-line :global(*) {
-	display: inline;
-	white-space: nowrap;
-}
-
 [contenteditable='true'].content-editable {
 	outline: none;
 }

@@ -13,10 +13,12 @@
 	<div
 		class="single-line content-editable text-ellipsis rounded py-[16px] pl-[4px] pr-[24px] transition-colors duration-200 ease-linear hover:bg-secondary focus:bg-secondary"
 		contenteditable="true"
-		bind:innerHTML={title}
 		use:stopTyping
-		on:stopTyping={onStopTyping}
-		use:maxLength={TodoDisplayConstr.title.maxLength}
+		on:stopTyping={(event) => {
+			title = event.detail.text;
+			onStopTyping();
+		}}
+		use:maxLength={{ maxLength: TodoDisplayConstr.title.maxLength, value: title }}
 		use:truncateEditable
 	/>
 </div>

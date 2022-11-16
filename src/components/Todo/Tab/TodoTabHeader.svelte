@@ -32,10 +32,12 @@
 			class="single-line content-editable mr-[4px] flex h-full text-ellipsis rounded py-[2px] pl-[4px] pr-[4px] tracking-normal transition-colors duration-200
 			ease-linear hover:bg-secondary focus:bg-secondary"
 			contenteditable="true"
-			bind:innerHTML={title}
 			use:stopTyping
-			on:stopTyping={onStopTyping}
-			use:maxLength={TodoTabConstr.title.maxLength}
+			on:stopTyping={(event) => {
+				title = event.detail.text;
+				onStopTyping();
+			}}
+			use:maxLength={{ maxLength: TodoTabConstr.title.maxLength, value: title }}
 			use:truncateEditable
 		/>
 

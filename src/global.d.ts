@@ -8,7 +8,7 @@ declare type DndEvent<ItemType = Item> = import('svelte-dnd-action').DndEvent<It
 declare namespace svelte.JSX {
 	interface HTMLAttributes<T> {
 		onclickoutside: () => void;
-		onstopTyping: () => void;
+		onstopTyping: (event: CustomEvent<{ text: string }>) => void;
 		onconsider?: (event: CustomEvent<DndEvent<ItemType>> & { target: EventTarget & T }) => void;
 		onfinalize?: (event: CustomEvent<DndEvent<ItemType>> & { target: EventTarget & T }) => void;
 	}
