@@ -95,7 +95,7 @@
 		onDelete={() => onDelete(data.id)}
 		onStopTyping={postTodo}
 		bind:title={data.title}
-		bind:isDragged
+		bind:isDragged={isDragged}
 		itemCount={displayItems.length}
 	/>
 	<div

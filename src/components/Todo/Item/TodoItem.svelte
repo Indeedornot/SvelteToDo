@@ -56,7 +56,7 @@
 		</div>
 		<div class="flex flex-none items-center pl-[8px] text-[14px] text-font-primary">
 			<div
-				class="content-editable w-full text-ellipsis  rounded py-1 px-[4px] 
+				class="content-editable w-full text-ellipsis rounded bg-accent bg-opacity-40 py-1 px-[4px]
 			transition-colors duration-200 ease-linear hover:bg-accent focus:bg-accent"
 				contenteditable="true"
 				use:maxLength={{ maxLength: TodoItemConstr.title.maxLength, value: data.title }}

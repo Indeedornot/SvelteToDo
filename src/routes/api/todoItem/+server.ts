@@ -1,11 +1,8 @@
 import { error, json } from '@sveltejs/kit';
 
-import type { TodoItem } from '@prisma/client';
-
 import { parseJson } from '$lib/helpers/jsUtils';
 import type { TodoItemApiData } from '$lib/prisma/TodoApiData';
-import { isValidId } from '$lib/server/DataValidation';
-import { validateTodoItem } from '$lib/server/DataValidation';
+import { isValidId, validateTodoItem } from '$lib/server/DataValidation';
 import prisma from '$lib/server/prisma';
 
 import type { RequestHandler } from './$types';

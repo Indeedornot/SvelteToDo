@@ -78,7 +78,7 @@
 
 <div class="flex h-full w-full flex-col bg-accent">
 	<TodoDisplayHeader onStopTyping={postTodo} bind:title={data.title} />
-	<TodoDisplaySearchbar onAdd={addTodoTab} bind:searchQuery />
+	<TodoDisplaySearchbar onAdd={addTodoTab} bind:searchQuery={searchQuery} />
 	<div
 		class="styled-scrollbar todotabs flex w-full flex-grow overflow-x-scroll py-[8px] sm:px-[16px] md:px-[24px] lg:px-[32px]"
 		use:dndzone={{ items: dndTabs, type: 'display', dragDisabled: !isDragging }}
@@ -86,7 +86,7 @@
 		on:finalize={handleDndFinalize}
 	>
 		{#each getDisplayTodoTabs(dndTabs) as todo (todo.dndId)}
-			<TodoTab onDelete={delTodoTab} bind:data={todo} bind:searchQuery bind:isDragged={isDragging} />
+			<TodoTab onDelete={delTodoTab} bind:data={todo} bind:searchQuery={searchQuery} bind:isDragged={isDragging} />
 		{/each}
 	</div>
 </div>

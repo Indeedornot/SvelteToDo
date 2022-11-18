@@ -11,7 +11,7 @@
 	<div class="h-[66px] w-full rounded-lg bg-secondary pt-[8px] pb-[12px]">
 		<div class="flex h-[24px] items-center px-[12px] text-[12px] text-font-secondary">
 			{status}
-			<StatusDropdown bind:status {...args} />
+			<StatusDropdown bind:status={status} {...args} />
 		</div>
 		<div class="flex items-center px-[12px] text-[14px] text-font-primary">
 			<span class="truncate" contenteditable="true">"Test StatusDropdown"</span>
