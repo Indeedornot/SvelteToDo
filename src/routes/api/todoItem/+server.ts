@@ -32,7 +32,6 @@ export const POST: RequestHandler = async ({ request }) => {
 
 	//update existing item
 	const existsItem = (await prisma.todoItem.count({ where: { id: data.id } })) === 1;
-	console.log('existsItem', existsItem);
 	if (!existsItem) return error(400, 'Item not found');
 
 	const todoItem = await prisma.todoItem.update({

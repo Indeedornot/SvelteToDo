@@ -12,6 +12,6 @@ export const TodoTabConstr = {
 
 export const TodoItemConstr = {
 	title: {
-		maxLength: 50
+		maxLength: 100
 	}
 };

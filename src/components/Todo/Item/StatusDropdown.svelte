@@ -36,7 +36,7 @@
 	on:click={toggleTooltip}
 	use:clickOutside
 	on:clickoutside={closeTooltip}
-	class="flex h-full items-center"
+	class="flex h-full w-full flex-none items-center whitespace-nowrap"
 >
 	{status}
 	<IoMdArrowDropdown />

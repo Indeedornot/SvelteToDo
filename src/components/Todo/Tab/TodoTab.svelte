@@ -10,27 +10,51 @@
 	import { dndzone } from 'svelte-dnd-action';
 
 	export let data: TodoTabData;
-	export let searchQuery: string;
 	export let onDelete: (id: number) => void;
-	let isDragging = false;
+	export let searchQuery: string;
+	export let hidden = false;
 	export let isDragged = false;
-
+	let isDragging = false;
 	let dndItems: TodoItemDndData[] = data.todoItems.map((item) => {
 		return {
 			...item,
-			dndId: `item-${item.id}`
+			dndId: `item-${item.id}`,
+			hidden: false
 		};
 	});
 
-	const getDisplayTodoItems = (items: TodoItemDndData[]) => {
-		items = sortBySortOrder(items);
-		if (isUndefinedOrEmpty(searchQuery)) return items;
-		return items.filter((item) => item.title.toLowerCase().includes(searchQuery.toLowerCase()));
+	//#region crud
+	const addTodoItem = async () => {
+		let todo: TodoItemData = {
+			id: -1,
+			title: 'New Todo Item',
+			status: 'Draft',
+			todoTabId: data.id,
+			sortOrder: dndItems.length
+			//*add to the end
+		};
+
+		todo = await postTodoItem(todo);
+		let dndTodo: TodoItemDndData = {
+			...todo,
+			dndId: `item-${todo.id}`,
+			hidden: false
+		};
+		dndItems = [dndTodo, ...dndItems];
 	};
 
-	let displayItems: TodoItemDndData[] = getDisplayTodoItems(dndItems);
-	$: displayItems = getDisplayTodoItems(dndItems);
+	const delTodoItem = (id: number) => {
+		deleteTodoItem(id);
+		const leftItems = dndItems.filter((item) => item.id !== id);
+		dndItems = adjustSortOrder(leftItems);
+	};
 
+	const postTodo = async () => {
+		await postTodoTab(data);
+	};
+	//#endregion
+
+	//#region dnd
 	//runs on drag in and drag out
 	const handleDndConsider = (e: TodoItemDndEvent) => {
 		const items: TodoItemDndData[] = e.detail.items;
@@ -58,39 +82,29 @@
 		isDragging = false;
 	};
 
-	const addTodoItem = async () => {
-		let todo: TodoItemData = {
-			id: -1,
-			title: 'New Todo Item',
-			status: 'Draft',
-			todoTabId: data.id,
-			sortOrder: dndItems.length
-			//*add to the end
-		};
+	const getDisplayTodoItems = (items: TodoItemDndData[]) => {
+		items = adjustSortOrder(items);
+		items = sortBySortOrder(items);
+		if (isUndefinedOrEmpty(searchQuery)) return items;
 
-		todo = await postTodoItem(todo);
-		let dndTodo: TodoItemDndData = {
-			...todo,
-			dndId: `item-${todo.id}`
-		};
-		dndItems = [dndTodo, ...dndItems];
+		items.forEach((item) => {
+			item.hidden = item.title.toLowerCase().includes(searchQuery.toLowerCase());
+		});
+
+		return items;
 	};
+	//#endregion
 
-	const delTodoItem = (id: number) => {
-		deleteTodoItem(id);
-		const leftItems = dndItems.filter((item) => item.id !== id);
-		dndItems = adjustSortOrder(leftItems);
-	};
-
-	const postTodo = async () => {
-		await postTodoTab(data);
-	};
-
+	let displayItems: TodoItemDndData[] = getDisplayTodoItems(dndItems);
+	$: displayItems = getDisplayTodoItems(dndItems);
 	$: searchQuery, (dndItems = dndItems); //needed to cause rerender on searchQuery change
 	$: data.todoItems = dndItems; //needed for parent to update
 </script>
 
-<div class="flex h-full flex-none flex-col rounded-md border border-border bg-primary sm:w-full xs:w-[350px]">
+<div
+	class:hidden
+	class="flex h-full flex-none flex-col rounded-md border border-border bg-primary sm:w-full xs:w-[350px]"
+>
 	<TodoTabHeader
 		onDelete={() => onDelete(data.id)}
 		onStopTyping={postTodo}
@@ -105,7 +119,7 @@
 		on:finalize={handleDndFinalize}
 	>
 		{#each displayItems as todoItem (todoItem.dndId)}
-			<TodoItem bind:data={todoItem} onDelete={delTodoItem} bind:isDragged={isDragging} />
+			<TodoItem hidden={todoItem.hidden} bind:data={todoItem} onDelete={delTodoItem} bind:isDragged={isDragging} />
 		{/each}
 	</div>
 	<TodoTabFooter onAdd={addTodoItem} />

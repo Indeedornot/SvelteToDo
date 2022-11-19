@@ -9,11 +9,6 @@ export function maxLength(node: HTMLElement, { maxLength, value }: { maxLength: 
 		const caretPosition = saveCursorPos(node);
 		const target = event.target as HTMLDivElement;
 		const text = target.innerText;
-		console.log({
-			maxLen: maxLength,
-			text: text,
-			html: target.innerHTML
-		});
 		if (text.length >= maxLength) {
 			target.innerText = oldValue;
 			restoreCursorPos(target, caretPosition);

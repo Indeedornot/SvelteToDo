@@ -9,36 +9,17 @@
 	import { dndzone } from 'svelte-dnd-action';
 
 	export let data: TodoDisplayData;
-	let searchQuery: string;
 	export let isDragging = false;
-
+	let searchQuery: string;
 	let dndTabs: TodoTabDndData[] = data.todoTabs.map((item) => {
 		return {
 			...item,
-			dndId: `tab-${item.id}`
+			dndId: `tab-${item.id}`,
+			hidden: false
 		};
 	});
 
-	//runs on drag in and drag out
-	const handleDndConsider = (e: TodoTabDndEvent) => {
-		const items: TodoTabDndData[] = e.detail.items;
-		dndTabs = adjustSortOrder(items);
-	};
-
-	const handleDndFinalize = async (e: TodoTabDndEvent) => {
-		let items: TodoTabDndData[] = e.detail.items;
-
-		let changedItem = items.findIndex((item, index) => item.sortOrder !== index);
-		if (changedItem !== -1) {
-			// items[changedItem].todoDisplayId = id;
-			items = adjustSortOrder(items);
-			await postTodoTabs(items.slice(changedItem, items.length));
-		}
-
-		dndTabs = items;
-		isDragging = false;
-	};
-
+	//#region crud
 	const addTodoTab = async () => {
 		const newTodoTab: TodoTabData = {
 			id: -1,
@@ -50,7 +31,8 @@
 		const todo = await postTodoTab(newTodoTab);
 		const dndTodo: TodoTabDndData = {
 			...todo,
-			dndId: `tab-${todo.id}`
+			dndId: `tab-${todo.id}`,
+			hidden: false
 		};
 		dndTabs = [...dndTabs, dndTodo];
 	};
@@ -63,30 +45,68 @@
 		await postTodoDisplay(data);
 		console.log(data);
 	};
+	//#endregion
 
-	const getDisplayTodoTabs = (tabs: TodoTabDndData[]) => {
-		if (isUndefinedOrEmpty(searchQuery)) return tabs;
-		return tabs.filter(
-			(tab) =>
-				tab.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				tab.todoItems.filter((item) => item.title.toLowerCase().includes(searchQuery.toLowerCase()))
-		);
+	//#region dnd
+	//runs on drag in and drag out
+	const handleDndConsider = (e: TodoTabDndEvent) => {
+		let items: TodoTabDndData[] = e.detail.items;
+		dndTabs = items;
 	};
 
-	$: searchQuery, (dndTabs = sortBySortOrder(dndTabs)); //needed to cause rerender on searchQuery change
+	const handleDndFinalize = async (e: TodoTabDndEvent) => {
+		let items: TodoTabDndData[] = e.detail.items;
+
+		let changedItem = items.findIndex((item, index) => item.sortOrder !== index);
+		if (changedItem !== -1) {
+			items = adjustSortOrder(items);
+			// items[changedItem].todoDisplayId = id;
+			await postTodoTabs(items.slice(changedItem, items.length));
+		}
+
+		dndTabs = items;
+		isDragging = false;
+	};
+
+	const getDisplayTodoTabs = (tabs: TodoTabDndData[]) => {
+		tabs = adjustSortOrder(tabs);
+		tabs = sortBySortOrder(tabs);
+
+		if (isUndefinedOrEmpty(searchQuery)) return tabs;
+
+		tabs.forEach((tab) => {
+			tab.hidden =
+				!tab.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
+				!tab.todoItems.some((todoItem) => todoItem.title.toLowerCase().includes(searchQuery.toLowerCase()));
+		});
+
+		return tabs;
+	};
+	//#endregion
+
+	let displayItems = getDisplayTodoTabs(dndTabs);
+	$: displayItems = getDisplayTodoTabs(dndTabs);
+	$: searchQuery, (dndTabs = dndTabs); //needed to cause rerender on searchQuery change
+	$: data.todoTabs = dndTabs;
 </script>
 
 <div class="flex h-full w-full flex-col bg-accent">
 	<TodoDisplayHeader onStopTyping={postTodo} bind:title={data.title} />
 	<TodoDisplaySearchbar onAdd={addTodoTab} bind:searchQuery={searchQuery} />
 	<div
-		class="styled-scrollbar todotabs flex w-full flex-grow overflow-x-scroll py-[8px] sm:px-[16px] md:px-[24px] lg:px-[32px]"
+		class="styled-scrollbar todotabs flex w-full flex-grow overflow-x-auto py-[8px] sm:px-[16px] md:px-[24px] lg:px-[32px]"
 		use:dndzone={{ items: dndTabs, type: 'display', dragDisabled: !isDragging }}
 		on:consider={handleDndConsider}
 		on:finalize={handleDndFinalize}
 	>
-		{#each getDisplayTodoTabs(dndTabs) as todo (todo.dndId)}
-			<TodoTab onDelete={delTodoTab} bind:data={todo} bind:searchQuery={searchQuery} bind:isDragged={isDragging} />
+		{#each displayItems as todo (todo.dndId)}
+			<TodoTab
+				hidden={todo.hidden}
+				onDelete={delTodoTab}
+				bind:data={todo}
+				bind:searchQuery={searchQuery}
+				bind:isDragged={isDragging}
+			/>
 		{/each}
 	</div>
 </div>
