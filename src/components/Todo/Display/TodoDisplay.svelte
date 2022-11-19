@@ -69,24 +69,24 @@
 	};
 
 	const getDisplayTodoTabs = (tabs: TodoTabDndData[]) => {
-		tabs = adjustSortOrder(tabs);
-		tabs = sortBySortOrder(tabs);
+		let tabCopy = [...tabs];
+		tabCopy = adjustSortOrder(tabs);
+		tabCopy = sortBySortOrder(tabs);
 
-		if (isUndefinedOrEmpty(searchQuery)) return tabs;
+		if (isUndefinedOrEmpty(searchQuery)) return tabCopy;
 
-		tabs.forEach((tab) => {
+		tabCopy.forEach((tab) => {
 			tab.hidden =
 				!tab.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
 				!tab.todoItems.some((todoItem) => todoItem.title.toLowerCase().includes(searchQuery.toLowerCase()));
 		});
 
-		return tabs;
+		return tabCopy;
 	};
 	//#endregion
 
-	let displayItems = getDisplayTodoTabs(dndTabs);
-	$: displayItems = getDisplayTodoTabs(dndTabs);
 	$: searchQuery, (dndTabs = dndTabs); //needed to cause rerender on searchQuery change
+	$: dndTabs = getDisplayTodoTabs(dndTabs);
 	$: data.todoTabs = dndTabs;
 </script>
 
@@ -99,7 +99,7 @@
 		on:consider={handleDndConsider}
 		on:finalize={handleDndFinalize}
 	>
-		{#each displayItems as todo (todo.dndId)}
+		{#each dndTabs as todo (todo.dndId)}
 			<TodoTab
 				hidden={todo.hidden}
 				onDelete={delTodoTab}

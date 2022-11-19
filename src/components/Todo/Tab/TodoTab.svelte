@@ -22,6 +22,7 @@
 			hidden: false
 		};
 	});
+	let visibleItemsCount = dndItems.length;
 
 	//#region crud
 	const addTodoItem = async () => {
@@ -83,21 +84,31 @@
 	};
 
 	const getDisplayTodoItems = (items: TodoItemDndData[]) => {
-		items = adjustSortOrder(items);
-		items = sortBySortOrder(items);
-		if (isUndefinedOrEmpty(searchQuery)) return items;
+		let itemsCopy = [...items];
+		itemsCopy = adjustSortOrder(itemsCopy);
+		itemsCopy = sortBySortOrder(itemsCopy);
+		if (isUndefinedOrEmpty(searchQuery)) {
+			visibleItemsCount = itemsCopy.length;
+			itemsCopy.forEach((item) => {
+				item.hidden = false;
+			});
 
-		items.forEach((item) => {
-			item.hidden = item.title.toLowerCase().includes(searchQuery.toLowerCase());
+			return itemsCopy;
+		}
+
+		visibleItemsCount = 0;
+		itemsCopy.forEach((item) => {
+			let hidden = !item.title.toLowerCase().includes(searchQuery.toLowerCase());
+			item.hidden = hidden;
+			visibleItemsCount += hidden ? 0 : 1;
 		});
 
-		return items;
+		return itemsCopy;
 	};
 	//#endregion
 
-	let displayItems: TodoItemDndData[] = getDisplayTodoItems(dndItems);
-	$: displayItems = getDisplayTodoItems(dndItems);
 	$: searchQuery, (dndItems = dndItems); //needed to cause rerender on searchQuery change
+	$: dndItems = getDisplayTodoItems(dndItems);
 	$: data.todoItems = dndItems; //needed for parent to update
 </script>
 
@@ -110,7 +121,7 @@
 		onStopTyping={postTodo}
 		bind:title={data.title}
 		bind:isDragged={isDragged}
-		itemCount={displayItems.length}
+		itemCount={visibleItemsCount}
 	/>
 	<div
 		class="styled-scrollbar flex-shrink flex-grow overflow-auto px-[10px] pt-[2px] child:mb-[8px]"
@@ -118,7 +129,7 @@
 		on:consider={handleDndConsider}
 		on:finalize={handleDndFinalize}
 	>
-		{#each displayItems as todoItem (todoItem.dndId)}
+		{#each dndItems as todoItem (todoItem.dndId)}
 			<TodoItem hidden={todoItem.hidden} bind:data={todoItem} onDelete={delTodoItem} bind:isDragged={isDragging} />
 		{/each}
 	</div>

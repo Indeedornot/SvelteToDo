@@ -23,7 +23,7 @@
 	};
 </script>
 
-<div class:hidden class="w-full rounded-md border border-border bg-secondary pb-[4px]">
+<div class:hidden class="w-full rounded-md border border-border bg-secondary ">
 	<div class="box-border flex h-[8px] flex-none items-end justify-center ">
 		<div
 			class="box-border flex h-full w-4/12 flex-none cursor-grab rounded-b bg-accent hover:bg-primary"
@@ -35,14 +35,14 @@
 		/>
 	</div>
 
-	<div class="flex w-full flex-grow flex-col  pr-[12px]">
+	<div class="flex w-full flex-grow flex-col pr-[12px]">
 		<div class="box-border flex h-[22px] w-full flex-none flex-row pl-[8px] text-[12px] text-font-secondary">
 			<div class="rounded pl-[4px] hover:bg-primary">
 				<StatusDropdown bind:status={data.status} onChoose={postTodo} />
 			</div>
 			<div class="ml-auto flex aspect-square h-full flex-none">
 				<button
-					class="box-border flex h-full w-full flex-none items-center justify-center rounded text-font-secondary outline-none 
+					class="box-border flex h-full w-full flex-none items-center justify-center rounded-t text-font-secondary outline-none 
 				transition-colors duration-150 ease-linear hover:bg-primary focus:outline-none"
 					type="button"
 					on:click={() => onDelete && onDelete(data.id)}
@@ -55,7 +55,7 @@
 		</div>
 		<div class="flex flex-none items-center pl-[8px] text-[14px] text-font-primary">
 			<div
-				class="content-editable w-full text-ellipsis rounded bg-accent bg-opacity-40 py-1 px-[4px]
+				class="content-editable w-full text-ellipsis rounded-t bg-accent bg-opacity-40 py-1 px-[4px] pb-[4px]
 			transition-colors duration-200 ease-linear hover:bg-accent focus:bg-accent"
 				contenteditable="true"
 				use:maxLength={{ maxLength: TodoItemConstr.title.maxLength, value: data.title }}
