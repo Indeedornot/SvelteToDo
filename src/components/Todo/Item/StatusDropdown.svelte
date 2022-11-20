@@ -1,6 +1,6 @@
 <script lang="ts">
+	import { ArrowDown, Dropdown } from '$components/Icons';
 	import { clickOutside } from '$lib/helpers/clickOutside.js';
-	import IoMdArrowDropdown from 'svelte-icons/io/IoMdArrowDropdown.svelte';
 	import { createPopperActions } from 'svelte-popperjs';
 
 	const [popperRef, popperContent] = createPopperActions({
@@ -38,8 +38,8 @@
 	on:clickoutside={closeTooltip}
 	class="flex h-full w-full flex-none items-center whitespace-nowrap"
 >
-	{status}
-	<IoMdArrowDropdown />
+	<span class="pr-1">{status}</span>
+	<Dropdown size={16} />
 </button>
 {#if showTooltip}
 	<div

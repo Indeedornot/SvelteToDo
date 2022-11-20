@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { maxLength, stopTyping, truncateEditable } from '$lib/helpers/contentEditable';
+	import { singleLine } from '$lib/helpers/contentEditable/singleLine';
 	import { TodoDisplayConstr } from '$lib/models/TodoDataConstr';
 	import '$lib/styles/Scrollbar.css';
 
@@ -13,11 +14,13 @@
 	<div
 		class="single-line content-editable text-ellipsis rounded py-[16px] pl-[4px] pr-[24px] transition-colors duration-200 ease-linear hover:bg-secondary focus:bg-secondary"
 		contenteditable="true"
+		spellcheck="false"
 		use:stopTyping
 		on:stopTyping={(event) => {
 			title = event.detail.text;
 			onStopTyping();
 		}}
+		use:singleLine
 		use:maxLength={{ maxLength: TodoDisplayConstr.title.maxLength, value: title }}
 		use:truncateEditable
 	/>

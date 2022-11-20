@@ -1,16 +1,17 @@
 <script lang="ts">
+	import { Collapse, Expand, Minus } from '$components/Icons';
 	import { StatusDropdown } from '$components/Todo';
 	import { maxLength, stopTyping, truncateEditable } from '$lib/helpers/contentEditable';
 	import type { TodoItemData } from '$lib/models/TodoData';
 	import { TodoItemConstr } from '$lib/models/TodoDataConstr';
 	import { postTodoItem } from '$lib/prisma/apiCalls';
 	import '$lib/styles/ContentEditable.css';
-	import FaMinus from 'svelte-icons/fa/FaMinus.svelte';
 
 	export let data: TodoItemData;
 	export let onDelete: (id: number) => void;
 	export let isDragged: boolean = false;
 	export let hidden: boolean = false;
+	let multiLine: boolean = false;
 	let singleLine = false;
 
 	const postTodo = async () => {
@@ -21,6 +22,8 @@
 		e.preventDefault();
 		isDragged = true;
 	};
+
+	$: multiLine = /\r|\n/.exec(data.title) !== null;
 </script>
 
 <div class:hidden class="w-full rounded-md border border-border bg-secondary ">
@@ -35,28 +38,48 @@
 		/>
 	</div>
 
-	<div class="flex w-full flex-grow flex-col pr-[12px]">
-		<div class="box-border flex h-[22px] w-full flex-none flex-row pl-[8px] text-[12px] text-font-secondary">
+	<div class="flex w-full flex-grow flex-col pr-[12px] pl-[8px]">
+		<div class="mb-0.5 box-border flex h-[22px] w-full flex-none  flex-row text-[12px] text-font-secondary">
 			<div class="rounded pl-[4px] hover:bg-primary">
 				<StatusDropdown bind:status={data.status} onChoose={postTodo} />
 			</div>
-			<div class="ml-auto flex aspect-square h-full flex-none">
+			<div class="ml-auto flex aspect-square h-full flex-none items-center justify-center">
 				<button
-					class="box-border flex h-full w-full flex-none items-center justify-center rounded-t text-font-secondary outline-none 
-				transition-colors duration-150 ease-linear hover:bg-primary focus:outline-none"
+					class="
+					box-border flex h-[90%] w-full flex-none items-center justify-center 
+					rounded text-font-secondary outline-none 
+					transition-colors duration-150 ease-linear hover:bg-primary focus:outline-none"
 					type="button"
 					on:click={() => onDelete && onDelete(data.id)}
 				>
-					<div class="flex w-1/2 flex-none items-center justify-center">
-						<FaMinus />
-					</div>
+					<Minus strokeWidth={3} />
 				</button>
 			</div>
 		</div>
-		<div class="flex flex-none items-center pl-[8px] text-[14px] text-font-primary">
+		<div class="rounded-t text-[14px] text-font-primary hover:bg-accent">
+			{#if multiLine}
+				<div
+					class="border-box relative right-[4px] top-[3px] float-right clear-none flex aspect-square h-[24px] flex-none items-center justify-items-center justify-self-end rounded"
+				>
+					<div class="border-box flex h-full w-full flex-none items-center justify-center p-[4px]">
+						<button
+							class="box-border flex h-full w-full flex-none items-center justify-center rounded bg-black  hover:bg-border"
+							on:click={() => (singleLine = !singleLine)}
+						>
+							{#if singleLine}
+								<Expand size={12} />
+							{:else}
+								<Collapse size={12} />
+							{/if}
+						</button>
+					</div>
+				</div>
+			{/if}
 			<div
-				class="content-editable w-full text-ellipsis rounded-t bg-accent bg-opacity-40 py-1 px-[4px] pb-[4px]
-			transition-colors duration-200 ease-linear hover:bg-accent focus:bg-accent"
+				class="content-editable h-full
+				text-ellipsis rounded-t bg-accent bg-opacity-40 
+				py-1 px-[4px] pb-[4px]
+				transition-colors duration-200 ease-linear"
 				contenteditable="true"
 				use:maxLength={{ maxLength: TodoItemConstr.title.maxLength, value: data.title }}
 				use:truncateEditable
@@ -71,6 +94,40 @@
 	</div>
 </div>
 
+<!-- 
+	<div
+			class="content-editable col-span-full row-span-full w-full text-ellipsis rounded-t bg-accent bg-opacity-40 py-1 px-[4px] pb-[4px]
+		transition-colors duration-200 ease-linear"
+			contenteditable="true"
+			use:maxLength={{ maxLength: TodoItemConstr.title.maxLength, value: data.title }}
+			use:truncateEditable
+			class:single-line={singleLine}
+			use:stopTyping
+			on:stopTyping={(event) => {
+				data.title = event.detail.text;
+				postTodo();
+			}}
+		/>
+
+		{#if multiLine}
+			<div
+				class="border-box col-span-full row-span-full mr-[4px] mt-[3px] flex aspect-square h-[24px] flex-none items-center justify-items-center justify-self-end rounded "
+			>
+				<div class="border-box flex h-full w-full flex-none items-center justify-center p-[4px]">
+					<button
+						class="box-border flex h-full w-full flex-none items-center justify-center rounded bg-black  hover:bg-border"
+						on:click={() => (singleLine = !singleLine)}
+					>
+						{#if singleLine}
+							<Expand size={12} />
+						{:else}
+							<Collapse size={12} />
+						{/if}
+					</button>
+				</div>
+			</div>
+		{/if} 
+-->
 <style>
 	.dragging {
 		cursor: grabbing;

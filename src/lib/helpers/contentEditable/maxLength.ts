@@ -1,15 +1,15 @@
-import { isUndefined } from '../jsUtils';
-import { restoreCursorPos, saveCursorPos } from './cursorPos';
+import { restoreCursorPos, saveCursorPos } from '$lib/helpers/contentEditable';
+import { isUndefined } from '$lib/helpers/jsUtils';
 
 export function maxLength(node: HTMLElement, { maxLength, value }: { maxLength: number; value?: string }) {
 	node.innerText = (isUndefined(value) ? node.innerText : value).slice(0, maxLength - 1);
 	let oldValue = node.innerText;
 
 	const handleInput = (event: Event) => {
-		const caretPosition = saveCursorPos(node);
 		const target = event.target as HTMLDivElement;
 		const text = target.innerText;
 		if (text.length >= maxLength) {
+			const caretPosition = saveCursorPos(node);
 			target.innerText = oldValue;
 			restoreCursorPos(target, caretPosition);
 			node.focus();

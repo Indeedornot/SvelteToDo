@@ -1,9 +1,10 @@
 <script lang="ts">
+	import { Minus } from '$components/Icons';
 	import { maxLength, stopTyping, truncateEditable } from '$lib/helpers/contentEditable';
+	import { singleLine } from '$lib/helpers/contentEditable/singleLine';
 	import { TodoTabConstr } from '$lib/models/TodoDataConstr';
 	import '$lib/styles/ContentEditable.css';
 	import '$lib/styles/Scrollbar.css';
-	import FaMinus from 'svelte-icons/fa/FaMinus.svelte';
 
 	export let onDelete: () => void;
 	export let onStopTyping: () => void;
@@ -29,7 +30,7 @@
 	</div>
 	<div class="flex max-h-full w-full flex-shrink-0 flex-grow flex-row items-center px-[12px] text-font-primary">
 		<div
-			class="single-line content-editable mr-[4px] flex h-full text-ellipsis rounded py-[2px] pl-[4px] pr-[4px] tracking-normal transition-colors duration-200
+			class="single-line content-editable mr-[4px] flex text-ellipsis rounded  pl-[4px] pr-[4px] transition-colors duration-200
 			ease-linear hover:bg-secondary focus:bg-secondary"
 			contenteditable="true"
 			use:stopTyping
@@ -37,6 +38,7 @@
 				title = event.detail.text;
 				onStopTyping();
 			}}
+			use:singleLine
 			use:maxLength={{ maxLength: TodoTabConstr.title.maxLength, value: title }}
 			use:truncateEditable
 		/>
@@ -46,13 +48,13 @@
 			bg-secondary py-[2px] px-[4px] text-xs font-semibold leading-tight text-font-secondary first:ml-0"
 			>{itemCount}
 		</span>
-		<div class="ml-auto box-border flex aspect-square h-full items-center justify-center p-0.5">
+		<div class="ml-auto box-border flex h-[90%] w-[10%] items-center justify-center p-0.5">
 			<button
-				class="h-full w-full rounded p-1.5 text-font-secondary outline-none transition-colors duration-200 ease-linear hover:bg-secondary"
+				class="flex h-full w-full flex-none items-center justify-center rounded text-font-secondary outline-none transition-colors duration-200 ease-linear hover:bg-secondary"
 				type="button"
 				on:click={onDelete}
 			>
-				<FaMinus />
+				<Minus strokeWidth={4} />
 			</button>
 		</div>
 	</div>
