@@ -22,7 +22,8 @@ export const POST: RequestHandler = async ({ request }) => {
 				title: data.title,
 				status: data.status,
 				todoTabId: data.todoTabId,
-				sortOrder: data.sortOrder
+				sortOrder: data.sortOrder,
+				collapsed: data.collapsed
 			}
 		});
 
@@ -42,7 +43,8 @@ export const POST: RequestHandler = async ({ request }) => {
 			title: data.title,
 			status: data.status,
 			todoTabId: data.todoTabId,
-			sortOrder: data.sortOrder
+			sortOrder: data.sortOrder,
+			collapsed: data.collapsed
 		}
 	});
 	const returnData: TodoItemApiData = todoItem;

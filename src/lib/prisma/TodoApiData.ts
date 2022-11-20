@@ -23,4 +23,5 @@ export type TodoItemApiData = {
 	todoTabId: number;
 	createdAt?: Date;
 	updatedAt?: Date;
+	collapsed: boolean;
 };

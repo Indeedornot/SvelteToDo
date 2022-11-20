@@ -12,7 +12,6 @@
 	export let isDragged: boolean = false;
 	export let hidden: boolean = false;
 	let multiLine: boolean = false;
-	let singleLine = false;
 
 	const postTodo = async () => {
 		await postTodoItem(data);
@@ -23,7 +22,18 @@
 		isDragged = true;
 	};
 
-	$: multiLine = /\r|\n/.exec(data.title) !== null;
+	const collapse = () => {
+		data.collapsed = !data.collapsed;
+		postTodo();
+	};
+
+	$: {
+		multiLine = /\r|\n/.exec(data.title) !== null;
+		if (data.collapsed && !multiLine) {
+			data.collapsed = false;
+			postTodo();
+		}
+	}
 </script>
 
 <div class:hidden class="w-full rounded-md border border-border bg-secondary ">
@@ -64,9 +74,9 @@
 					<div class="border-box flex h-full w-full flex-none items-center justify-center p-[4px]">
 						<button
 							class="box-border flex h-full w-full flex-none items-center justify-center rounded bg-black  hover:bg-border"
-							on:click={() => (singleLine = !singleLine)}
+							on:click={collapse}
 						>
-							{#if singleLine}
+							{#if data.collapsed}
 								<Expand size={12} />
 							{:else}
 								<Collapse size={12} />
@@ -83,7 +93,7 @@
 				contenteditable="true"
 				use:maxLength={{ maxLength: TodoItemConstr.title.maxLength, value: data.title }}
 				use:truncateEditable
-				class:single-line={singleLine}
+				class:single-line={data.collapsed}
 				use:stopTyping
 				on:stopTyping={(event) => {
 					data.title = event.detail.text;

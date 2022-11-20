@@ -32,6 +32,7 @@ model TodoItem {
   sortOrder Int
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
+  collapsed Boolean  @default(false)
 }
 
 model TodoDisplay {

@@ -1,4 +1,4 @@
-import { isUndefined } from '$lib/helpers/jsUtils';
+import { isBoolean, isUndefined } from '$lib/helpers/jsUtils';
 import { TodoDisplayConstr, TodoItemConstr, TodoTabConstr } from '$lib/models/TodoDataConstr';
 import type { TodoDisplayApiData, TodoItemApiData, TodoTabApiData } from '$lib/prisma/TodoApiData';
 
@@ -28,6 +28,7 @@ export const validateTodoItem = (item: TodoItemApiData): { code: number; error: 
 	if (!isValidId(item.todoTabId)) return { code: 400, error: 'Invalid todoTabId' };
 	if (!isValidSortOrder(item.sortOrder)) return { code: 400, error: 'Invalid sortOrder' };
 	if (!isValidId(item.id)) return { code: 400, error: 'Invalid id' };
+	if (!isBoolean(item.collapsed)) return { code: 400, error: 'Invalid collapsed' };
 	return undefined;
 };
 

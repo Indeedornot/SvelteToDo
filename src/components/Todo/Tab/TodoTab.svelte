@@ -31,7 +31,8 @@
 			title: 'New Todo Item',
 			status: 'Draft',
 			todoTabId: data.id,
-			sortOrder: dndItems.length
+			sortOrder: dndItems.length,
+			collapsed: false
 			//*add to the end
 		};
 
