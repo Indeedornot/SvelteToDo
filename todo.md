@@ -2,15 +2,18 @@ Todos:
 
 <!--TODO: Add gracefull error handling for validation fails -->
 
-<!--TODO: Maybe optimize search to not run filter on items on both display and tabs - but we are using .some() so we might be good -->
-<!--TODO: Look at filtering once again -->
 
+
+<!--TODO: Look at filtering once again -->
 
 In Progress:
 
 BackBurner:
 
-<!--TODO: Use Rem --> - gotta read more
+<!--TODO: Maybe optimize search to not 
+run filter on items on both display and tabs - but we are using .some() so we might be good 
+-->
+<!--TODO: Use Rem - gotta read more -->
 <!--TODO: Rewrite stories -->
 <!--TODO: Implement multiple TodoDisplays -->
 <!--TODO: Work on scalability more -->
@@ -21,12 +24,14 @@ BackBurner:
 -->
 
 Done:
+<!--TODO: Add 3 dots menu for extra actions - take note, take out status showing out of the statusdropdown otherwise the position relative messes stuff -->
 <!--TODO: TodoItem: Handle multiple lines -->
 <!--TODO: Add to multiline TodoItem content a handle to add single line -->
 <!--TODO: Make status change background on hover-->
 <!--TODO: Add checks on the server for TodoConstr -->
 <!--TODO: Add checking to api for TodoItemsData and TodoTabsData -->
-<!--TODO: Fix dragging when using search
+<!--
+    TODO: Fix dragging when using search 
     Problem: svelte-dnd-action uses rendered items
 -->
 

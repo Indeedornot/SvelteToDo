@@ -9,3 +9,5 @@ export { Filter } from 'lucide-svelte';
 export { CircleEllipsis as Dropdown } from 'lucide-svelte';
 export { Minimize as Collapse } from 'lucide-svelte';
 export { Maximize as Expand } from 'lucide-svelte';
+export { MoreHorizontal as More } from 'lucide-svelte';
+export { X as Delete } from 'lucide-svelte';

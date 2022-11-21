@@ -4,11 +4,17 @@
 	import { createPopperActions } from 'svelte-popperjs';
 
 	const [popperRef, popperContent] = createPopperActions({
-		placement: 'bottom',
-		strategy: 'fixed'
+		placement: 'bottom-start',
+		strategy: 'absolute'
 	});
 	const extraOpts = {
-		modifiers: [{ name: 'offset', options: { offset: [0, 2] } }]
+		modifiers: [
+			{ name: 'offset', options: { offset: [-4, 2] } },
+			{
+				name: 'flip',
+				options: { fallbackPlacements: [] }
+			}
+		]
 	};
 	const closeTooltip = () => {
 		showTooltip = false;
@@ -41,17 +47,19 @@
 	<span class="pr-1">{status}</span>
 	<Dropdown size={16} />
 </button>
-{#if showTooltip}
-	<div
-		use:popperContent={extraOpts}
-		class="tooltip rounded-md border border-accent bg-secondary text-[12px] text-font-primary child-hover:bg-accent"
-	>
-		{#each statuses as stat}
-			<button on:click={() => setStatus(stat)}>{stat}</button>
-		{/each}
-		<!--    <div id="arrow" data-popper-arrow />-->
-	</div>
-{/if}
+<div class="relative">
+	{#if showTooltip}
+		<div
+			use:popperContent={extraOpts}
+			class="tooltip rounded-md border border-accent bg-secondary text-[12px] text-font-primary child-hover:bg-accent"
+		>
+			{#each statuses as stat}
+				<button on:click={() => setStatus(stat)}>{stat}</button>
+			{/each}
+			<!--    <div id="arrow" data-popper-arrow />-->
+		</div>
+	{/if}
+</div>
 
 <style>
 	.tooltip > * {

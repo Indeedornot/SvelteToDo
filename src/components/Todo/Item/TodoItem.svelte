@@ -7,6 +7,8 @@
 	import { postTodoItem } from '$lib/prisma/apiCalls';
 	import '$lib/styles/ContentEditable.css';
 
+	import MoreDropdown from './MoreDropdown.svelte';
+
 	export let data: TodoItemData;
 	export let onDelete: (id: number) => void;
 	export let isDragged: boolean = false;
@@ -25,6 +27,10 @@
 	const collapse = () => {
 		data.collapsed = !data.collapsed;
 		postTodo();
+	};
+
+	const deleteSelf = () => {
+		onDelete(data.id);
 	};
 
 	$: {
@@ -49,27 +55,18 @@
 	</div>
 
 	<div class="flex w-full flex-grow flex-col pr-[12px] pl-[8px]">
-		<div class="mb-0.5 box-border flex h-[22px] w-full flex-none  flex-row text-[12px] text-font-secondary">
+		<div class="mb-0.5 box-border flex h-[22px] w-full flex-none flex-row text-[12px] text-font-secondary">
 			<div class="rounded pl-[4px] hover:bg-primary">
 				<StatusDropdown bind:status={data.status} onChoose={postTodo} />
 			</div>
 			<div class="ml-auto flex aspect-square h-full flex-none items-center justify-center">
-				<button
-					class="
-					box-border flex h-[90%] w-full flex-none items-center justify-center 
-					rounded text-font-secondary outline-none 
-					transition-colors duration-150 ease-linear hover:bg-primary focus:outline-none"
-					type="button"
-					on:click={() => onDelete && onDelete(data.id)}
-				>
-					<Minus strokeWidth={3} />
-				</button>
+				<MoreDropdown onDelete={deleteSelf} />
 			</div>
 		</div>
 		<div class="rounded-t text-[14px] text-font-primary hover:bg-accent">
 			{#if multiLine}
 				<div
-					class="border-box relative right-[4px] top-[3px] float-right clear-none flex aspect-square h-[24px] flex-none items-center justify-items-center justify-self-end rounded"
+					class="border-box relative right-[4px] top-[3px]  float-right clear-none flex aspect-square h-[24px] flex-none items-center justify-items-center justify-self-end rounded"
 				>
 					<div class="border-box flex h-full w-full flex-none items-center justify-center p-[4px]">
 						<button

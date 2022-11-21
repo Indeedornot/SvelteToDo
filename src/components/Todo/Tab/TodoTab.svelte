@@ -124,8 +124,9 @@
 		bind:isDragged={isDragged}
 		itemCount={visibleItemsCount}
 	/>
+	<div />
 	<div
-		class="styled-scrollbar flex-shrink flex-grow overflow-auto px-[10px] pt-[2px] child:mb-[8px]"
+		class="styled-scrollbar flex flex-shrink flex-grow flex-col overflow-auto px-[10px] pt-[2px] child:mb-[8px]"
 		use:dndzone={{ items: dndItems, type: 'tab', dragDisabled: !isDragging }}
 		on:consider={handleDndConsider}
 		on:finalize={handleDndFinalize}
@@ -134,5 +135,6 @@
 			<TodoItem hidden={todoItem.hidden} bind:data={todoItem} onDelete={delTodoItem} bind:isDragged={isDragging} />
 		{/each}
 	</div>
+
 	<TodoTabFooter onAdd={addTodoItem} />
 </div>
