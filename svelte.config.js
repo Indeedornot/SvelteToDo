@@ -17,6 +17,20 @@ const config = {
 		alias: {
 			$components: './src/components'
 		}
+	},
+	vitePlugin: {
+		experimental: {
+			inspector: {
+				// change shortcut
+				toggleKeyCombo: 'ctrl-spacebar',
+				// hold and release key to toggle inspector mode
+				// holdMode: true,
+				// show or hide the inspector option
+				showToggleButton: 'always',
+				// inspector position
+				toggleButtonPos: 'top-right'
+			}
+		}
 	}
 };
 

@@ -1,13 +1,12 @@
 <script lang="ts">
-	import { Collapse, Expand, Minus } from '$components/Icons';
+	import { Collapse, Expand } from '$components/Icons';
 	import { StatusDropdown } from '$components/Todo';
+	import { ItemMore } from '$components/Todo';
 	import { maxLength, stopTyping, truncateEditable } from '$lib/helpers/contentEditable';
 	import type { TodoItemData } from '$lib/models/TodoData';
 	import { TodoItemConstr } from '$lib/models/TodoDataConstr';
 	import { postTodoItem } from '$lib/prisma/apiCalls';
 	import '$lib/styles/ContentEditable.css';
-
-	import MoreDropdown from './MoreDropdown.svelte';
 
 	export let data: TodoItemData;
 	export let onDelete: (id: number) => void;
@@ -42,8 +41,8 @@
 	}
 </script>
 
-<div class:hidden class="w-full rounded-md border border-border bg-secondary ">
-	<div class="box-border flex h-[8px] flex-none items-end justify-center ">
+<div class:hidden class="w-full rounded-md border border-border bg-secondary">
+	<div class="box-border flex h-[8px] flex-none items-end justify-center">
 		<div
 			class="box-border flex h-full w-4/12 flex-none cursor-grab rounded-b bg-accent hover:bg-primary"
 			on:mousedown={onDrag}
@@ -60,7 +59,7 @@
 				<StatusDropdown bind:status={data.status} onChoose={postTodo} />
 			</div>
 			<div class="ml-auto flex aspect-square h-full flex-none items-center justify-center">
-				<MoreDropdown onDelete={deleteSelf} />
+				<ItemMore onDelete={deleteSelf} />
 			</div>
 		</div>
 		<div class="rounded-t text-[14px] text-font-primary hover:bg-accent">
@@ -101,40 +100,6 @@
 	</div>
 </div>
 
-<!-- 
-	<div
-			class="content-editable col-span-full row-span-full w-full text-ellipsis rounded-t bg-accent bg-opacity-40 py-1 px-[4px] pb-[4px]
-		transition-colors duration-200 ease-linear"
-			contenteditable="true"
-			use:maxLength={{ maxLength: TodoItemConstr.title.maxLength, value: data.title }}
-			use:truncateEditable
-			class:single-line={singleLine}
-			use:stopTyping
-			on:stopTyping={(event) => {
-				data.title = event.detail.text;
-				postTodo();
-			}}
-		/>
-
-		{#if multiLine}
-			<div
-				class="border-box col-span-full row-span-full mr-[4px] mt-[3px] flex aspect-square h-[24px] flex-none items-center justify-items-center justify-self-end rounded "
-			>
-				<div class="border-box flex h-full w-full flex-none items-center justify-center p-[4px]">
-					<button
-						class="box-border flex h-full w-full flex-none items-center justify-center rounded bg-black  hover:bg-border"
-						on:click={() => (singleLine = !singleLine)}
-					>
-						{#if singleLine}
-							<Expand size={12} />
-						{:else}
-							<Collapse size={12} />
-						{/if}
-					</button>
-				</div>
-			</div>
-		{/if} 
--->
 <style>
 	.dragging {
 		cursor: grabbing;

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { ArrowDown, Dropdown } from '$components/Icons';
 	import { clickOutside } from '$lib/helpers/clickOutside.js';
+	import { slide } from '$lib/helpers/slideAnim';
 	import { createPopperActions } from 'svelte-popperjs';
 
 	const [popperRef, popperContent] = createPopperActions({
@@ -32,6 +33,7 @@
 	let showTooltip = false;
 	let statuses = ['Draft', 'Completed', 'In Progress', 'Archived', 'Abandoned'];
 	const setStatus = (newStatus: string) => {
+		closeTooltip();
 		status = newStatus;
 		onChoose && onChoose(newStatus);
 	};
@@ -51,6 +53,8 @@
 	{#if showTooltip}
 		<div
 			use:popperContent={extraOpts}
+			in:slide={{ duration: 300, axis: 'y' }}
+			out:slide={{ duration: 300, axis: 'y' }}
 			class="tooltip rounded-md border border-accent bg-secondary text-[12px] text-font-primary child-hover:bg-accent"
 		>
 			{#each statuses as stat}

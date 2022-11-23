@@ -2,6 +2,7 @@ export type TodoDisplayApiData = {
 	id: number;
 	title: string;
 	todoTabs?: TodoTabApiData[];
+	sortOrder: number;
 	createdAt?: Date;
 	updatedAt?: Date;
 };

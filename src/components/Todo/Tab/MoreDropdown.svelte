@@ -34,10 +34,12 @@
 	//#endregion
 
 	export let onDelete: () => void;
+
 	const onDel = () => {
 		closeTooltip();
 		onDelete();
 	};
+
 	let showTooltip = false;
 </script>
 
@@ -53,9 +55,9 @@
 <div class="relative">
 	{#if showTooltip}
 		<div
+			use:popperContent={extraOpts}
 			in:slide={{ duration: 300, axis: 'y' }}
 			out:slide={{ duration: 300, axis: 'y' }}
-			use:popperContent={extraOpts}
 			class="tooltip z-[1] rounded-md border border-accent bg-secondary text-[12px] text-font-primary child-hover:bg-accent"
 		>
 			<button class="flex items-center justify-center" on:click={onDel}>

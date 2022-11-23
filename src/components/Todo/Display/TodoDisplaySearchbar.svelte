@@ -7,13 +7,22 @@
 
 	export let searchQuery: string = '';
 	export let onAdd: () => void;
+
+	let searchInput: HTMLElement;
 </script>
 
 <div
-	class="flex h-[40px] w-full flex-shrink-0 flex-row items-center overflow-y-hidden border-y border-border text-font-secondary sm:px-[16px] md:px-[24px] lg:px-[32px]"
+	class="flex h-[40px] w-full flex-shrink-0 flex-row items-center overflow-y-hidden 
+	border-y border-border text-font-secondary 
+	sm:pl-[16px] sm:pr-[24px] md:pl-[24px] md:pr-[32px]"
 >
-	<div class="mr-[8px] h-[24px] w-[24px]">
-		<Filter />
+	<div class="mr-[8px] flex h-full w-[24px] flex-none items-center ">
+		<button
+			class="box-border flex w-full flex-none items-center justify-center rounded-full py-1.5 hover:bg-border hover:text-font-primary"
+			on:click={() => searchInput.focus()}
+		>
+			<Filter size={20} />
+		</button>
 	</div>
 	<div
 		class="durtation-200 mr-[5px] flex h-full flex-grow items-center transition-colors ease-linear focus-within:bg-accent hover:bg-accent"
@@ -22,6 +31,7 @@
 			class="single-line content-editable w-full text-ellipsis bg-transparent px-[8px]"
 			placeholder="Filter by keyword or by field"
 			contenteditable="true"
+			bind:this={searchInput}
 			bind:textContent={searchQuery}
 			use:maxLength={{ maxLength: TodoTabConstr.title.maxLength }}
 			use:truncateEditable

@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { TodoDisplayHeader, TodoDisplaySearchbar, TodoTab } from '$components/Todo';
+	import { TodoDisplaySearchbar, TodoTab } from '$components/Todo';
 	import { isUndefinedOrEmpty } from '$lib/helpers/jsUtils';
 	import { adjustSortOrder, sortBySortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoDisplayData, TodoTabData } from '$lib/models/TodoData';
 	import type { TodoTabDndData, TodoTabDndEvent } from '$lib/models/TodoDndData';
-	import { deleteTodoTab, postTodoDisplay, postTodoTab, postTodoTabs } from '$lib/prisma/apiCalls';
+	import { deleteTodoTab, postTodoTab, postTodoTabs } from '$lib/prisma/apiCalls';
 	import '$lib/styles/Scrollbar.css';
 	import { dndzone } from 'svelte-dnd-action';
 
@@ -41,10 +41,6 @@
 		const leftItems = dndTabs.filter((todoTab) => todoTab.id !== todoTabId);
 		dndTabs = adjustSortOrder(leftItems);
 	};
-	const postTodo = async () => {
-		await postTodoDisplay(data);
-		console.log(data);
-	};
 	//#endregion
 
 	//#region dnd
@@ -70,8 +66,8 @@
 
 	const getDisplayTodoTabs = (tabs: TodoTabDndData[]) => {
 		let tabCopy = [...tabs];
-		tabCopy = adjustSortOrder(tabs);
-		tabCopy = sortBySortOrder(tabs);
+		tabCopy = adjustSortOrder(tabCopy);
+		tabCopy = sortBySortOrder(tabCopy);
 
 		if (isUndefinedOrEmpty(searchQuery)) return tabCopy;
 
@@ -85,17 +81,15 @@
 	};
 	//#endregion
 
-	$: searchQuery, (dndTabs = dndTabs); //needed to cause rerender on searchQuery change
-	$: dndTabs = getDisplayTodoTabs(dndTabs);
+	$: searchQuery, (dndTabs = getDisplayTodoTabs(dndTabs));
 	$: data.todoTabs = dndTabs;
 </script>
 
 <div class="flex h-full w-full flex-col bg-accent">
-	<TodoDisplayHeader onStopTyping={postTodo} bind:title={data.title} />
 	<TodoDisplaySearchbar onAdd={addTodoTab} bind:searchQuery={searchQuery} />
 	<div
 		class="styled-scrollbar todotabs flex w-full flex-grow overflow-x-auto py-[8px] sm:px-[16px] md:px-[24px] lg:px-[32px]"
-		use:dndzone={{ items: dndTabs, type: 'display', dragDisabled: !isDragging }}
+		use:dndzone={{ items: dndTabs, type: 'display', dragDisabled: !isDragging, dropFromOthersDisabled: true }}
 		on:consider={handleDndConsider}
 		on:finalize={handleDndFinalize}
 	>

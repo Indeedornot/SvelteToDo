@@ -1,13 +1,14 @@
 import type { TodoDisplayData } from '$lib/models/TodoData';
-import { getTodoDisplay, postTodoDisplay } from '$lib/prisma/apiCalls';
+import { getTodoDisplays, postTodoDisplay } from '$lib/prisma/apiCalls';
 
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ fetch }) => {
-	let todos: TodoDisplayData = await getTodoDisplay();
+	let todos: TodoDisplayData[] = await getTodoDisplays();
 	if (!todos) {
-		todos = { id: -1, title: 'ProjectName', todoTabs: [] };
-		todos = await postTodoDisplay(todos);
+		let todo: TodoDisplayData = { id: -1, title: 'ProjectName', todoTabs: [], sortOrder: 0 };
+		todo = await postTodoDisplay(todo);
+		todos = [todo];
 	}
 
 	return {

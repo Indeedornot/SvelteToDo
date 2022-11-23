@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Minus } from '$components/Icons';
+	import { TabMore } from '$components/Todo';
 	import { maxLength, stopTyping, truncateEditable } from '$lib/helpers/contentEditable';
 	import { singleLine } from '$lib/helpers/contentEditable/singleLine';
 	import { TodoTabConstr } from '$lib/models/TodoDataConstr';
@@ -30,7 +30,7 @@
 	</div>
 	<div class="flex max-h-full w-full flex-shrink-0 flex-grow flex-row items-center px-[12px] text-font-primary">
 		<div
-			class="single-line content-editable mr-[4px] flex text-ellipsis rounded  pl-[4px] pr-[4px] transition-colors duration-200
+			class="single-line content-editable mr-[4px] flex truncate rounded pl-[4px] pr-[4px] transition-colors duration-200
 			ease-linear hover:bg-secondary focus:bg-secondary"
 			contenteditable="true"
 			use:stopTyping
@@ -49,13 +49,7 @@
 			>{itemCount}
 		</span>
 		<div class="ml-auto box-border flex h-[90%] w-[10%] items-center justify-center p-0.5">
-			<button
-				class="flex h-full w-full flex-none items-center justify-center rounded text-font-secondary outline-none transition-colors duration-200 ease-linear hover:bg-secondary"
-				type="button"
-				on:click={onDelete}
-			>
-				<Minus strokeWidth={4} />
-			</button>
+			<TabMore onDelete={onDelete} />
 		</div>
 	</div>
 </div>

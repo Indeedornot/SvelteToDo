@@ -39,6 +39,7 @@ model TodoDisplay {
   id        Int       @id @default(autoincrement())
   title     String
   todoTabs  TodoTab[]
+  sortOrder Int
   updatedAt DateTime  @updatedAt
   createdAt DateTime  @default(now())
 }

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import TodoDisplay from '$components/Todo/Display/TodoDisplay.svelte';
+	import TodoScreen from '$components/Todo/Screen/TodoScreen.svelte';
 	import type { TodoDisplayData } from '$lib/models/TodoData';
 	import { overrideItemIdKeyNameBeforeInitialisingDndZones } from 'svelte-dnd-action';
 
@@ -7,13 +7,9 @@
 
 	export let data: PageData;
 
-	let todoData: TodoDisplayData = data.todos;
+	let todoData: TodoDisplayData[] = data.todos;
 
 	overrideItemIdKeyNameBeforeInitialisingDndZones('dndId');
 </script>
 
-<div class="flex h-full w-full flex-col bg-primary text-font-secondary">
-	<div class="flex min-h-0 flex-grow bg-secondary">
-		<TodoDisplay bind:data={todoData} />
-	</div>
-</div>
+<TodoScreen data={data.todos} />

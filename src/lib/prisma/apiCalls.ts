@@ -8,8 +8,18 @@ const getIp = (relativePath: string): string => {
 
 //*Standard
 //**Display */
-export const getTodoDisplay = async (): Promise<TodoDisplayData> => {
-	const response: TodoDisplayApiData = await fetch(getIp('/api/todoDisplay'), {
+export const getTodoDisplays = async (): Promise<TodoDisplayData[]> => {
+	const response: TodoDisplayApiData[] = await fetch(getIp('/api/todoDisplay'), {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json'
+		}
+	}).then((response) => response.json());
+
+	return response as TodoDisplayData[];
+};
+export const getTodoDisplay = async (id: number): Promise<TodoDisplayData> => {
+	const response: TodoDisplayApiData = await fetch(getIp(`/api/todoDisplay/${id}`), {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json'
@@ -18,6 +28,7 @@ export const getTodoDisplay = async (): Promise<TodoDisplayData> => {
 
 	return response as TodoDisplayData;
 };
+
 export const postTodoDisplay = async (data: TodoDisplayApiData): Promise<TodoDisplayData> => {
 	const response: TodoDisplayApiData = await fetch(getIp('/api/todoDisplay'), {
 		method: 'POST',
@@ -28,6 +39,16 @@ export const postTodoDisplay = async (data: TodoDisplayApiData): Promise<TodoDis
 	}).then((response) => response.json());
 
 	return response as TodoDisplayData;
+};
+
+export const deleteTodoDisplay = async (id: number): Promise<void> => {
+	await fetch(getIp(`/api/todoDisplay`), {
+		method: 'DELETE',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ id })
+	});
 };
 
 //**Tabs */

@@ -2,6 +2,7 @@ export type TodoDisplayData = {
 	id: number;
 	title: string;
 	todoTabs: TodoTabData[];
+	sortOrder: number;
 	createdAt?: Date;
 	updatedAt?: Date;
 };
