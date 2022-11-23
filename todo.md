@@ -1,5 +1,10 @@
 Todos:
 
+<!-- 
+#: Add modal for server desync
+might use a store
+-->
+
 <!--
 #: Add gracefull error handling for validation fails
 - use .then and if fails simply don't assign it - for add
@@ -7,11 +12,11 @@ Todos:
 - for update leave item the same
 -->
 
-<!--#: Add MoreDropdown to TodoScreen -->
-
 <!--#: Look at filtering once again -->
 
 <!--#: Add animations for add and remove -->
+
+Not relevant anymore:
 <!--#: Rewrite animations in css -->
 
 In Progress:
@@ -24,17 +29,18 @@ run filter on items on both display and tabs - but we are using .some() so we mi
 -->
 <!--#: Use Rem - gotta read more -->
 <!--#: Rewrite stories -->
-<!--#: Implement multiple TodoDisplays -->
 <!--#: Work on scalability more -->
 <!--#: Export styles in some way -->
+
+
+Done:
 <!--
     #: Fix bug when dragndropping singleline multiline
     Prolly need to send to a parent whether it is collapsed or not
     And maybe will have to update prisma model
 -->
-
-Done:
-
+<!--#: Implement multiple TodoDisplays -->
+<!--#: Add MoreDropdown to TodoScreen -->
 <!--#: Add 3 dots menu for extra actions - take note, take out status showing out of the statusdropdown otherwise the position relative messes stuff -->
 <!--#: TodoItem: Handle multiple lines -->
 <!--#: Add to multiline TodoItem content a handle to add single line -->

@@ -4,7 +4,7 @@
 	import { adjustSortOrder, sortBySortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoDisplayData, TodoTabData } from '$lib/models/TodoData';
 	import type { TodoTabDndData, TodoTabDndEvent } from '$lib/models/TodoDndData';
-	import { deleteTodoTab, postTodoTab, postTodoTabs } from '$lib/prisma/apiCalls';
+	import { deleteTodoTab, postTodoTab } from '$lib/prisma/apiCalls';
 	import '$lib/styles/Scrollbar.css';
 	import { dndzone } from 'svelte-dnd-action';
 
@@ -28,18 +28,22 @@
 			sortOrder: data.todoTabs.length,
 			todoItems: []
 		};
-		const todo = await postTodoTab(newTodoTab);
-		const dndTodo: TodoTabDndData = {
-			...todo,
-			dndId: `tab-${todo.id}`,
-			hidden: false
-		};
-		dndTabs = [...dndTabs, dndTodo];
+		postTodoTab(newTodoTab).then((data) => {
+			let dndTab: TodoTabDndData = {
+				...data,
+				dndId: `tab-${data.id}`,
+				hidden: false
+			};
+			dndTabs = [dndTab, ...dndTabs];
+		});
 	};
 	const delTodoTab = (todoTabId: number) => {
-		deleteTodoTab(todoTabId);
-		const leftItems = dndTabs.filter((todoTab) => todoTab.id !== todoTabId);
-		dndTabs = adjustSortOrder(leftItems);
+		deleteTodoTab(todoTabId)
+			.then(() => {
+				const leftItems = dndTabs.filter((todoTab) => todoTab.id !== todoTabId);
+				dndTabs = adjustSortOrder(leftItems);
+			})
+			.catch();
 	};
 	//#endregion
 
@@ -50,14 +54,18 @@
 		dndTabs = items;
 	};
 
-	const handleDndFinalize = async (e: TodoTabDndEvent) => {
+	const handleDndFinalize = (e: TodoTabDndEvent) => {
 		let items: TodoTabDndData[] = e.detail.items;
 
 		let changedItem = items.findIndex((item, index) => item.sortOrder !== index);
 		if (changedItem !== -1) {
 			items = adjustSortOrder(items);
-			// items[changedItem].todoDisplayId = id;
-			await postTodoTabs(items.slice(changedItem, items.length));
+			// items[changedItem].todoDisplayId = id; - we dont support moving between displays rn
+			items.slice(changedItem, items.length).forEach(async (item) => {
+				await postTodoTab(item).catch(() => {
+					item.hidden = true; //if error, hide item till next refresh
+				});
+			});
 		}
 
 		dndTabs = items;

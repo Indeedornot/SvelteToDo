@@ -14,8 +14,8 @@
 	export let hidden: boolean = false;
 	let multiLine: boolean = false;
 
-	const postTodo = async () => {
-		await postTodoItem(data);
+	const postTodo = () => {
+		postTodoItem(data).catch();
 	};
 
 	const onDrag = (e: Event) => {
