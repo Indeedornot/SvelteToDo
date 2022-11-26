@@ -3,6 +3,7 @@
 	import { StatusDropdown } from '$components/Todo';
 	import { ItemMore } from '$components/Todo';
 	import { maxLength, stopTyping, truncateEditable } from '$lib/helpers/contentEditable';
+	import { isUndefined } from '$lib/helpers/jsUtils';
 	import type { TodoItemData } from '$lib/models/TodoData';
 	import { TodoItemConstr } from '$lib/models/TodoDataConstr';
 	import { postTodoItem } from '$lib/prisma/apiCalls';
@@ -10,11 +11,11 @@
 	import '$lib/styles/ContentEditable.css';
 
 	export let data: TodoItemData;
+	if (isUndefined(data.hidden)) data.hidden = false;
 	let startData: TodoItemData = data;
 
 	export let onDelete: (id: number) => void;
 	export let isDragged: boolean = false;
-	export let hidden: boolean = false;
 	let multiLine: boolean = false;
 
 	const postTodo = () => {
@@ -49,7 +50,7 @@
 	}
 </script>
 
-<div class:hidden class="w-full rounded-md border border-border bg-secondary">
+<div class:hidden={data.hidden} class="w-full rounded-md border border-border bg-secondary">
 	<div class="box-border flex h-[8px] flex-none items-end justify-center">
 		<div
 			class="box-border flex h-full w-4/12 flex-none cursor-grab rounded-b bg-accent hover:bg-primary"

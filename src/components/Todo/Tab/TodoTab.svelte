@@ -8,25 +8,19 @@
 	import { TodoItemHistory, TodoTabHistory } from '$lib/stores';
 	import '$lib/styles/ContentEditable.css';
 	import '$lib/styles/Scrollbar.css';
-	import { dndzone } from 'svelte-dnd-action';
+
+	import TodoTabDnd from './TodoTabDnd.svelte';
 
 	export let data: TodoTabData;
+	if (isUndefined(data.hidden)) data.hidden = false;
+
 	let startData: TodoTabData = data;
 
 	export let onDelete: (id: number) => void;
 	export let searchQuery: string = '';
-	export let hidden = false;
 	export let isDragged = false;
-	let isDragging = false;
-	let dndItems: TodoItemDndData[] = data.todoItems.map((item) => {
-		return {
-			...item,
-			dndId: `item-${item.id}`,
-			hidden: false
-		};
-	});
 
-	let visibleItemsCount = dndItems.length;
+	let visibleItemsCount = data.todoItems.length;
 
 	//#region crud
 	const addTodoItem = async () => {
@@ -35,20 +29,15 @@
 			title: 'New Todo Item',
 			status: 'Draft',
 			todoTabId: data.id,
-			sortOrder: dndItems.length,
+			sortOrder: data.todoItems.length,
 			collapsed: false
 			//*add to the end
 		};
 
 		postTodoItem(todo)
-			.then((data) => {
-				TodoItemHistory.addAdded(data);
-				let dndTodo: TodoItemDndData = {
-					...data,
-					dndId: `item-${data.id}`,
-					hidden: false
-				};
-				dndItems = [dndTodo, ...dndItems];
+			.then((newItem) => {
+				TodoItemHistory.addAdded(newItem);
+				data.todoItems = [newItem, ...data.todoItems];
 			})
 			.catch();
 	};
@@ -56,11 +45,11 @@
 	const delTodoItem = (id: number) => {
 		deleteTodoItem(id)
 			.then(() => {
-				const index = dndItems.findIndex((item) => item.id === id);
-				TodoItemHistory.addRemoved(dndItems[index]);
+				const index = data.todoItems.findIndex((item) => item.id === id);
+				TodoItemHistory.addRemoved(data.todoItems[index]);
 
-				dndItems.splice(index, 1);
-				dndItems = adjustSortOrder(dndItems);
+				data.todoItems.splice(index, 1);
+				data.todoItems = adjustSortOrder(data.todoItems);
 			})
 			.catch();
 	};
@@ -79,40 +68,7 @@
 	};
 	//#endregion
 
-	//#region dnd
-	//runs on drag in and drag out
-	const handleDndConsider = (e: TodoItemDndEvent) => {
-		const items: TodoItemDndData[] = e.detail.items;
-
-		dndItems = adjustSortOrder(items);
-	};
-
-	const handleDndFinalize = async (e: TodoItemDndEvent) => {
-		let items: TodoItemDndData[] = e.detail.items;
-
-		let newItem = items.filter((item) => item.todoTabId !== data.id)[0];
-		if (!isUndefined(newItem)) {
-			TodoItemHistory.addChanged({ old: newItem, new: { ...newItem, todoTabId: data.id } });
-			newItem.todoTabId = data.id;
-			await postTodoItem(newItem);
-		}
-
-		//first incorect sortOrder or Item (edge case)
-		let changedItem = items.findIndex((item, index) => item.sortOrder !== index);
-		if (changedItem !== -1) {
-			items = adjustSortOrder(items);
-			for (let item of items.slice(changedItem, items.length)) {
-				await postTodoItem(item).catch(() => {
-					item.hidden = true; //for now let's hide invalid items until next refresh
-				});
-			}
-		}
-
-		dndItems = items;
-		isDragging = false;
-	};
-
-	const getDisplayTodoItems = (items: TodoItemDndData[]) => {
+	const getDisplayTodoItems = (items: TodoItemData[]) => {
 		let itemsCopy = [...items];
 		itemsCopy = adjustSortOrder(itemsCopy);
 		itemsCopy = sortBySortOrder(itemsCopy);
@@ -134,15 +90,12 @@
 
 		return itemsCopy;
 	};
-	//#endregion
 
-	$: searchQuery, (dndItems = dndItems); //needed to cause rerender on searchQuery change
-	$: dndItems = getDisplayTodoItems(dndItems);
-	$: data.todoItems = dndItems; //needed for parent to update
+	$: searchQuery, (data.todoItems = getDisplayTodoItems(data.todoItems));
 </script>
 
 <div
-	class:hidden
+	class:hidden={data.hidden}
 	class="flex h-full flex-none flex-col rounded-md border border-border bg-primary sm:w-full xs:w-[350px]"
 >
 	<TodoTabHeader
@@ -152,17 +105,7 @@
 		bind:isDragged={isDragged}
 		itemCount={visibleItemsCount}
 	/>
-	<div />
-	<div
-		class="styled-scrollbar flex flex-shrink flex-grow flex-col overflow-auto px-[10px] pt-[2px] child:mb-[8px]"
-		use:dndzone={{ items: dndItems, type: 'tab', dragDisabled: !isDragging }}
-		on:consider={handleDndConsider}
-		on:finalize={handleDndFinalize}
-	>
-		{#each dndItems as todoItem (todoItem.dndId)}
-			<TodoItem hidden={todoItem.hidden} bind:data={todoItem} onDelete={delTodoItem} bind:isDragged={isDragging} />
-		{/each}
-	</div>
+	<TodoTabDnd delTodoItem={delTodoItem} bind:todoItems={data.todoItems} todoTabId={data.id} />
 
 	<TodoTabFooter onAdd={addTodoItem} />
 </div>

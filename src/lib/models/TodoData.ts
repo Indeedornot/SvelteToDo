@@ -15,6 +15,7 @@ export type TodoTabData = {
 	todoItems: TodoItemData[];
 	createdAt?: Date;
 	updatedAt?: Date;
+	hidden?: boolean;
 };
 
 export type TodoItemData = {
@@ -26,4 +27,5 @@ export type TodoItemData = {
 	createdAt?: Date;
 	updatedAt?: Date;
 	collapsed: boolean;
+	hidden?: boolean;
 };

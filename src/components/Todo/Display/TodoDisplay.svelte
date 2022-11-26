@@ -3,89 +3,54 @@
 	import { isUndefinedOrEmpty } from '$lib/helpers/jsUtils';
 	import { adjustSortOrder, sortBySortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoDisplayData, TodoTabData } from '$lib/models/TodoData';
-	import type { TodoTabDndData, TodoTabDndEvent } from '$lib/models/TodoDndData';
 	import { deleteTodoTab, postTodoTab } from '$lib/prisma/apiCalls';
 	import { TodoTabHistory } from '$lib/stores';
 	import '$lib/styles/Scrollbar.css';
-	import { dndzone } from 'svelte-dnd-action';
+
+	import TodoDisplayDnd from './TodoDisplayDnd.svelte';
 
 	export let data: TodoDisplayData;
 	export let isDragging = false;
 	let searchQuery: string;
-	let dndTabs: TodoTabDndData[] = data.todoTabs.map((item) => {
-		return {
-			...item,
-			dndId: `tab-${item.id}`,
-			hidden: false
-		};
-	});
 
 	//#region crud
 	const addTodoTab = async () => {
-		const newTodoTab: TodoTabData = {
+		const todo: TodoTabData = {
 			id: -1,
 			title: 'New Tab',
 			todoDisplayId: data.id,
 			sortOrder: data.todoTabs.length,
 			todoItems: []
 		};
-		postTodoTab(newTodoTab).then((data) => {
-			TodoTabHistory.addAdded(data);
-
-			let dndTab: TodoTabDndData = {
-				...data,
-				dndId: `tab-${data.id}`,
-				hidden: false
-			};
-			dndTabs = [dndTab, ...dndTabs];
+		postTodoTab(todo).then((newTab) => {
+			TodoTabHistory.addAdded(newTab);
+			data.todoTabs = [newTab, ...data.todoTabs];
 		});
 	};
 	const delTodoTab = (todoTabId: number) => {
 		deleteTodoTab(todoTabId)
 			.then(() => {
-				const index = dndTabs.findIndex((item) => item.id === todoTabId);
-				console.log('index', index);
-				TodoTabHistory.addRemoved(dndTabs[index]);
+				const index = data.todoTabs.findIndex((item) => item.id === todoTabId);
+				TodoTabHistory.addRemoved(data.todoTabs[index]);
 
-				dndTabs.splice(index, 1);
-				dndTabs = adjustSortOrder(dndTabs);
+				data.todoTabs.splice(index, 1);
+				data.todoTabs = adjustSortOrder(data.todoTabs);
 			})
 			.catch();
 	};
 	//#endregion
 
-	//#region dnd
-	//runs on drag in and drag out
-	const handleDndConsider = (e: TodoTabDndEvent) => {
-		let items: TodoTabDndData[] = e.detail.items;
-		dndTabs = adjustSortOrder(items);
-	};
-
-	const handleDndFinalize = async (e: TodoTabDndEvent) => {
-		let items: TodoTabDndData[] = e.detail.items;
-
-		let changedItem = items.findIndex((item, index) => item.sortOrder !== index);
-		if (changedItem !== -1) {
-			items = adjustSortOrder(items);
-			// items[changedItem].todoDisplayId = id; - we dont support moving between displays rn
-
-			for (let item of items.slice(changedItem, items.length)) {
-				await postTodoTab(item).catch(() => {
-					item.hidden = true; //if error, hide item till next refresh
-				});
-			}
-		}
-
-		dndTabs = items;
-		isDragging = false;
-	};
-
-	const getDisplayTodoTabs = (tabs: TodoTabDndData[]) => {
+	const getDisplayTodoTabs = (tabs: TodoTabData[]) => {
 		let tabCopy = [...tabs];
 		tabCopy = adjustSortOrder(tabCopy);
 		tabCopy = sortBySortOrder(tabCopy);
 
-		if (isUndefinedOrEmpty(searchQuery)) return tabCopy;
+		if (isUndefinedOrEmpty(searchQuery)) {
+			tabCopy.forEach((tab) => {
+				tab.hidden = false;
+			});
+			return tabCopy;
+		}
 
 		tabCopy.forEach((tab) => {
 			tab.hidden =
@@ -95,34 +60,16 @@
 
 		return tabCopy;
 	};
-	//#endregion
 
-	$: searchQuery, (dndTabs = getDisplayTodoTabs(dndTabs));
-	$: data.todoTabs = dndTabs;
+	$: searchQuery, (data.todoTabs = getDisplayTodoTabs(data.todoTabs));
 </script>
 
 <div class="flex h-full w-full flex-col bg-accent">
 	<TodoDisplaySearchbar onAdd={addTodoTab} bind:searchQuery={searchQuery} />
-	<div
-		class="styled-scrollbar todotabs flex w-full flex-grow overflow-x-auto py-[8px] sm:px-[16px] md:px-[24px] lg:px-[32px]"
-		use:dndzone={{ items: dndTabs, type: 'display', dragDisabled: !isDragging, dropFromOthersDisabled: true }}
-		on:consider={handleDndConsider}
-		on:finalize={handleDndFinalize}
-	>
-		{#each dndTabs as todo (todo.dndId)}
-			<TodoTab
-				hidden={todo.hidden}
-				onDelete={delTodoTab}
-				bind:data={todo}
-				bind:searchQuery={searchQuery}
-				bind:isDragged={isDragging}
-			/>
-		{/each}
-	</div>
+	<TodoDisplayDnd
+		delTodoTab={delTodoTab}
+		searchQuery={searchQuery}
+		bind:todoTabs={data.todoTabs}
+		bind:isDragging={isDragging}
+	/>
 </div>
-
-<style>
-	.todotabs > :global(*:not(:last-child)) {
-		margin-right: 8px;
-	}
-</style>
