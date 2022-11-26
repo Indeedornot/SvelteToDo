@@ -22,13 +22,14 @@ const config = {
 		experimental: {
 			inspector: {
 				// change shortcut
-				toggleKeyCombo: 'ctrl-spacebar',
+				toggleKeyCombo: 'control-spacebar',
 				// hold and release key to toggle inspector mode
 				// holdMode: true,
 				// show or hide the inspector option
 				showToggleButton: 'always',
 				// inspector position
-				toggleButtonPos: 'top-right'
+				toggleButtonPos: 'top-right',
+				holdMode: true
 			}
 		}
 	}

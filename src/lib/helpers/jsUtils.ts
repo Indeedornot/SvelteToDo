@@ -26,6 +26,10 @@ export const isObject = (x: unknown): x is object => {
 	return typeof x === 'object' && x !== null;
 };
 
+export const capitalizeStart = (str: string) => {
+	return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
 /**
  *
  * @param x Request

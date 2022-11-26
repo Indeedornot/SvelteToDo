@@ -5,6 +5,7 @@
 	import type { TodoDisplayData, TodoTabData } from '$lib/models/TodoData';
 	import type { TodoTabDndData, TodoTabDndEvent } from '$lib/models/TodoDndData';
 	import { deleteTodoTab, postTodoTab } from '$lib/prisma/apiCalls';
+	import { TodoTabHistory } from '$lib/stores';
 	import '$lib/styles/Scrollbar.css';
 	import { dndzone } from 'svelte-dnd-action';
 
@@ -29,6 +30,8 @@
 			todoItems: []
 		};
 		postTodoTab(newTodoTab).then((data) => {
+			TodoTabHistory.addAdded(data);
+
 			let dndTab: TodoTabDndData = {
 				...data,
 				dndId: `tab-${data.id}`,
@@ -40,8 +43,12 @@
 	const delTodoTab = (todoTabId: number) => {
 		deleteTodoTab(todoTabId)
 			.then(() => {
-				const leftItems = dndTabs.filter((todoTab) => todoTab.id !== todoTabId);
-				dndTabs = adjustSortOrder(leftItems);
+				const index = dndTabs.findIndex((item) => item.id === todoTabId);
+				console.log('index', index);
+				TodoTabHistory.addRemoved(dndTabs[index]);
+
+				dndTabs.splice(index, 1);
+				dndTabs = adjustSortOrder(dndTabs);
 			})
 			.catch();
 	};
@@ -51,21 +58,22 @@
 	//runs on drag in and drag out
 	const handleDndConsider = (e: TodoTabDndEvent) => {
 		let items: TodoTabDndData[] = e.detail.items;
-		dndTabs = items;
+		dndTabs = adjustSortOrder(items);
 	};
 
-	const handleDndFinalize = (e: TodoTabDndEvent) => {
+	const handleDndFinalize = async (e: TodoTabDndEvent) => {
 		let items: TodoTabDndData[] = e.detail.items;
 
 		let changedItem = items.findIndex((item, index) => item.sortOrder !== index);
 		if (changedItem !== -1) {
 			items = adjustSortOrder(items);
 			// items[changedItem].todoDisplayId = id; - we dont support moving between displays rn
-			items.slice(changedItem, items.length).forEach(async (item) => {
+
+			for (let item of items.slice(changedItem, items.length)) {
 				await postTodoTab(item).catch(() => {
 					item.hidden = true; //if error, hide item till next refresh
 				});
-			});
+			}
 		}
 
 		dndTabs = items;

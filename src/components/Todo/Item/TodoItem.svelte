@@ -6,16 +6,24 @@
 	import type { TodoItemData } from '$lib/models/TodoData';
 	import { TodoItemConstr } from '$lib/models/TodoDataConstr';
 	import { postTodoItem } from '$lib/prisma/apiCalls';
+	import { TodoItemHistory } from '$lib/stores';
 	import '$lib/styles/ContentEditable.css';
 
 	export let data: TodoItemData;
+	let startData: TodoItemData = data;
+
 	export let onDelete: (id: number) => void;
 	export let isDragged: boolean = false;
 	export let hidden: boolean = false;
 	let multiLine: boolean = false;
 
 	const postTodo = () => {
-		postTodoItem(data).catch();
+		postTodoItem(data)
+			.then((data) => {
+				TodoItemHistory.addChanged({ new: data, old: startData });
+				startData = data;
+			})
+			.catch();
 	};
 
 	const onDrag = (e: Event) => {

@@ -12,3 +12,4 @@ export { Maximize as Expand } from 'lucide-svelte';
 export { MoreHorizontal as More } from 'lucide-svelte';
 export { X as Delete } from 'lucide-svelte';
 export { BarChart3 as Project } from 'lucide-svelte';
+export { History } from 'lucide-svelte';

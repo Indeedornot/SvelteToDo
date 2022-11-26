@@ -4,14 +4,17 @@
 	import { adjustSortOrder, sortBySortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoItemData, TodoTabData } from '$lib/models/TodoData';
 	import type { TodoItemDndData, TodoItemDndEvent } from '$lib/models/TodoDndData';
-	import { deleteTodoItem, postTodoItem, postTodoItems, postTodoTab } from '$lib/prisma/apiCalls';
+	import { deleteTodoItem, postTodoItem, postTodoTab } from '$lib/prisma/apiCalls';
+	import { TodoItemHistory, TodoTabHistory } from '$lib/stores';
 	import '$lib/styles/ContentEditable.css';
 	import '$lib/styles/Scrollbar.css';
 	import { dndzone } from 'svelte-dnd-action';
 
 	export let data: TodoTabData;
+	let startData: TodoTabData = data;
+
 	export let onDelete: (id: number) => void;
-	export let searchQuery: string;
+	export let searchQuery: string = '';
 	export let hidden = false;
 	export let isDragged = false;
 	let isDragging = false;
@@ -22,6 +25,7 @@
 			hidden: false
 		};
 	});
+
 	let visibleItemsCount = dndItems.length;
 
 	//#region crud
@@ -36,23 +40,42 @@
 			//*add to the end
 		};
 
-		todo = await postTodoItem(todo);
-		let dndTodo: TodoItemDndData = {
-			...todo,
-			dndId: `item-${todo.id}`,
-			hidden: false
-		};
-		dndItems = [dndTodo, ...dndItems];
+		postTodoItem(todo)
+			.then((data) => {
+				TodoItemHistory.addAdded(data);
+				let dndTodo: TodoItemDndData = {
+					...data,
+					dndId: `item-${data.id}`,
+					hidden: false
+				};
+				dndItems = [dndTodo, ...dndItems];
+			})
+			.catch();
 	};
 
 	const delTodoItem = (id: number) => {
-		deleteTodoItem(id);
-		const leftItems = dndItems.filter((item) => item.id !== id);
-		dndItems = adjustSortOrder(leftItems);
+		deleteTodoItem(id)
+			.then(() => {
+				const index = dndItems.findIndex((item) => item.id === id);
+				TodoItemHistory.addRemoved(dndItems[index]);
+
+				dndItems.splice(index, 1);
+				dndItems = adjustSortOrder(dndItems);
+			})
+			.catch();
 	};
 
 	const postTodo = async () => {
-		await postTodoTab(data);
+		postTodoTab(data)
+			.then((data) => {
+				TodoTabHistory.addChanged({ old: startData, new: data });
+				startData = data;
+			})
+			.catch(); //probably will add a modal here
+	};
+
+	const delSelf = () => {
+		onDelete(data.id);
 	};
 	//#endregion
 
@@ -69,6 +92,7 @@
 
 		let newItem = items.filter((item) => item.todoTabId !== data.id)[0];
 		if (!isUndefined(newItem)) {
+			TodoItemHistory.addChanged({ old: newItem, new: { ...newItem, todoTabId: data.id } });
 			newItem.todoTabId = data.id;
 			await postTodoItem(newItem);
 		}
@@ -77,7 +101,11 @@
 		let changedItem = items.findIndex((item, index) => item.sortOrder !== index);
 		if (changedItem !== -1) {
 			items = adjustSortOrder(items);
-			await postTodoItems(items.slice(changedItem, items.length));
+			for (let item of items.slice(changedItem, items.length)) {
+				await postTodoItem(item).catch(() => {
+					item.hidden = true; //for now let's hide invalid items until next refresh
+				});
+			}
 		}
 
 		dndItems = items;
@@ -118,7 +146,7 @@
 	class="flex h-full flex-none flex-col rounded-md border border-border bg-primary sm:w-full xs:w-[350px]"
 >
 	<TodoTabHeader
-		onDelete={() => onDelete(data.id)}
+		onDelete={delSelf}
 		onStopTyping={postTodo}
 		bind:title={data.title}
 		bind:isDragged={isDragged}

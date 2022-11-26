@@ -14,3 +14,5 @@ export { default as ItemMore } from './Item/MoreDropdown.svelte';
 export { default as TodoScreen } from './Screen/TodoScreen.svelte';
 export { default as TodoScreenTab } from './Screen/TodoScreenTab.svelte';
 export { default as ScreenMore } from './Screen/MoreDropdown.svelte';
+
+export { default as Changelog } from './Changelog/ChangelogDropdown.svelte';

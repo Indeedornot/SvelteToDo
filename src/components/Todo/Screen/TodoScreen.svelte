@@ -4,16 +4,24 @@
 	import { adjustSortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoDisplayData } from '$lib/models/TodoData';
 	import { deleteTodoDisplay, postTodoDisplay } from '$lib/prisma/apiCalls';
+	import { TodoDisplayHistory } from '$lib/stores';
 
+	import { Changelog } from '..';
 	import TodoScreenTab from './TodoScreenTab.svelte';
 
 	export let data: TodoDisplayData[];
 	let index = 0;
 
 	const delTodoDisplay = (id: number) => {
-		deleteTodoDisplay(id);
-		const leftItems = data.filter((todoDisplay) => todoDisplay.id !== id);
-		data = adjustSortOrder(leftItems);
+		deleteTodoDisplay(id)
+			.then(() => {
+				const index = data.findIndex((item) => item.id === id);
+				TodoDisplayHistory.addRemoved(data[index]);
+
+				data.splice(index, 1);
+				data = adjustSortOrder(data);
+			})
+			.catch();
 	};
 
 	const addTodoDisplay = async () => {
@@ -23,8 +31,12 @@
 			todoTabs: [],
 			sortOrder: data.length
 		};
-		const todo = await postTodoDisplay(newTodoDisplay);
-		data = [...data, todo];
+		postTodoDisplay(newTodoDisplay)
+			.then((todo) => {
+				TodoDisplayHistory.addAdded(todo);
+				data = [...data, todo];
+			})
+			.catch();
 	};
 
 	const changeIndex = (newIndex: number) => {
@@ -35,8 +47,15 @@
 </script>
 
 <div class="m-0 flex h-full w-full flex-none flex-col bg-primary p-0 text-font-secondary">
-	<div class="scrollbar styled-scrollbar flex h-[104px] w-full flex-none overflow-x-auto bg-primary">
-		<div class="screenTabs mt-auto flex h-[34px] flex-none flex-row text-[14px] sm:px-[16px] md:px-[24px] lg:px-[32px]">
+	<div class="flex h-[104px] w-full flex-none flex-col bg-primary ">
+		<div class="flex h-[70px] w-full flex-none items-center sm:px-[16px] md:px-[24px] lg:px-[32px]">
+			<div class="relative ml-auto flex flex-none">
+				<Changelog />
+			</div>
+		</div>
+		<div
+			class="screenTabs styled-scrollbar flex h-[34px] w-full flex-none flex-row overflow-x-auto text-[14px] sm:px-[16px] md:px-[24px] lg:px-[32px]"
+		>
 			{#each data as dataDisplay (dataDisplay.id)}
 				<TodoScreenTab
 					data={dataDisplay}

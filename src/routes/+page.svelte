@@ -12,4 +12,6 @@
 	overrideItemIdKeyNameBeforeInitialisingDndZones('dndId');
 </script>
 
-<TodoScreen data={data.todos} />
+<div class="h-full w-full bg-primary">
+	<TodoScreen data={data.todos} />
+</div>

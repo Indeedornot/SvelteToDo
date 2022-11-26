@@ -5,21 +5,19 @@ Todos:
 might use a store
 -->
 
+<!--#: Look at filtering once again -->
+
+Not considered anymore:
+<!--#: Add animations for add and remove -->
+<!--#: Rewrite animations in css -->
+
+In Progress:
 <!--
 #: Add gracefull error handling for validation fails
 - use .then and if fails simply don't assign it - for add
 - for delete simply remove the item from list only
 - for update leave item the same
 -->
-
-<!--#: Look at filtering once again -->
-
-<!--#: Add animations for add and remove -->
-
-Not relevant anymore:
-<!--#: Rewrite animations in css -->
-
-In Progress:
 
 BackBurner:
 
@@ -34,6 +32,7 @@ run filter on items on both display and tabs - but we are using .some() so we mi
 
 
 Done:
+<!-- #: Add TodoHistory -->
 <!--
     #: Fix bug when dragndropping singleline multiline
     Prolly need to send to a parent whether it is collapsed or not

@@ -44,8 +44,8 @@
 		/>
 
 		<span
-			class="relative mx-1 flex w-fit items-center justify-center truncate rounded-full
-			bg-secondary py-[2px] px-[4px] text-xs font-semibold leading-tight text-font-secondary first:ml-0"
+			class="mx-1 flex w-fit items-center justify-center truncate rounded-full bg-secondary
+			py-[2px] px-[4px] text-xs font-semibold leading-tight text-font-secondary"
 			>{itemCount}
 		</span>
 		<div class="ml-auto box-border flex h-[90%] w-[10%] items-center justify-center p-0.5">

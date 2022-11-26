@@ -48,6 +48,6 @@ export const isValidStatus = (status: string) => {
 	return typeof status === 'string';
 };
 
-export const error = (code: number, error: string) => {
+export const error = (code: number, error?: string) => {
 	return new Response(error, { status: code });
 };
