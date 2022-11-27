@@ -78,7 +78,7 @@
 					{:else if historyItem.historyType === 'tab'}
 						<TodoChangelog title={'Tab'} history={historyItem} keys={['title']} />
 					{:else}
-						<TodoChangelog title={'Item'} history={historyItem} keys={['title', 'status']} />
+						<TodoChangelog title={'Item'} history={historyItem} keys={['title', 'status', 'collapsed']} />
 					{/if}
 				{/each}
 			</div>

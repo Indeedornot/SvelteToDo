@@ -2,7 +2,7 @@
 	import { TodoTab } from '$components/Todo';
 	import { postTodoTab } from '$lib/apiCalls/TodoActions';
 	import { isUndefined } from '$lib/helpers/jsUtils';
-	import { adjustSortOrder } from '$lib/helpers/sortOrder';
+	import { adjustSortOrder, sortBySortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoTabData } from '$lib/models/TodoData';
 	import type { TodoTabDndData, TodoTabDndEvent } from '$lib/models/TodoDndData';
 	import '$lib/styles/Scrollbar.css';

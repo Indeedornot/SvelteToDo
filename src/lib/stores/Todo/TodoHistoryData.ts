@@ -1,3 +1,5 @@
+import type { TodoDisplayData, TodoItemData, TodoTabData } from '$lib/models/TodoData';
+
 //#region Base
 type TodoHistoryBase = {
 	date: Date;
@@ -22,233 +24,26 @@ type TodoHistoryRemove<T> = TodoHistoryBase & {
 export type TodoHistoryAll<T> = TodoHistoryChange<T> | TodoHistoryAdd<T> | TodoHistoryRemove<T>;
 //#endregion
 
-//DISPLAY
-export type TodoDisplayHistoryData = {
-	id: number;
-	title: string;
-};
-export type TodoDisplayChange = TodoHistoryAll<TodoDisplayHistoryData>;
+// //DISPLAY
+// export type TodoDisplayHistoryData = {
+// 	id: number;
+// 	title: string;
+// };
+export type TodoDisplayChange = TodoHistoryAll<TodoDisplayData>;
 
-//ITEM
-export type TodoItemHistoryData = {
-	id: number;
-	title: string;
-	status: string;
-	todoTabId: number;
-};
-export type TodoItemChange = TodoHistoryAll<TodoItemHistoryData>;
+// //ITEM
+// export type TodoItemHistoryData = {
+// 	id: number;
+// 	title: string;
+// 	status: string;
+// 	todoTabId: number;
+// };
+export type TodoItemChange = TodoHistoryAll<TodoItemData>;
 
-//TAB
-export type TodoTabHistoryData = {
-	id: number;
-	title: string;
-	todoDisplayId: number;
-};
-export type TodoTabChange = TodoHistoryAll<TodoTabHistoryData>;
-
-//SAMPLE
-type TodoHistorySample<T> = {
-	add: TodoHistoryAdd<T>;
-	remove: TodoHistoryRemove<T>;
-	change: TodoHistoryChange<T>[];
-};
-
-const TodoItemHistorySample: TodoHistorySample<TodoItemHistoryData> = {
-	change: [
-		// unchanged status
-		{
-			old: {
-				id: 1,
-				title: 'test',
-				status: 'test',
-				todoTabId: 1
-			},
-			new: {
-				id: 1,
-				title: 'testNew',
-				status: 'test',
-				todoTabId: 1
-			},
-			type: 'changed',
-			date: new Date()
-		},
-		// unchanged title
-		{
-			old: {
-				id: 1,
-				title: 'test',
-				status: 'test',
-				todoTabId: 1
-			},
-			new: {
-				id: 1,
-				title: 'test',
-				status: 'testNew',
-				todoTabId: 1
-			},
-			type: 'changed',
-			date: new Date()
-		},
-
-		// changed all
-		{
-			old: {
-				id: 1,
-				title: 'test',
-				status: 'test',
-				todoTabId: 1
-			},
-			new: {
-				id: 1,
-				title: 'testNew',
-				status: 'testNew',
-				todoTabId: 1
-			},
-			type: 'changed',
-			date: new Date()
-		},
-		// unchanged
-		{
-			old: {
-				id: 1,
-				title: 'test',
-				status: 'test',
-				todoTabId: 1
-			},
-			new: {
-				id: 1,
-				title: 'test',
-				status: 'test',
-				todoTabId: 1
-			},
-			type: 'changed',
-			date: new Date()
-		}
-	],
-	// removed
-	remove: {
-		old: {
-			id: 1,
-			title: 'test',
-			status: 'test',
-			todoTabId: 1
-		},
-		type: 'removed',
-		date: new Date()
-	},
-	// added
-	add: {
-		new: {
-			id: 1,
-			title: 'testNew',
-			status: 'testNew',
-			todoTabId: 1
-		},
-		type: 'added',
-		date: new Date()
-	}
-};
-
-const TodoTabHistorySample: TodoHistorySample<TodoTabHistoryData> = {
-	change: [
-		// changed
-		{
-			old: {
-				id: 1,
-				title: 'test',
-				todoDisplayId: 1
-			},
-			new: {
-				id: 1,
-				title: 'testNew',
-				todoDisplayId: 1
-			},
-			type: 'changed',
-			date: new Date()
-		},
-		//unchanged
-		{
-			old: {
-				id: 1,
-				title: 'test',
-				todoDisplayId: 1
-			},
-			new: {
-				id: 1,
-				title: 'test',
-				todoDisplayId: 1
-			},
-			type: 'changed',
-			date: new Date()
-		}
-	],
-	// removed
-	remove: {
-		old: {
-			id: 1,
-			title: 'test',
-			todoDisplayId: 1
-		},
-		type: 'removed',
-		date: new Date()
-	},
-	// added
-	add: {
-		new: {
-			id: 1,
-			title: 'testNew',
-			todoDisplayId: 1
-		},
-		type: 'added',
-		date: new Date()
-	}
-};
-
-const TodoDisplayHistorySample: TodoHistorySample<TodoDisplayHistoryData> = {
-	change: [
-		// changed
-		{
-			old: {
-				id: 1,
-				title: 'test'
-			},
-			new: {
-				id: 1,
-				title: 'testNew'
-			},
-			type: 'changed',
-			date: new Date()
-		},
-		//unchanged
-		{
-			old: {
-				id: 1,
-				title: 'test'
-			},
-			new: {
-				id: 1,
-				title: 'test'
-			},
-			type: 'changed',
-			date: new Date()
-		}
-	],
-	// removed
-	remove: {
-		old: {
-			id: 1,
-			title: 'test'
-		},
-		type: 'removed',
-		date: new Date()
-	},
-	// added
-	add: {
-		new: {
-			id: 1,
-			title: 'testNew'
-		},
-		type: 'added',
-		date: new Date()
-	}
-};
+// //TAB
+// export type TodoTabHistoryData = {
+// 	id: number;
+// 	title: string;
+// 	todoDisplayId: number;
+// };
+export type TodoTabChange = TodoHistoryAll<TodoTabData>;

@@ -9,6 +9,9 @@
 	import TodoDisplayDnd from './TodoDisplayDnd.svelte';
 
 	export let data: TodoDisplayData;
+	//tabs come unsorted
+	data.todoTabs = sortBySortOrder(data.todoTabs);
+
 	export let isDragging = false;
 	let searchQuery: string;
 
@@ -20,10 +23,17 @@
 			todoDisplayId: data.id,
 			sortOrder: 0,
 			todoItems: []
+			//*add to the end
 		};
-		postTodoTab(todo, true).then((newTab) => {
+
+		postTodoTab(todo, true).then(async (newTab) => {
 			data.todoTabs = [newTab, ...data.todoTabs];
 			data.todoTabs = adjustSortOrder(data.todoTabs);
+
+			//push others back
+			for (let i = 1; i < data.todoTabs.length; i++) {
+				await postTodoTab(data.todoTabs[i], false);
+			}
 		});
 	};
 	const delTodoTab = (todoTabId: number) => {
@@ -42,7 +52,6 @@
 	const getDisplayTodoTabs = (tabs: TodoTabData[]) => {
 		let tabCopy = [...tabs];
 		tabCopy = adjustSortOrder(tabCopy);
-		tabCopy = sortBySortOrder(tabCopy);
 
 		if (isUndefinedOrEmpty(searchQuery)) {
 			tabCopy.forEach((tab) => {
@@ -61,6 +70,7 @@
 	};
 
 	$: searchQuery, (data.todoTabs = getDisplayTodoTabs(data.todoTabs));
+	$: data.todoTabs = sortBySortOrder(data.todoTabs);
 </script>
 
 <div class="flex h-full w-full flex-col bg-accent">

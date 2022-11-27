@@ -10,9 +10,11 @@
 	import TodoTabDnd from './TodoTabDnd.svelte';
 
 	export let data: TodoTabData;
+	//for searchQuery filtering
 	if (isUndefined(data.hidden)) data.hidden = false;
 
-	let startData: TodoTabData = data;
+	//tabs come unsorted
+	data.todoItems = sortBySortOrder(data.todoItems);
 
 	export let onDelete: (id: number) => void;
 	export let searchQuery: string = '';
@@ -33,9 +35,14 @@
 		};
 
 		postTodoItem(todo, true)
-			.then((newItem) => {
+			.then(async (newItem) => {
 				data.todoItems = [newItem, ...data.todoItems];
 				data.todoItems = adjustSortOrder(data.todoItems);
+
+				//push others back
+				for (let i = 1; i < data.todoItems.length; i++) {
+					await postTodoItem(data.todoItems[i], false);
+				}
 			})
 			.catch();
 	};
@@ -51,11 +58,7 @@
 	};
 
 	const postTodo = async () => {
-		postTodoTab(data, true)
-			.then((data) => {
-				startData = data;
-			})
-			.catch(); //probably will add a modal here
+		postTodoTab(data, true).catch();
 	};
 
 	const delSelf = () => {
@@ -66,7 +69,7 @@
 	const getDisplayTodoItems = (items: TodoItemData[]) => {
 		let itemsCopy = [...items];
 		itemsCopy = adjustSortOrder(itemsCopy);
-		itemsCopy = sortBySortOrder(itemsCopy);
+
 		if (isUndefinedOrEmpty(searchQuery)) {
 			visibleItemsCount = itemsCopy.length;
 			itemsCopy.forEach((item) => {
@@ -87,6 +90,7 @@
 	};
 
 	$: searchQuery, (data.todoItems = getDisplayTodoItems(data.todoItems));
+	$: data.todoItems = sortBySortOrder(data.todoItems);
 </script>
 
 <div

@@ -7,24 +7,17 @@
 	import { isUndefined } from '$lib/helpers/jsUtils';
 	import type { TodoItemData } from '$lib/models/TodoData';
 	import { TodoItemConstr } from '$lib/models/TodoDataConstr';
-	import { TodoItemHistory } from '$lib/stores/Todo';
 	import '$lib/styles/ContentEditable.css';
 
 	export let data: TodoItemData;
 	if (isUndefined(data.hidden)) data.hidden = false;
-	let startData: TodoItemData = data;
 
 	export let onDelete: (id: number) => void;
 	export let isDragged: boolean = false;
 	let multiLine: boolean = false;
 
 	const postTodo = () => {
-		postTodoItem(data, true)
-			.then((data) => {
-				TodoItemHistory.addChanged({ new: data, old: startData });
-				startData = data;
-			})
-			.catch();
+		postTodoItem(data, true).catch();
 	};
 
 	const onDrag = (e: Event) => {
@@ -71,7 +64,7 @@
 				<ItemMore onDelete={deleteSelf} />
 			</div>
 		</div>
-		<div class="rounded-t text-[14px] text-font-primary hover:bg-accent">
+		<div class="rounded-t bg-accent bg-opacity-40 text-[14px] text-font-primary hover:bg-accent">
 			{#if multiLine}
 				<div
 					class="border-box relative right-[4px] top-[3px]  float-right clear-none flex aspect-square h-[24px] flex-none items-center justify-items-center justify-self-end rounded"
@@ -92,7 +85,7 @@
 			{/if}
 			<div
 				class="content-editable h-full
-				text-ellipsis rounded-t bg-accent bg-opacity-40 
+				text-ellipsis rounded-t 
 				py-1 px-[4px] pb-[4px]
 				transition-colors duration-200 ease-linear"
 				contenteditable="true"
