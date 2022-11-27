@@ -43,7 +43,7 @@
 	<div class="flex aspect-square h-full flex-none items-center justify-center p-1">
 		<button
 			class="flex h-full w-full flex-none items-center justify-center 
-			rounded border border-border text-center text-font-secondary 
+			rounded border border-border text-font-secondary 
 			outline-none transition-colors duration-150 ease-linear hover:bg-primary focus:outline-none"
 			type="button"
 			on:click={onAdd}

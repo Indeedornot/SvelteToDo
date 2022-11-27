@@ -1,37 +1,22 @@
 <script lang="ts">
 	import { Delete, More } from '$components/Icons';
 	import { clickOutside } from '$lib/helpers/clickOutside';
+	import { createDropdown } from '$lib/helpers/dropdownCtor';
 	import { slide } from '$lib/helpers/slideAnim';
-	import { createPopperActions } from 'svelte-popperjs';
 
-	//#region Popper
-	const [popperRef, popperContent] = createPopperActions({
+	const { popperRef, popperContent, extraOpts } = createDropdown({
 		placement: 'bottom-end',
-		strategy: 'absolute'
+		strategy: 'absolute',
+		offset: [0, -3],
+		fallbackPlacements: []
 	});
-	const extraOpts = {
-		modifiers: [
-			{
-				name: 'offset',
-				options: { offset: [0, -3] }
-			},
-			{
-				name: 'flip',
-				options: { fallbackPlacements: [] }
-			}
-		]
-	};
 
 	const closeTooltip = () => {
 		showTooltip = false;
 	};
-	const openTooltip = () => {
-		showTooltip = true;
-	};
 	const toggleTooltip = () => {
 		showTooltip = !showTooltip;
 	};
-	//#endregion
 
 	export let onDelete: () => void;
 
@@ -58,7 +43,7 @@
 			use:popperContent={extraOpts}
 			in:slide={{ duration: 300, axis: 'y' }}
 			out:slide={{ duration: 300, axis: 'y' }}
-			class="tooltip z-[1] rounded-md border border-accent bg-secondary text-[12px] text-font-primary child-hover:bg-accent"
+			class="tooltip  rounded-md border border-accent bg-secondary text-[12px] text-font-primary child-hover:bg-accent"
 		>
 			<button class="flex items-center justify-center" on:click={onDel}>
 				<Delete size={12} class="inline-block" />

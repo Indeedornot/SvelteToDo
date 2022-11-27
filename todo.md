@@ -5,6 +5,8 @@ Todos:
 might use a store
 -->
 
+<!--#: Rethink colors -->
+
 <!--#: Maybe add visibility for child items removed for tab and display in a history -->
 
 <!--#: Look at filtering once again -->

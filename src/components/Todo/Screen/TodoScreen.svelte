@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { Plus } from '$components/Icons';
+	import { Changelog } from '$components/Todo';
 	import TodoDisplay from '$components/Todo/Display/TodoDisplay.svelte';
 	import { deleteTodoDisplay, postTodoDisplay } from '$lib/apiCalls/TodoActions';
 	import { adjustSortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoDisplayData } from '$lib/models/TodoData';
 
-	import { Changelog } from '..';
 	import TodoScreenTab from './TodoScreenTab.svelte';
 
 	export let data: TodoDisplayData[];

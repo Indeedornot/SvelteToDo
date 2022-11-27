@@ -16,3 +16,5 @@ export { default as TodoScreenTab } from './Screen/TodoScreenTab.svelte';
 export { default as ScreenMore } from './Screen/MoreDropdown.svelte';
 
 export { default as Changelog } from './Changelog/ChangelogDropdown.svelte';
+
+export { default as DesyncModal } from './DesyncModal.svelte';

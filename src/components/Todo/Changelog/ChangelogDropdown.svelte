@@ -1,42 +1,27 @@
 <script lang="ts">
-	import { Delete, History, More } from '$components/Icons';
+	import { History } from '$components/Icons';
 	import { clickOutside } from '$lib/helpers/clickOutside';
+	import { createDropdown } from '$lib/helpers/dropdownCtor';
 	import { slide } from '$lib/helpers/slideAnim';
 	import { TodoHistory, type TodoHistoryData } from '$lib/stores/Todo';
-	import { createPopperActions } from 'svelte-popperjs';
 
 	import TodoChangelog from './TodoChangelog.svelte';
 
-	//#region Popper
-	const [popperRef, popperContent] = createPopperActions({
+	const { popperRef, popperContent, extraOpts } = createDropdown({
 		placement: 'bottom-end',
-		strategy: 'absolute'
+		strategy: 'absolute',
+		offset: [0, 5],
+		fallbackPlacements: []
 	});
-	const extraOpts = {
-		modifiers: [
-			{
-				name: 'offset',
-				options: { offset: [0, 5] }
-			},
-			{
-				name: 'flip',
-				options: { fallbackPlacements: [] }
-			}
-		]
-	};
 
 	const closeTooltip = () => {
 		showTooltip = false;
 	};
-	const openTooltip = () => {
-		showTooltip = true;
-	};
 	const toggleTooltip = () => {
 		showTooltip = !showTooltip;
 	};
-	//#endregion
 
-	let showTooltip = true;
+	let showTooltip = false;
 
 	let history: TodoHistoryData[] = [...$TodoHistory].sort((a, b) => b.date.getTime() - a.date.getTime());
 	$: history = [...$TodoHistory].sort((a, b) => b.date.getTime() - a.date.getTime());
@@ -47,9 +32,11 @@
 	on:click={toggleTooltip}
 	use:clickOutside
 	on:clickoutside={closeTooltip}
-	class="flex flex-none items-center whitespace-nowrap"
+	class="flex h-full w-full flex-none items-center justify-center rounded 
+			border border-border bg-secondary p-1.5
+			text-font-secondary outline-none transition-colors duration-150 ease-linear hover:bg-primary focus:outline-none"
 >
-	<History size={24} />
+	<History />
 </button>
 
 {#if showTooltip}

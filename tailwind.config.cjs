@@ -6,6 +6,7 @@ module.exports = {
 			colors: {
 				primary: 'rgb(var(--color-primary) / <alpha-value>)',
 				secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
+				highlight: 'rgb(var(--color-highlight) / <alpha-value>)',
 				accent: 'rgb(var(--color-accent) / <alpha-value>)',
 				border: 'rgb(var(--color-border) / <alpha-value>)',
 				'font-primary': 'rgb(var(--color-text-primary) / <alpha-value>)',

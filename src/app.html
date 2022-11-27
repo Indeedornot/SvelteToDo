@@ -1,33 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
-		<meta name="viewport" content="width=device-width" />
 
-		<!-- primary - semi-dark -->
-		<!-- secondary - grayish-->
-		<!-- accent - black-grayish -->
-		<!-- border - lighter than secondary -->
+<head>
+	<meta charset="utf-8" />
+	<link rel="icon" href="%sveltekit.assets%/favicon.png" />
+	<meta name="viewport" content="width=device-width" />
 
-		<style>
-			:root {
-				--color-primary: 1 4 9;
-				--color-secondary: 22 27 34;
-				--color-accent: 13 17 24;
-				--color-border: 33 38 45;
-				--color-text-primary: 255 255 255;
-				--color-text-secondary: 139 148 158;
-			}
+	<!-- primary - semi-dark -->
+	<!-- secondary - grayish-->
+	<!-- accent - black-grayish -->
+	<!-- border - lighter than secondary -->
 
-			.dark {
-			}
-		</style>
+	<style>
+		:root {
+			--color-primary: 1 4 9;
+			--color-secondary: 22 27 34;
+			--color-highlight: 40 46 51;
+			--color-accent: 13 17 24;
+			--color-border: 33 38 45;
+			--color-text-primary: 255 255 255;
+			--color-text-secondary: 139 148 158;
+		}
 
-		%sveltekit.head%
-	</head>
+		.dark {}
+	</style>
 
-	<body>
-		<div style="height: 100vh; width: 100vw">%sveltekit.body%</div>
-	</body>
+	%sveltekit.head%
+</head>
+
+<body>
+	<div style="height: 100vh; width: 100vw">%sveltekit.body%</div>
+</body>
+
 </html>

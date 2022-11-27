@@ -1,7 +1,7 @@
 import type { TodoDisplayApiData, TodoItemApiData, TodoTabApiData } from '$lib/apiCalls/TodoApiData';
 import type { TodoDisplayData, TodoItemData, TodoTabData } from '$lib/models/TodoData';
 
-const host = 'http://localhost:5173';
+const host = 'http://192.168.8.104:5173';
 const getIp = (relativePath: string): string => {
 	return host + relativePath;
 };

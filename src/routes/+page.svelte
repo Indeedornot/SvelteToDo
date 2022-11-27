@@ -1,6 +1,7 @@
 <script lang="ts">
-	import TodoScreen from '$components/Todo/Screen/TodoScreen.svelte';
+	import { DesyncModal, TodoScreen } from '$components/Todo';
 	import type { TodoDisplayData } from '$lib/models/TodoData';
+	import { isSynced } from '$lib/stores/Sync';
 	import { overrideItemIdKeyNameBeforeInitialisingDndZones } from 'svelte-dnd-action';
 
 	import type { PageData } from './$types';
@@ -9,13 +10,10 @@
 
 	let todoData: TodoDisplayData[] = data.todos;
 
-	/*
-        TODO: Hi
-         asdasd
-     */
 	overrideItemIdKeyNameBeforeInitialisingDndZones('dndId');
 </script>
 
 <div class="h-full w-full bg-primary">
-	<TodoScreen data={data.todos} />
+	<TodoScreen data={todoData} />
+	<DesyncModal isSynced={$isSynced} />
 </div>

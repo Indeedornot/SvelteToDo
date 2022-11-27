@@ -1,32 +1,18 @@
 <script lang="ts">
 	import { Delete, More } from '$components/Icons';
 	import { clickOutside } from '$lib/helpers/clickOutside';
+	import { createDropdown } from '$lib/helpers/dropdownCtor';
 	import { slide } from '$lib/helpers/slideAnim';
-	import { createPopperActions } from 'svelte-popperjs';
 
-	//#region Popper
-	const [popperRef, popperContent] = createPopperActions({
+	const { popperRef, popperContent, extraOpts } = createDropdown({
 		placement: 'bottom-start',
-		strategy: 'absolute'
+		strategy: 'absolute',
+		offset: [-30, 0],
+		fallbackPlacements: []
 	});
-	const extraOpts = {
-		modifiers: [
-			{
-				name: 'offset',
-				options: { offset: [-30, 0] }
-			},
-			{
-				name: 'flip',
-				options: { fallbackPlacements: [] }
-			}
-		]
-	};
 
 	const closeTooltip = () => {
 		showTooltip = false;
-	};
-	const openTooltip = () => {
-		showTooltip = true;
 	};
 	const toggleTooltip = () => {
 		showTooltip = !showTooltip;
