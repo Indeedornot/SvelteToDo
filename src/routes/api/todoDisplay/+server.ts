@@ -2,8 +2,8 @@ import { json } from '@sveltejs/kit';
 
 import type { TodoDisplay, TodoItem, TodoTab } from '@prisma/client';
 
+import type { TodoDisplayApiData } from '$lib/apiCalls/TodoApiData';
 import { isUndefined, parseJson } from '$lib/helpers/jsUtils';
-import type { TodoDisplayApiData } from '$lib/prisma/TodoApiData';
 import { error, isValidId, validateTodoDisplay } from '$lib/server/DataValidation';
 import prisma from '$lib/server/prisma';
 

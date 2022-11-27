@@ -1,10 +1,9 @@
 <script lang="ts">
-	import { TodoDisplaySearchbar, TodoTab } from '$components/Todo';
+	import { TodoDisplaySearchbar } from '$components/Todo';
+	import { deleteTodoTab, postTodoTab } from '$lib/apiCalls/TodoActions';
 	import { isUndefinedOrEmpty } from '$lib/helpers/jsUtils';
 	import { adjustSortOrder, sortBySortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoDisplayData, TodoTabData } from '$lib/models/TodoData';
-	import { deleteTodoTab, postTodoTab } from '$lib/prisma/apiCalls';
-	import { TodoTabHistory } from '$lib/stores';
 	import '$lib/styles/Scrollbar.css';
 
 	import TodoDisplayDnd from './TodoDisplayDnd.svelte';
@@ -19,24 +18,24 @@
 			id: -1,
 			title: 'New Tab',
 			todoDisplayId: data.id,
-			sortOrder: data.todoTabs.length,
+			sortOrder: 0,
 			todoItems: []
 		};
-		postTodoTab(todo).then((newTab) => {
-			TodoTabHistory.addAdded(newTab);
+		postTodoTab(todo, true).then((newTab) => {
 			data.todoTabs = [newTab, ...data.todoTabs];
+			data.todoTabs = adjustSortOrder(data.todoTabs);
 		});
 	};
 	const delTodoTab = (todoTabId: number) => {
-		deleteTodoTab(todoTabId)
+		const index = data.todoTabs.findIndex((item) => item.id === todoTabId);
+		deleteTodoTab(data.todoTabs[index], true)
 			.then(() => {
-				const index = data.todoTabs.findIndex((item) => item.id === todoTabId);
-				TodoTabHistory.addRemoved(data.todoTabs[index]);
-
 				data.todoTabs.splice(index, 1);
 				data.todoTabs = adjustSortOrder(data.todoTabs);
 			})
-			.catch();
+			.catch(() => {
+				console.log('error');
+			});
 	};
 	//#endregion
 

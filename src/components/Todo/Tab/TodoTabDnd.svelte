@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { TodoItem } from '$components/Todo';
+	import { postTodoItem } from '$lib/apiCalls/TodoActions';
 	import { isUndefined } from '$lib/helpers/jsUtils';
 	import { adjustSortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoItemData } from '$lib/models/TodoData';
 	import type { TodoItemDndData, TodoItemDndEvent } from '$lib/models/TodoDndData';
-	import { postTodoItem } from '$lib/prisma/apiCalls';
-	import { TodoItemHistory } from '$lib/stores';
+	import { TodoItemHistory } from '$lib/stores/Todo';
 	import { dndzone } from 'svelte-dnd-action';
 
 	export let todoItems: TodoItemData[];
@@ -50,7 +50,7 @@
 		if (!isUndefined(newItem)) {
 			TodoItemHistory.addChanged({ old: newItem, new: { ...newItem, todoTabId: todoTabId } });
 			newItem.todoTabId = todoTabId;
-			await postTodoItem(newItem);
+			await postTodoItem(newItem, true);
 		}
 
 		//first incorect sortOrder or Item (edge case)
@@ -58,7 +58,7 @@
 		if (changedItem !== -1) {
 			items = adjustSortOrder(items);
 			for (let item of items.slice(changedItem, items.length)) {
-				await postTodoItem(item).catch(() => {
+				await postTodoItem(item, false).catch(() => {
 					item.hidden = true; //for now let's hide invalid items until next refresh
 				});
 			}

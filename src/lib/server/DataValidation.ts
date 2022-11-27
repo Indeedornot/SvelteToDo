@@ -1,6 +1,6 @@
+import type { TodoDisplayApiData, TodoItemApiData, TodoTabApiData } from '$lib/apiCalls/TodoApiData';
 import { isBoolean, isUndefined } from '$lib/helpers/jsUtils';
 import { TodoDisplayConstr, TodoItemConstr, TodoTabConstr } from '$lib/models/TodoDataConstr';
-import type { TodoDisplayApiData, TodoItemApiData, TodoTabApiData } from '$lib/prisma/TodoApiData';
 
 export const validateTodoDisplay = (display: TodoDisplayApiData): { code: number; error: string } | undefined => {
 	if (!isValidTitle(display.title, TodoDisplayConstr.title.maxLength)) return { code: 400, error: 'Invalid title' };

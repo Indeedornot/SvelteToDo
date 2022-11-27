@@ -30,8 +30,9 @@ const createTodoTabHistory = () => {
 
 	const add = (data: TodoTabHistoryData) => {
 		const newHist: TodoTabChange = { new: data, type: 'added', date: new Date() };
-		update((history) => [...history, newHist]);
 		console.log('TodoTabHistory: add', newHist);
+
+		update((history) => [...history, newHist]);
 	};
 
 	return {

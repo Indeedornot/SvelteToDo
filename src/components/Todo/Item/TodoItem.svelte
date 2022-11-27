@@ -2,12 +2,12 @@
 	import { Collapse, Expand } from '$components/Icons';
 	import { StatusDropdown } from '$components/Todo';
 	import { ItemMore } from '$components/Todo';
+	import { postTodoItem } from '$lib/apiCalls/TodoActions';
 	import { maxLength, stopTyping, truncateEditable } from '$lib/helpers/contentEditable';
 	import { isUndefined } from '$lib/helpers/jsUtils';
 	import type { TodoItemData } from '$lib/models/TodoData';
 	import { TodoItemConstr } from '$lib/models/TodoDataConstr';
-	import { postTodoItem } from '$lib/prisma/apiCalls';
-	import { TodoItemHistory } from '$lib/stores';
+	import { TodoItemHistory } from '$lib/stores/Todo';
 	import '$lib/styles/ContentEditable.css';
 
 	export let data: TodoItemData;
@@ -19,7 +19,7 @@
 	let multiLine: boolean = false;
 
 	const postTodo = () => {
-		postTodoItem(data)
+		postTodoItem(data, true)
 			.then((data) => {
 				TodoItemHistory.addChanged({ new: data, old: startData });
 				startData = data;

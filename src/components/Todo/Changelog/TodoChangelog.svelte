@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { capitalizeStart } from '$lib/helpers/jsUtils';
-	import type { TodoHistoryAll } from '$lib/stores';
+	import type { TodoHistoryAll } from '$lib/stores/Todo';
 
 	type T = $$Generic;
 	type W = TodoHistoryAll<T>;

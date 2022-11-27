@@ -1,23 +1,20 @@
 Todos:
 
-<!-- 
+<!--
 #: Add modal for server desync
 might use a store
 -->
 
+<!--#: Maybe add visibility for child items removed for tab and display in a history -->
+
 <!--#: Look at filtering once again -->
 
 Not considered anymore:
+
 <!--#: Add animations for add and remove -->
 <!--#: Rewrite animations in css -->
 
 In Progress:
-<!--
-#: Add gracefull error handling for validation fails
-- use .then and if fails simply don't assign it - for add
-- for delete simply remove the item from list only
-- for update leave item the same
--->
 
 BackBurner:
 
@@ -30,9 +27,15 @@ run filter on items on both display and tabs - but we are using .some() so we mi
 <!--#: Work on scalability more -->
 <!--#: Export styles in some way -->
 
-
 Done:
+
 <!-- #: Add TodoHistory -->
+<!--
+#: Add gracefull error handling for validation fails
+- use .then and if fails simply don't assign it - for add
+- for delete simply remove the item from list only
+- for update leave item the same
+-->
 <!--
     #: Fix bug when dragndropping singleline multiline
     Prolly need to send to a parent whether it is collapsed or not

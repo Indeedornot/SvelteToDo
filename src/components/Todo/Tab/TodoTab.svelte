@@ -1,11 +1,9 @@
 <script lang="ts">
-	import { TodoItem, TodoTabFooter, TodoTabHeader } from '$components/Todo';
+	import { TodoTabFooter, TodoTabHeader } from '$components/Todo';
+	import { deleteTodoItem, postTodoItem, postTodoTab } from '$lib/apiCalls/TodoActions';
 	import { isUndefined, isUndefinedOrEmpty } from '$lib/helpers/jsUtils';
 	import { adjustSortOrder, sortBySortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoItemData, TodoTabData } from '$lib/models/TodoData';
-	import type { TodoItemDndData, TodoItemDndEvent } from '$lib/models/TodoDndData';
-	import { deleteTodoItem, postTodoItem, postTodoTab } from '$lib/prisma/apiCalls';
-	import { TodoItemHistory, TodoTabHistory } from '$lib/stores';
 	import '$lib/styles/ContentEditable.css';
 	import '$lib/styles/Scrollbar.css';
 
@@ -29,25 +27,23 @@
 			title: 'New Todo Item',
 			status: 'Draft',
 			todoTabId: data.id,
-			sortOrder: data.todoItems.length,
+			sortOrder: 0,
 			collapsed: false
 			//*add to the end
 		};
 
-		postTodoItem(todo)
+		postTodoItem(todo, true)
 			.then((newItem) => {
-				TodoItemHistory.addAdded(newItem);
 				data.todoItems = [newItem, ...data.todoItems];
+				data.todoItems = adjustSortOrder(data.todoItems);
 			})
 			.catch();
 	};
 
 	const delTodoItem = (id: number) => {
-		deleteTodoItem(id)
+		const index = data.todoItems.findIndex((item) => item.id === id);
+		deleteTodoItem(data.todoItems[index], true)
 			.then(() => {
-				const index = data.todoItems.findIndex((item) => item.id === id);
-				TodoItemHistory.addRemoved(data.todoItems[index]);
-
 				data.todoItems.splice(index, 1);
 				data.todoItems = adjustSortOrder(data.todoItems);
 			})
@@ -55,9 +51,8 @@
 	};
 
 	const postTodo = async () => {
-		postTodoTab(data)
+		postTodoTab(data, true)
 			.then((data) => {
-				TodoTabHistory.addChanged({ old: startData, new: data });
 				startData = data;
 			})
 			.catch(); //probably will add a modal here

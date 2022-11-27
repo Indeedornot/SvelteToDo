@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Filter, Plus } from '$components/Icons';
 	import { maxLength, truncateEditable } from '$lib/helpers/contentEditable';
+	import { singleLine } from '$lib/helpers/contentEditable/singleLine';
 	import { TodoTabConstr } from '$lib/models/TodoDataConstr';
 	import '$lib/styles/ContentEditable.css';
 	import '$lib/styles/Scrollbar.css';
@@ -35,6 +36,7 @@
 			bind:textContent={searchQuery}
 			use:maxLength={{ maxLength: TodoTabConstr.title.maxLength }}
 			use:truncateEditable
+			use:singleLine
 		/>
 	</div>
 

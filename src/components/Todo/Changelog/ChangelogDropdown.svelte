@@ -2,7 +2,7 @@
 	import { Delete, History, More } from '$components/Icons';
 	import { clickOutside } from '$lib/helpers/clickOutside';
 	import { slide } from '$lib/helpers/slideAnim';
-	import { TodoHistory, type TodoHistoryData } from '$lib/stores';
+	import { TodoHistory, type TodoHistoryData } from '$lib/stores/Todo';
 	import { createPopperActions } from 'svelte-popperjs';
 
 	import TodoChangelog from './TodoChangelog.svelte';

@@ -1,10 +1,9 @@
 <script lang="ts">
 	import { Plus } from '$components/Icons';
 	import TodoDisplay from '$components/Todo/Display/TodoDisplay.svelte';
+	import { deleteTodoDisplay, postTodoDisplay } from '$lib/apiCalls/TodoActions';
 	import { adjustSortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoDisplayData } from '$lib/models/TodoData';
-	import { deleteTodoDisplay, postTodoDisplay } from '$lib/prisma/apiCalls';
-	import { TodoDisplayHistory } from '$lib/stores';
 
 	import { Changelog } from '..';
 	import TodoScreenTab from './TodoScreenTab.svelte';
@@ -13,11 +12,9 @@
 	let index = 0;
 
 	const delTodoDisplay = (id: number) => {
-		deleteTodoDisplay(id)
+		const index = data.findIndex((item) => item.id === id);
+		deleteTodoDisplay(data[index], true)
 			.then(() => {
-				const index = data.findIndex((item) => item.id === id);
-				TodoDisplayHistory.addRemoved(data[index]);
-
 				data.splice(index, 1);
 				data = adjustSortOrder(data);
 			})
@@ -31,9 +28,8 @@
 			todoTabs: [],
 			sortOrder: data.length
 		};
-		postTodoDisplay(newTodoDisplay)
+		postTodoDisplay(newTodoDisplay, true)
 			.then((todo) => {
-				TodoDisplayHistory.addAdded(todo);
 				data = [...data, todo];
 			})
 			.catch();

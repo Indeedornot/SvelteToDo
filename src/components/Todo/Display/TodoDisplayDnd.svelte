@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { TodoTab } from '$components/Todo';
+	import { postTodoTab } from '$lib/apiCalls/TodoActions';
 	import { isUndefined } from '$lib/helpers/jsUtils';
 	import { adjustSortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoTabData } from '$lib/models/TodoData';
 	import type { TodoTabDndData, TodoTabDndEvent } from '$lib/models/TodoDndData';
-	import { postTodoTab } from '$lib/prisma/apiCalls';
 	import '$lib/styles/Scrollbar.css';
 	import { dndzone } from 'svelte-dnd-action';
 
@@ -46,6 +46,9 @@
 	};
 
 	$: searchQuery, updateDndItems();
+	$: if (todoTabs.length !== dndTabs.length) {
+		updateDndItems();
+	}
 
 	const updateDndItems = () => {
 		dndTabs = todoTabs.map((item) => {

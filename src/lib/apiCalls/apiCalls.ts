@@ -1,5 +1,5 @@
+import type { TodoDisplayApiData, TodoItemApiData, TodoTabApiData } from '$lib/apiCalls/TodoApiData';
 import type { TodoDisplayData, TodoItemData, TodoTabData } from '$lib/models/TodoData';
-import type { TodoDisplayApiData, TodoItemApiData, TodoTabApiData } from '$lib/prisma/TodoApiData';
 
 const host = 'http://localhost:5173';
 const getIp = (relativePath: string): string => {
@@ -8,7 +8,7 @@ const getIp = (relativePath: string): string => {
 
 //*Standard
 //**Display */
-export const getTodoDisplays = async (): Promise<TodoDisplayData[]> => {
+export const getTodoDisplaysApi = async (): Promise<TodoDisplayData[]> => {
 	return fetch(getIp('/api/todoDisplay'), {
 		method: 'GET',
 		headers: {
@@ -17,7 +17,7 @@ export const getTodoDisplays = async (): Promise<TodoDisplayData[]> => {
 	}).then((response) => parseResponse(response));
 };
 
-export const getTodoDisplay = async (id: number): Promise<TodoDisplayData> => {
+export const getTodoDisplayApi = async (id: number): Promise<TodoDisplayData> => {
 	return fetch(getIp(`/api/todoDisplay/${id}`), {
 		method: 'GET',
 		headers: {
@@ -26,7 +26,7 @@ export const getTodoDisplay = async (id: number): Promise<TodoDisplayData> => {
 	}).then((response) => parseResponse(response));
 };
 
-export const postTodoDisplay = async (body: TodoDisplayApiData): Promise<TodoDisplayData> => {
+export const postTodoDisplayApi = async (body: TodoDisplayApiData): Promise<TodoDisplayData> => {
 	return fetch(getIp('/api/todoDisplay'), {
 		method: 'POST',
 		headers: {
@@ -36,7 +36,7 @@ export const postTodoDisplay = async (body: TodoDisplayApiData): Promise<TodoDis
 	}).then((response) => parseResponse(response));
 };
 
-export const deleteTodoDisplay = async (id: number): Promise<void> => {
+export const deleteTodoDisplayApi = async (id: number): Promise<void> => {
 	return fetch(getIp(`/api/todoDisplay`), {
 		method: 'DELETE',
 		headers: {
@@ -47,7 +47,7 @@ export const deleteTodoDisplay = async (id: number): Promise<void> => {
 };
 
 //**Tabs */
-export const getTodoTab = async (id: number): Promise<TodoTabData> => {
+export const getTodoTabApi = async (id: number): Promise<TodoTabData> => {
 	const queryParam = new URLSearchParams({ id: id.toString() });
 	return fetch(getIp(`/api/todoTab/?${queryParam}`), {
 		method: 'GET',
@@ -57,7 +57,7 @@ export const getTodoTab = async (id: number): Promise<TodoTabData> => {
 	}).then((response) => parseResponse(response));
 };
 
-export const getTodoTabs = async (todoDisplayId: number): Promise<TodoTabData[]> => {
+export const getTodoTabsApi = async (todoDisplayId: number): Promise<TodoTabData[]> => {
 	const queryParam = new URLSearchParams({ todoDisplayId: todoDisplayId.toString() });
 	return fetch(getIp(`/api/todoTab/?${queryParam}`), {
 		method: 'GET',
@@ -67,7 +67,7 @@ export const getTodoTabs = async (todoDisplayId: number): Promise<TodoTabData[]>
 	}).then((response) => parseResponse(response));
 };
 
-export const postTodoTab = async (body: TodoTabApiData): Promise<TodoTabData> => {
+export const postTodoTabApi = async (body: TodoTabApiData): Promise<TodoTabData> => {
 	return fetch(getIp('/api/todoTab'), {
 		method: 'POST',
 		headers: {
@@ -76,18 +76,21 @@ export const postTodoTab = async (body: TodoTabApiData): Promise<TodoTabData> =>
 		body: JSON.stringify(body)
 	}).then((response) => parseResponse(response));
 };
-export const deleteTodoTab = async (id: number): Promise<void> => {
+export const deleteTodoTabApi = async (id: number): Promise<void> => {
 	await fetch(getIp(`/api/todoTab`), {
 		method: 'DELETE',
 		headers: {
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({ id })
-	}).then((response) => parseResponse(response));
+	}).then((response) => {
+		console.log(response);
+		return parseResponse(response);
+	});
 };
 
 //**Items */
-export const getTodoItem = async (id: number): Promise<TodoItemData> => {
+export const getTodoItemApi = async (id: number): Promise<TodoItemData> => {
 	const queryParam = new URLSearchParams({ id: id.toString() });
 	return fetch(getIp(`/api/todoItem/?${queryParam}`), {
 		method: 'GET',
@@ -96,7 +99,7 @@ export const getTodoItem = async (id: number): Promise<TodoItemData> => {
 		}
 	}).then((response) => parseResponse(response));
 };
-export const getTodoItems = async (todoTabId: number): Promise<TodoItemData[]> => {
+export const getTodoItemsApi = async (todoTabId: number): Promise<TodoItemData[]> => {
 	const queryParam = new URLSearchParams({ todoTabId: todoTabId.toString() });
 	return fetch(getIp(`/api/todoItem/?${queryParam}`), {
 		method: 'GET',
@@ -105,7 +108,7 @@ export const getTodoItems = async (todoTabId: number): Promise<TodoItemData[]> =
 		}
 	}).then((response) => parseResponse(response));
 };
-export const postTodoItem = async (body: TodoItemApiData): Promise<TodoItemData> => {
+export const postTodoItemApi = async (body: TodoItemApiData): Promise<TodoItemData> => {
 	return fetch(getIp('/api/todoItem'), {
 		method: 'POST',
 		headers: {
@@ -115,7 +118,7 @@ export const postTodoItem = async (body: TodoItemApiData): Promise<TodoItemData>
 	}).then((response) => parseResponse(response));
 };
 
-export const deleteTodoItem = async (id: number): Promise<void> => {
+export const deleteTodoItemApi = async (id: number): Promise<void> => {
 	await fetch(getIp(`/api/todoItem`), {
 		method: 'DELETE',
 		headers: {
