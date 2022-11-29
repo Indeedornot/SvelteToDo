@@ -3,8 +3,8 @@ export type TodoDisplayData = {
 	title: string;
 	todoTabs: TodoTabData[];
 	sortOrder: number;
-	createdAt?: Date;
-	updatedAt?: Date;
+	createdAt?: string;
+	updatedAt?: string;
 };
 
 export type TodoTabData = {
@@ -13,8 +13,8 @@ export type TodoTabData = {
 	sortOrder: number;
 	todoDisplayId: number;
 	todoItems: TodoItemData[];
-	createdAt?: Date;
-	updatedAt?: Date;
+	createdAt?: string;
+	updatedAt?: string;
 	hidden?: boolean;
 };
 
@@ -24,8 +24,8 @@ export type TodoItemData = {
 	sortOrder: number;
 	status: string;
 	todoTabId: number;
-	createdAt?: Date;
-	updatedAt?: Date;
+	createdAt?: string;
+	updatedAt?: string;
 	collapsed: boolean;
 	hidden?: boolean;
 };

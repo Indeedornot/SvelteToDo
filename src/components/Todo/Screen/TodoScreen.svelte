@@ -2,7 +2,7 @@
 	import { Plus } from '$components/Icons';
 	import { Changelog } from '$components/Todo';
 	import TodoDisplay from '$components/Todo/Display/TodoDisplay.svelte';
-	import { deleteTodoDisplay, postTodoDisplay } from '$lib/apiCalls/TodoActions';
+	import { deleteTodoDisplay, postTodoDisplay, createTodoDisplay } from '$lib/apiCalls/TodoActions';
 	import { adjustSortOrder, sortBySortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoDisplayData } from '$lib/models/TodoData';
 
@@ -30,7 +30,7 @@
 			sortOrder: data.length
 		};
 		adding = true;
-		postTodoDisplay(newTodoDisplay, true)
+		createTodoDisplay(newTodoDisplay, true)
 			.then((todo) => {
 				data = [...data, todo];
 				data = adjustSortOrder(data);

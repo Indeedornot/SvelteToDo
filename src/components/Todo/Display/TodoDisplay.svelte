@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { TodoDisplaySearchbar } from '$components/Todo';
-	import { deleteTodoTab, postTodoTab } from '$lib/apiCalls/TodoActions';
+	import { deleteTodoTab, postTodoTab, createTodoTab, postTodoTabs } from '$lib/apiCalls/TodoActions';
 	import { isUndefinedOrEmpty } from '$lib/helpers/jsUtils';
 	import { adjustSortOrder, sortBySortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoDisplayData, TodoTabData } from '$lib/models/TodoData';
@@ -29,14 +29,15 @@
 		};
 
 		adding = true;
-		postTodoTab(todo, true).then(async (newTab) => {
+		createTodoTab(todo, true).then(async (newTab) => {
 			data.todoTabs = [newTab, ...data.todoTabs];
 			data.todoTabs = adjustSortOrder(data.todoTabs);
 
+			await postTodoTabs(data.todoTabs.slice(1, data.length), false);
 			//push others back
-			for (let i = 1; i < data.todoTabs.length; i++) {
-				await postTodoTab(data.todoTabs[i], false);
-			}
+			// for (let i = 1; i < data.todoTabs.length; i++) {
+			// 	await postTodoTab(data.todoTabs[i], false);
+			// }
 			adding = false;
 		});
 	};

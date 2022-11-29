@@ -1,19 +1,21 @@
 import { error } from '@sveltejs/kit';
 
-import { getTodoDisplays, postTodoDisplay } from '$lib/apiCalls/TodoActions';
 import type { TodoDisplayData } from '$lib/models/TodoData';
+import { trpc } from '$lib/trpc/client';
 
 import type { PageLoad } from './$types';
 
-export const load: PageLoad = async () => {
+export const load: PageLoad = async (event) => {
 	let todos: TodoDisplayData[];
-	return await getTodoDisplays()
+	return await trpc(event)
+		.display.getAll.query()
 		.then(async (data) => {
 			todos = data;
 			if (todos.length !== 0) return { todos };
 
 			const todo: TodoDisplayData = { id: -1, title: 'ProjectName', todoTabs: [], sortOrder: 0 };
-			return postTodoDisplay(todo)
+			return trpc()
+				.display.create.query(todo)
 				.then((data) => {
 					todos = [data];
 					return { todos };
