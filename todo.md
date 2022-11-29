@@ -1,15 +1,16 @@
 Todos:
 
-<!--
-#: Add modal for server desync
-might use a store
--->
-
-<!--#: Rethink colors -->
-
 <!--#: Maybe add visibility for child items removed for tab and display in a history -->
 
 <!--#: Look at filtering once again -->
+
+<!--#: Add support for touch for dnd -->
+
+<!--#: Add a text somewhere that user is desynchronised. -->
+
+<!--#: Make TodoDisplayTitles editable -->
+
+<!--#: Pass error message to IsSynced -->
 
 Not considered anymore:
 
@@ -30,6 +31,24 @@ run filter on items on both display and tabs - but we are using .some() so we mi
 <!--#: Export styles in some way -->
 
 Done:
+
+<!--#: Rethink colors -->
+
+<!--
+#: Add modal for server desync
+might use a store
+-->
+
+<!--
+    #: Rewrite styles 
+    Fininish it
+    finish modal
+    displaymoremodal
+    add hover to todoitem text
+-->
+
+<!--
+#: Add a timeout so it cannot be dismissed immidiately   -->
 
 <!-- #: Add TodoHistory -->
 <!--

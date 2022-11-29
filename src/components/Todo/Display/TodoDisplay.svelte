@@ -16,7 +16,9 @@
 	let searchQuery: string;
 
 	//#region crud
+	let adding = false;
 	const addTodoTab = async () => {
+		if (adding) return;
 		const todo: TodoTabData = {
 			id: -1,
 			title: 'New Tab',
@@ -26,6 +28,7 @@
 			//*add to the end
 		};
 
+		adding = true;
 		postTodoTab(todo, true).then(async (newTab) => {
 			data.todoTabs = [newTab, ...data.todoTabs];
 			data.todoTabs = adjustSortOrder(data.todoTabs);
@@ -34,6 +37,7 @@
 			for (let i = 1; i < data.todoTabs.length; i++) {
 				await postTodoTab(data.todoTabs[i], false);
 			}
+			adding = false;
 		});
 	};
 	const delTodoTab = (todoTabId: number) => {
@@ -73,7 +77,7 @@
 	$: data.todoTabs = sortBySortOrder(data.todoTabs);
 </script>
 
-<div class="flex h-full w-full flex-col bg-accent">
+<div class="isolate flex h-full w-full flex-col bg-default">
 	<TodoDisplaySearchbar onAdd={addTodoTab} bind:searchQuery={searchQuery} />
 	<TodoDisplayDnd
 		delTodoTab={delTodoTab}

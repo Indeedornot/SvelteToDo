@@ -13,23 +13,22 @@
 </script>
 
 <div
-	class="flex h-[40px] w-full flex-shrink-0 flex-row items-center overflow-y-hidden 
-	border-y border-border text-font-secondary 
-	sm:pl-[16px] sm:pr-[24px] md:pl-[24px] md:pr-[32px]"
+	class="z-[1] flex h-[40px] w-full flex-shrink-0 flex-row items-center 
+	overflow-y-hidden border-y border-muted 
+	text-subtle
+	focus-within:shadow-outline-default sm:pl-[16px] sm:pr-[24px] md:pl-[24px] md:pr-[32px]"
 >
-	<div class="mr-[8px] flex h-full w-[24px] flex-none items-center ">
+	<div class="relative mr-[8px] flex h-full w-[24px] flex-none items-center">
 		<button
-			class="box-border flex w-full flex-none items-center justify-center rounded-full py-1.5 hover:bg-border hover:text-font-primary"
+			class="hover:bg-border box-border flex w-full flex-none items-center justify-center rounded-full py-1.5 hover:text-default"
 			on:click={() => searchInput.focus()}
 		>
 			<Filter size={20} />
 		</button>
 	</div>
-	<div
-		class="durtation-200 mr-[5px] flex h-full flex-grow items-center transition-colors ease-linear focus-within:bg-accent hover:bg-accent"
-	>
+	<div class="durtation-200 mr-[5px] flex h-full flex-grow items-center transition-colors ease-linear">
 		<div
-			class="single-line content-editable w-full text-ellipsis bg-transparent px-[8px]"
+			class="single-line content-editable bg-transparent w-full text-ellipsis px-[8px]"
 			placeholder="Filter by keyword or by field"
 			contenteditable="true"
 			bind:this={searchInput}
@@ -43,8 +42,8 @@
 	<div class="flex aspect-square h-full flex-none items-center justify-center p-1">
 		<button
 			class="flex h-full w-full flex-none items-center justify-center 
-			rounded border border-border text-font-secondary 
-			outline-none transition-colors duration-150 ease-linear hover:bg-primary focus:outline-none"
+			rounded border border-muted
+			hover:bg-neutral-muted hover:text-default focus:outline-none"
 			type="button"
 			on:click={onAdd}
 		>

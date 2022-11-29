@@ -13,7 +13,7 @@
 	overrideItemIdKeyNameBeforeInitialisingDndZones('dndId');
 </script>
 
-<div class="h-full w-full bg-primary">
+<div class="h-full w-full">
 	<TodoScreen data={todoData} />
 	<DesyncModal isSynced={$isSynced} />
 </div>

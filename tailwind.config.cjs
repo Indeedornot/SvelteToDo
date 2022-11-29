@@ -2,23 +2,44 @@
 module.exports = {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
-		extend: {
-			colors: {
-				primary: 'rgb(var(--color-primary) / <alpha-value>)',
-				secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
-				highlight: 'rgb(var(--color-highlight) / <alpha-value>)',
-				accent: 'rgb(var(--color-accent) / <alpha-value>)',
-				border: 'rgb(var(--color-border) / <alpha-value>)',
-				'font-primary': 'rgb(var(--color-text-primary) / <alpha-value>)',
-				'font-secondary': 'rgb(var(--color-text-secondary) / <alpha-value>)',
-				'font-accent': 'rgb(var(--color-text-accent) / <alpha-value>)'
-			}
-		},
 		screens: {
 			sm: '0px',
 			xs: '380px',
 			md: '544px',
 			lg: '768px'
+		},
+		backgroundColor: {
+			default: 'rgb(var(--color-bg-default) / <alpha-value>)',
+			overlay: 'rgb(var(--color-bg-overlay) / <alpha-value>)',
+			inset: 'rgb(var(--color-bg-inset) / <alpha-value>)',
+			subtle: 'rgb(var(--color-bg-subtle) / <alpha-value>)',
+			neutral: {
+				emphasis: 'rgb(var(--color-neutral-emphasis) / <alpha-value>)',
+				muted: 'rgb(var(--color-neutral-muted))',
+				subtle: 'rgb(var(--color-neutral-subtle))'
+			}
+		},
+		textColor: {
+			default: 'rgb(var(--color-fg-default) / <alpha-value>)',
+			muted: 'rgb(var(--color-fg-muted) / <alpha-value>)',
+			subtle: 'rgb(var(--color-fg-subtle) / <alpha-value>)',
+			emphasis: 'rgb(var(--color-fg-emphasis) / <alpha-value>)'
+		},
+		boxShadow: {
+			default: 'var(--color-shadow-default)',
+			medium: 'var(--color-shadow-medium)',
+			large: 'var(--color-shadow-large)',
+			'extra-large': 'var(--color-shadow-extra-large)',
+			'outline-default': 'var(--color-shadow-outline-default)',
+			'outline-muted': 'var(--color-shadow-outline-muted)',
+			// --color-shadow-ambient
+			ambient: 'var(--color-shadow-ambient)'
+		},
+		borderColor: {
+			default: 'rgb(var(--color-border-default) / <alpha-value>)',
+			muted: 'rgb(var(--color-border-muted) / <alpha-value>)',
+			subtle: 'rgb(var(--color-border-subtle))',
+			emphasis: 'rgb(var(--color-border-emphasis))'
 		}
 	},
 	plugins: [

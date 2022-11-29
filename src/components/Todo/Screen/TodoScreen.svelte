@@ -3,7 +3,7 @@
 	import { Changelog } from '$components/Todo';
 	import TodoDisplay from '$components/Todo/Display/TodoDisplay.svelte';
 	import { deleteTodoDisplay, postTodoDisplay } from '$lib/apiCalls/TodoActions';
-	import { adjustSortOrder } from '$lib/helpers/sortOrder';
+	import { adjustSortOrder, sortBySortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoDisplayData } from '$lib/models/TodoData';
 
 	import TodoScreenTab from './TodoScreenTab.svelte';
@@ -21,6 +21,7 @@
 			.catch();
 	};
 
+	let adding = false;
 	const addTodoDisplay = async () => {
 		const newTodoDisplay: TodoDisplayData = {
 			id: -1,
@@ -28,9 +29,12 @@
 			todoTabs: [],
 			sortOrder: data.length
 		};
+		adding = true;
 		postTodoDisplay(newTodoDisplay, true)
 			.then((todo) => {
 				data = [...data, todo];
+				data = adjustSortOrder(data);
+				adding = false;
 			})
 			.catch();
 	};
@@ -39,18 +43,23 @@
 		index = newIndex;
 	};
 
-	$: data = adjustSortOrder(data);
+	$: data = sortBySortOrder(data);
 </script>
 
-<div class="m-0 flex h-full w-full flex-none flex-col bg-primary p-0 text-font-secondary">
-	<div class="flex h-[104px] w-full flex-none flex-col bg-primary ">
-		<div class="flex h-[70px] w-full flex-none items-center sm:px-[16px] md:px-[24px] lg:px-[32px]">
-			<div class="relative ml-auto flex flex-none">
+<div class="isolate flex h-full w-full flex-none flex-col">
+	<div class="flex h-[104px] w-full flex-none flex-col bg-inset">
+		<div
+			class="flex h-[70px] w-full flex-none items-center 
+				sm:px-[16px] md:px-[24px] lg:px-[32px]"
+		>
+			<div class="ml-auto flex flex-none">
 				<Changelog />
 			</div>
 		</div>
 		<div
-			class="screenTabs styled-scrollbar flex h-[34px] w-full flex-none flex-row overflow-x-auto text-[14px] sm:px-[16px] md:px-[24px] lg:px-[32px]"
+			class="screenTabs styled-scrollbar flex h-[34px] w-full 
+			flex-none flex-row overflow-x-auto text-[14px] text-subtle 
+			sm:px-[16px] md:px-[24px] lg:px-[32px]"
 		>
 			{#each data as dataDisplay (dataDisplay.id)}
 				<TodoScreenTab
@@ -60,12 +69,12 @@
 					chosen={index === dataDisplay.sortOrder}
 				/>
 			{/each}
-			<button on:click={addTodoDisplay}>
+			<button class="hover:text-default" on:click={addTodoDisplay}>
 				<Plus />
 			</button>
 		</div>
 	</div>
-	<div class="flex min-h-0 flex-grow bg-secondary">
+	<div class="flex min-h-0 flex-grow bg-default">
 		<!-- ! HACK - component doesn't update otherwise -->
 		{#each data as dataDisplay (dataDisplay.id)}
 			{#if index === dataDisplay.sortOrder}

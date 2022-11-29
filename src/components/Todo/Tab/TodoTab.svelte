@@ -23,7 +23,9 @@
 	let visibleItemsCount = data.todoItems.length;
 
 	//#region crud
+	let adding = false;
 	const addTodoItem = async () => {
+		if (adding) return;
 		let todo: TodoItemData = {
 			id: -1,
 			title: 'New Todo Item',
@@ -34,6 +36,7 @@
 			//*add to the end
 		};
 
+		adding = true;
 		postTodoItem(todo, true)
 			.then(async (newItem) => {
 				data.todoItems = [newItem, ...data.todoItems];
@@ -43,6 +46,7 @@
 				for (let i = 1; i < data.todoItems.length; i++) {
 					await postTodoItem(data.todoItems[i], false);
 				}
+				adding = false;
 			})
 			.catch();
 	};
@@ -95,7 +99,7 @@
 
 <div
 	class:hidden={data.hidden}
-	class="flex h-full flex-none flex-col rounded-md border border-border bg-primary sm:w-full xs:w-[350px]"
+	class="isolate flex h-full flex-none flex-col rounded-md border border-subtle bg-inset sm:w-full xs:w-[350px]"
 >
 	<TodoTabHeader
 		onDelete={delSelf}

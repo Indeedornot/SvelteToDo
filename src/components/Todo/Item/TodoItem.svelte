@@ -17,7 +17,7 @@
 	let multiLine: boolean = false;
 
 	const postTodo = () => {
-		postTodoItem(data, true).catch();
+		postTodoItem(data, true).catch((error) => console.log(error));
 	};
 
 	const onDrag = (e: Event) => {
@@ -43,10 +43,10 @@
 	}
 </script>
 
-<div class:hidden={data.hidden} class="w-full rounded-md border border-border bg-secondary">
+<div class:hidden={data.hidden} class="border-border w-full rounded-md border border-subtle bg-subtle">
 	<div class="box-border flex h-[8px] flex-none items-end justify-center">
 		<div
-			class="box-border flex h-full w-4/12 flex-none cursor-grab rounded-b bg-accent hover:bg-primary"
+			class="box-border flex h-full w-4/12 flex-none cursor-grab rounded-b bg-default hover:bg-neutral-muted"
 			on:mousedown={onDrag}
 			on:mouseup={() => {
 				isDragged = false;
@@ -56,48 +56,56 @@
 	</div>
 
 	<div class="flex w-full flex-grow flex-col pr-[12px] pl-[8px]">
-		<div class="mb-0.5 box-border flex h-[22px] w-full flex-none flex-row text-[12px] text-font-secondary">
-			<div class="rounded pl-[4px] hover:bg-primary">
+		<div class="mb-0.5 box-border flex h-[22px] w-full flex-none flex-row justify-between text-[12px] text-subtle">
+			<div class="rounded">
 				<StatusDropdown bind:status={data.status} onChoose={postTodo} />
 			</div>
-			<div class="ml-auto flex aspect-square h-full flex-none items-center justify-center">
+			<div class="flex aspect-square h-full flex-none items-center justify-center">
 				<ItemMore onDelete={deleteSelf} />
 			</div>
 		</div>
-		<div class="rounded-t bg-accent bg-opacity-40 text-[14px] text-font-primary hover:bg-accent">
-			{#if multiLine}
-				<div
-					class="border-box relative right-[4px] top-[3px]  float-right clear-none flex aspect-square h-[24px] flex-none items-center justify-items-center justify-self-end rounded"
-				>
-					<div class="border-box flex h-full w-full flex-none items-center justify-center p-[4px]">
-						<button
-							class="box-border flex h-full w-full flex-none items-center justify-center rounded bg-black  hover:bg-border"
-							on:click={collapse}
-						>
-							{#if data.collapsed}
-								<Expand size={12} />
-							{:else}
-								<Collapse size={12} />
-							{/if}
-						</button>
-					</div>
-				</div>
-			{/if}
+		<div class="box-border pb-1.5 pt-1">
 			<div
-				class="content-editable h-full
-				text-ellipsis rounded-t 
-				py-1 px-[4px] pb-[4px]
+				class="shadow shadow-bottomless rounded
+				text-[14px] text-default 
+				focus-within:bg-default focus-within:shadow-outline-muted 
+				hover:bg-default"
+			>
+				{#if multiLine}
+					<div
+						class="border-box relative right-[1px] top-[-1.5px] float-right clear-none ml-0.5
+					flex aspect-square h-[24px] flex-none items-center justify-items-center justify-self-end rounded"
+					>
+						<div class="border-box flex h-full w-full flex-none items-center justify-center p-[4px]">
+							<button
+								class="box-border flex h-full w-full flex-none items-center justify-center rounded bg-neutral-muted hover:bg-neutral-emphasis "
+								on:click={collapse}
+							>
+								{#if data.collapsed}
+									<Expand size={12} />
+								{:else}
+									<Collapse size={12} />
+								{/if}
+							</button>
+						</div>
+					</div>
+				{/if}
+				<div
+					class="content-editable h-full text-ellipsis 
+				break-all rounded px-[4px]
+				pb-0.5
 				transition-colors duration-200 ease-linear"
-				contenteditable="true"
-				use:maxLength={{ maxLength: TodoItemConstr.title.maxLength, value: data.title }}
-				use:truncateEditable
-				class:single-line={data.collapsed}
-				use:stopTyping
-				on:stopTyping={(event) => {
-					data.title = event.detail.text;
-					postTodo();
-				}}
-			/>
+					contenteditable="true"
+					use:maxLength={{ maxLength: TodoItemConstr.title.maxLength, value: data.title }}
+					use:truncateEditable={data.collapsed || !multiLine}
+					class:single-line={data.collapsed}
+					use:stopTyping
+					on:stopTyping={(event) => {
+						data.title = event.detail.text;
+						postTodo();
+					}}
+				/>
+			</div>
 		</div>
 	</div>
 </div>
@@ -119,5 +127,6 @@
 	[contenteditable='true'].single-line :global(*) {
 		display: inline;
 		white-space: nowrap;
+		background-color: transparent;
 	}
 </style>

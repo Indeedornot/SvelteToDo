@@ -11,14 +11,16 @@
 </script>
 
 <div
-	class="rounded-t border border-b-0 border-border bg-secondary "
+	class="rounded-t border border-b-0 border-muted bg-default hover:bg-overlay"
 	out:slide={{ axis: 'x', duration: 400 }}
 	in:slide={{ axis: 'x', duration: 400, delay: 50, easing: (t) => (t * t) / 2 }}
 >
 	<div
 		class="flex h-full w-full flex-none flex-row px-3 py-1 transition-all duration-300 ease-linear"
-		class:bg-accent={chosen}
 		class:px-2={chosen}
+		class:text-default={chosen}
+		class:font-semibold={chosen}
+		class:bg-subtle={chosen}
 	>
 		<button class="flex flex-none flex-row items-center justify-center" on:click={() => changeIndex(data.sortOrder)}>
 			<Project size={20} />

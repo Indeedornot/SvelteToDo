@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
 
 const createSync = () => {
-	const { subscribe, set, update } = writable(false);
+	const { subscribe, set, update } = writable(true);
 
 	const setSync = (sync: boolean) => {
 		set(sync);
@@ -14,4 +14,4 @@ const createSync = () => {
 	};
 };
 
-export const isSynced = writable(true);
+export const isSynced = createSync();

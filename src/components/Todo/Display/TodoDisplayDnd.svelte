@@ -62,7 +62,7 @@
 </script>
 
 <div
-	class="styled-scrollbar todotabs flex w-full flex-grow overflow-x-auto py-[8px] sm:px-[16px] md:px-[24px] lg:px-[32px]"
+	class="styled-scrollbar todotabs flex w-full flex-grow overflow-x-auto bg-default py-[8px] sm:px-[16px] md:px-[24px] lg:px-[32px]"
 	use:dndzone={{ items: dndTabs, type: 'display', dragDisabled: !isDragging, dropFromOthersDisabled: true }}
 	on:consider={handleDndConsider}
 	on:finalize={handleDndFinalize}

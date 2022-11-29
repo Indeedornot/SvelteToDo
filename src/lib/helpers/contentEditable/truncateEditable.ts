@@ -1,17 +1,21 @@
 //use onFocus and onBlur to toggle class truncate
-export function truncateEditable(node: HTMLElement) {
+export function truncateEditable(node: HTMLElement, singleLine = false) {
 	const classList = node.classList;
 	if (classList.contains('truncate')) {
 		classList.remove('truncate');
 	}
-	classList.add('text-ellipsis');
-	classList.add('overflow-hidden');
-	classList.add('whitespace-nowrap');
+	if (singleLine) {
+		classList.add('text-ellipsis');
+		classList.add('overflow-hidden');
+		classList.add('whitespace-nowrap');
+	}
 
 	const handleFocus = () => {
+		if (!singleLine) return;
 		node.classList.remove('text-ellipsis');
 	};
 	const handleBlur = () => {
+		if (!singleLine) return;
 		node.classList.add('text-ellipsis');
 	};
 
@@ -21,6 +25,21 @@ export function truncateEditable(node: HTMLElement) {
 		destroy() {
 			node.removeEventListener('focus', handleFocus);
 			node.removeEventListener('blur', handleBlur);
+		},
+
+		update(isSingleLine: boolean) {
+			if (isSingleLine === singleLine) return;
+
+			singleLine = isSingleLine;
+			if (singleLine) {
+				node.classList.add('text-ellipsis');
+				classList.add('overflow-hidden');
+				classList.add('whitespace-nowrap');
+			} else {
+				node.classList.remove('text-ellipsis');
+				classList.remove('overflow-hidden');
+				classList.remove('whitespace-nowrap');
+			}
 		}
 	};
 }
