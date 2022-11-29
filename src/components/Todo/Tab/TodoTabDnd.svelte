@@ -6,7 +6,7 @@
 	import type { TodoItemData } from '$lib/models/TodoData';
 	import type { TodoItemDndData, TodoItemDndEvent } from '$lib/models/TodoDndData';
 	import { TodoItemHistory } from '$lib/stores/Todo';
-	import { dndzone } from 'svelte-dnd-action';
+	import { SOURCES, TRIGGERS, dndzone } from 'svelte-dnd-action';
 
 	export let todoItems: TodoItemData[];
 	export let todoTabId: number;
@@ -39,8 +39,12 @@
 
 	const handleDndConsider = (e: TodoItemDndEvent) => {
 		const items: TodoItemDndData[] = e.detail.items;
-
 		todoItems = dndItems = adjustSortOrder(items);
+
+		const { source, trigger } = e.detail.info;
+		if (source === SOURCES.KEYBOARD && trigger === TRIGGERS.DRAG_STOPPED) {
+			isDragging = false;
+		}
 	};
 
 	const handleDndFinalize = async (e: TodoItemDndEvent) => {
@@ -65,7 +69,11 @@
 		}
 
 		todoItems = dndItems = items;
-		isDragging = false;
+
+		const { source } = e.detail.info;
+		if (source === SOURCES.POINTER) {
+			isDragging = false;
+		}
 	};
 </script>
 

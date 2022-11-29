@@ -1,7 +1,7 @@
 
 Todo:
   ☐ Maybe add visibility for child items removed for tab and display in a history
-  ☐ Add support for touch for dnd
+  ☐ Add support for touch for dnd @started(22-11-29 17:03)
   ☐ Add a text somewhere that user is desynchronised.
   ☐ Work on scalability more 
     Add a way to limit the number of items displayed

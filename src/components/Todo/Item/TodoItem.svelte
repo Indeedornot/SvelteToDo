@@ -4,6 +4,7 @@
 	import { ItemMore } from '$components/Todo';
 	import { postTodoItem } from '$lib/apiCalls/TodoActions';
 	import { maxLength, stopTyping, truncateEditable } from '$lib/helpers/contentEditable';
+	import { dndHandle } from '$lib/helpers/dndHandle';
 	import { isUndefined } from '$lib/helpers/jsUtils';
 	import type { TodoItemData } from '$lib/models/TodoData';
 	import { TodoItemConstr } from '$lib/models/TodoDataConstr';
@@ -18,11 +19,6 @@
 
 	const postTodo = () => {
 		postTodoItem(data, true).catch((error) => console.log(error));
-	};
-
-	const onDrag = (e: Event) => {
-		e.preventDefault();
-		isDragged = true;
 	};
 
 	const collapse = () => {
@@ -44,14 +40,13 @@
 </script>
 
 <div class:hidden={data.hidden} class="border-border w-full rounded-md border border-subtle bg-subtle">
-	<div class="box-border flex h-[8px] flex-none items-end justify-center">
+	<div class="box-border flex h-[8px] flex-none touch-none items-end justify-center">
 		<div
-			class="box-border flex h-full w-4/12 flex-none cursor-grab rounded-b bg-default hover:bg-neutral-muted"
-			on:mousedown={onDrag}
-			on:mouseup={() => {
-				isDragged = false;
-			}}
+			class="box-border flex h-full w-4/12 flex-none 
+			cursor-grab rounded-b bg-default hover:bg-neutral-muted"
 			class:dragging={isDragged}
+			use:dndHandle={isDragged}
+			on:dragged={(e) => (isDragged = e.detail.isDragged)}
 		/>
 	</div>
 
