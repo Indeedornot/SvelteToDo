@@ -63,7 +63,7 @@
 		>
 			{#each data as dataDisplay (dataDisplay.id)}
 				<TodoScreenTab
-					data={dataDisplay}
+					bind:data={dataDisplay}
 					onDelete={delTodoDisplay}
 					changeIndex={changeIndex}
 					chosen={index === dataDisplay.sortOrder}

@@ -41,7 +41,7 @@ export const getTodoTabs = async (todoDisplayId: number): Promise<TodoTabData[]>
 
 export const postTodoDisplay = async (data: TodoDisplayData, history = false): Promise<TodoDisplayData> => {
 	if (data.id !== -1) {
-		getTodoDisplayApi(data.id)
+		await getTodoDisplayApi(data.id)
 			.then((todoDisplay) => {
 				history && TodoDisplayHistory.addChanged({ old: todoDisplay, new: data });
 			})
@@ -83,7 +83,7 @@ export const getTodoTab = async (id: number): Promise<TodoTabData> => {
 };
 export const postTodoTab = async (data: TodoTabData, history = false): Promise<TodoTabData> => {
 	if (data.id !== -1) {
-		getTodoTabApi(data.id)
+		await getTodoTabApi(data.id)
 			.then((todoTab) => {
 				history && TodoTabHistory.addChanged({ old: todoTab, new: data });
 			})
@@ -137,7 +137,7 @@ export const getTodoItem = async (id: number): Promise<TodoItemData> => {
 
 export const postTodoItem = async (data: TodoItemData, history = false): Promise<TodoItemData> => {
 	if (data.id !== -1) {
-		getTodoItemApi(data.id)
+		await getTodoItemApi(data.id)
 			.then((todoItem) => {
 				history && TodoItemHistory.addChanged({ old: todoItem, new: data });
 			})

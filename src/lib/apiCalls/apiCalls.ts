@@ -18,7 +18,8 @@ export const getTodoDisplaysApi = async (): Promise<TodoDisplayData[]> => {
 };
 
 export const getTodoDisplayApi = async (id: number): Promise<TodoDisplayData> => {
-	return fetch(getIp(`/api/todoDisplay/${id}`), {
+	const queryParam = new URLSearchParams({ id: id.toString() });
+	return fetch(getIp(`/api/todoDisplay/?${queryParam}`), {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json'
@@ -135,7 +136,7 @@ const parseResponse = async <T>(response: Response): Promise<T> => {
 	// check for error response
 	if (!response.ok) {
 		// get error message from body or default to response status
-		const error = (data && data.message) || response.status;
+		const error = (data && data.message) || `${response.status}: ${response.statusText}`;
 		return Promise.reject(error);
 	}
 	return data;

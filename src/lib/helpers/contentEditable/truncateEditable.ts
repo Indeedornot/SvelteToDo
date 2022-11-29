@@ -1,5 +1,5 @@
 //use onFocus and onBlur to toggle class truncate
-export function truncateEditable(node: HTMLElement, singleLine = false) {
+export function truncateEditable(node: HTMLElement, singleLine = true) {
 	const classList = node.classList;
 	if (classList.contains('truncate')) {
 		classList.remove('truncate');
