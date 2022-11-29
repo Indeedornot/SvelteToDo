@@ -20,21 +20,21 @@ import {
 //displays
 export const getTodoDisplays = async (): Promise<TodoDisplayData[]> => {
 	return getTodoDisplaysApi().catch((error) => {
-		isSynced.set(false);
+		isSynced.set({ isSync: false, error: error });
 		return Promise.reject(error);
 	});
 };
 
 export const getTodoDisplay = async (id: number): Promise<TodoDisplayData> => {
 	return getTodoDisplayApi(id).catch((error) => {
-		isSynced.set(false);
+		isSynced.set({ isSync: false, error: error });
 		return Promise.reject(error);
 	});
 };
 
 export const getTodoTabs = async (todoDisplayId: number): Promise<TodoTabData[]> => {
 	return getTodoTabsApi(todoDisplayId).catch((error) => {
-		isSynced.set(false);
+		isSynced.set({ isSync: false, error: error });
 		return Promise.reject(error);
 	});
 };
@@ -45,8 +45,9 @@ export const postTodoDisplay = async (data: TodoDisplayData, history = false): P
 			.then((todoDisplay) => {
 				history && TodoDisplayHistory.addChanged({ old: todoDisplay, new: data });
 			})
-			.catch(() => {
-				isSynced.set(false);
+			.catch((error) => {
+				isSynced.set({ isSync: false, error: error });
+				return Promise.reject(error);
 			});
 	}
 	return postTodoDisplayApi(data)
@@ -57,7 +58,7 @@ export const postTodoDisplay = async (data: TodoDisplayData, history = false): P
 			return postedDisplay;
 		})
 		.catch((error) => {
-			isSynced.set(false);
+			isSynced.set({ isSync: false, error: error });
 			return Promise.reject(error);
 		});
 };
@@ -68,7 +69,7 @@ export const deleteTodoDisplay = async (data: TodoDisplayData, history = false):
 			history && TodoDisplayHistory.addRemoved(data);
 		})
 		.catch((error) => {
-			isSynced.set(false);
+			isSynced.set({ isSync: false, error: error });
 			return Promise.reject(error);
 		});
 };
@@ -76,7 +77,7 @@ export const deleteTodoDisplay = async (data: TodoDisplayData, history = false):
 //tabs
 export const getTodoTab = async (id: number): Promise<TodoTabData> => {
 	return getTodoTabApi(id).catch((error) => {
-		isSynced.set(false);
+		isSynced.set({ isSync: false, error: error });
 		return Promise.reject(error);
 	});
 };
@@ -86,8 +87,9 @@ export const postTodoTab = async (data: TodoTabData, history = false): Promise<T
 			.then((todoTab) => {
 				history && TodoTabHistory.addChanged({ old: todoTab, new: data });
 			})
-			.catch(() => {
-				isSynced.set(false);
+			.catch((error) => {
+				isSynced.set({ isSync: false, error: error });
+				return Promise.reject(error);
 			});
 	}
 
@@ -100,7 +102,7 @@ export const postTodoTab = async (data: TodoTabData, history = false): Promise<T
 			return postedTab;
 		})
 		.catch((error) => {
-			isSynced.set(false);
+			isSynced.set({ isSync: false, error: error });
 			return Promise.reject(error);
 		});
 };
@@ -111,7 +113,7 @@ export const deleteTodoTab = async (data: TodoTabData, history = false): Promise
 			console.log('deleteTodoTab', data);
 		})
 		.catch((error) => {
-			isSynced.set(false);
+			isSynced.set({ isSync: false, error: error });
 			return Promise.reject(error);
 		});
 };
@@ -119,7 +121,7 @@ export const deleteTodoTab = async (data: TodoTabData, history = false): Promise
 //items
 export const getTodoItems = async (todoTabId: number): Promise<TodoItemData[]> => {
 	return getTodoItemsApi(todoTabId).catch((error) => {
-		isSynced.set(false);
+		isSynced.set({ isSync: false, error: error });
 		return Promise.reject(error);
 	});
 };
@@ -128,7 +130,7 @@ export const getTodoItem = async (id: number): Promise<TodoItemData> => {
 	return getTodoItemApi(id)
 		.then((data) => data)
 		.catch((error) => {
-			isSynced.set(false);
+			isSynced.set({ isSync: false, error: error });
 			return Promise.reject(error);
 		});
 };
@@ -139,8 +141,9 @@ export const postTodoItem = async (data: TodoItemData, history = false): Promise
 			.then((todoItem) => {
 				history && TodoItemHistory.addChanged({ old: todoItem, new: data });
 			})
-			.catch(() => {
-				isSynced.set(false);
+			.catch((error) => {
+				isSynced.set({ isSync: false, error: error });
+				return Promise.reject(error);
 			});
 	}
 	return postTodoItemApi(data)
@@ -151,7 +154,7 @@ export const postTodoItem = async (data: TodoItemData, history = false): Promise
 			return postedItem;
 		})
 		.catch((error) => {
-			isSynced.set(false);
+			isSynced.set({ isSync: false, error: error });
 			return Promise.reject(error);
 		});
 };
@@ -162,7 +165,7 @@ export const deleteTodoItem = async (data: TodoItemData, history = false): Promi
 			history && TodoItemHistory.addRemoved(data);
 		})
 		.catch((error) => {
-			isSynced.set(false);
+			isSynced.set({ isSync: false, error: error });
 			return Promise.reject(error);
 		});
 };

@@ -4,7 +4,6 @@ Todo:
   ☐ Add support for touch for dnd
   ☐ Add a text somewhere that user is desynchronised.
   ☐ Make TodoDisplayTitles editable 
-  ☐ Pass error message to IsSynced 
 
 Not considered anymore:
 
@@ -19,11 +18,13 @@ BackBurner:
   ☐ Use Rem - gotta read more 
   ☐ Rewrite stories 
   ☐ Work on scalability more 
+    Keep an eye on prisma and sqlite timeouts
   ☐ Export styles in some way 
 
 Done:
-  ✔ Rethink colors @done(22-11-29 15:37)
+  ✔ Pass error message to IsSynced @done(22-11-29 16:22)
 
+  ✔ Rethink colors @done(22-11-29 15:37)
 
   ✔ Add modal for server desync @done(22-11-29 15:37)
     might use a store
