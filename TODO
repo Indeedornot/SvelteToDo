@@ -1,0 +1,66 @@
+
+Todo:
+  ☐ Maybe add visibility for child items removed for tab and display in a history
+  ☐ Add support for touch for dnd
+  ☐ Add a text somewhere that user is desynchronised.
+  ☐ Make TodoDisplayTitles editable 
+  ☐ Pass error message to IsSynced 
+
+Not considered anymore:
+
+  ☐ Add animations for add and remove 
+  ☐ Rewrite animations in css 
+
+BackBurner:
+  ☐ Look at filtering once again
+  ☐ Maybe optimize search to not run filter on items on both display and tabs
+    but we are using .some() so we might be good
+
+  ☐ Use Rem - gotta read more 
+  ☐ Rewrite stories 
+  ☐ Work on scalability more 
+  ☐ Export styles in some way 
+
+Done:
+  ✔ Rethink colors @done(22-11-29 15:37)
+
+
+  ✔ Add modal for server desync @done(22-11-29 15:37)
+    might use a store
+  ✔ Add a timeout so desyncmodal cannot be dismissed immidiately @done(22-11-29 15:37)
+
+  ✔ Rewrite styles @done(22-11-29 15:37)
+    Fininish it
+    finish modal
+    displaymoremodal
+    add hover to todoitem text
+
+
+  ✔ Add TodoHistory @done(22-11-29 15:37)
+
+  ✔ Add gracefull error handling for validation fails @done(22-11-29 15:37)
+    use .then and if fails simply don't assign it - for add
+    for delete simply remove the item from list only
+    for update leave item the same
+
+  ✔ Fix bug when dragndropping singleline multiline @done(22-11-29 15:37)
+    Prolly need to send to a parent whether it is collapsed or not
+    And maybe will have to update prisma model
+
+  ✔ Implement multiple TodoDisplays @done(22-11-29 15:37)
+  ✔ Add MoreDropdown to TodoScreen @done(22-11-29 15:37)
+  ✔ Add 3 dots menu for extra actions @done(22-11-29 15:37)
+   take note, take out status showing out of the statusdropdown otherwise the position relative messes stuff 
+  ✔ TodoItem: Handle multiple lines @done(22-11-29 15:37)
+  ✔ Add to multiline TodoItem content a handle to add single line @done(22-11-29 15:37)
+  ✔ Make status change background on hover @done(22-11-29 15:37)
+  ✔ Add checks on the server for TodoConstr @done(22-11-29 15:37)
+  ✔ Add checking to api for TodoItemsData and TodoTabsData @done(22-11-29 15:37)
+  ✔ Fix dragging when using search @done(22-11-29 15:37)
+    Problem: svelte-dnd-action uses rendered items
+  ✔ Make server treat newline as one char, bind to innerHTML some let and then use $: to update the title with parsing @done(22-11-29 15:38)
+
+Keep an eye on:
+  ☐ Separation of concerns: My client should only be concerned about TodoData and TodoApiData 
+    where as server with - Todo and TodoApiData
+    now finish it on client side in apiCaller
