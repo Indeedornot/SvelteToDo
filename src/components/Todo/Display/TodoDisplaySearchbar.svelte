@@ -3,6 +3,7 @@
 	import { maxLength, truncateEditable } from '$lib/helpers/contentEditable';
 	import { singleLine } from '$lib/helpers/contentEditable/singleLine';
 	import { TodoTabConstr } from '$lib/models/TodoDataConstr';
+	import { isSynced } from '$lib/stores/Sync';
 	import '$lib/styles/ContentEditable.css';
 	import '$lib/styles/Scrollbar.css';
 
@@ -38,7 +39,9 @@
 			use:singleLine
 		/>
 	</div>
-
+	{#if !$isSynced.isSync}
+		<div class="pr-2 font-semibold text-muted">Desynchronised</div>
+	{/if}
 	<div class="flex aspect-square h-full flex-none items-center justify-center p-1">
 		<button
 			class="flex h-full w-full flex-none items-center justify-center 

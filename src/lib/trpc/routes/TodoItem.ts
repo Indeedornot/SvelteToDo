@@ -1,6 +1,5 @@
 import prisma from '$lib/server/prisma';
 import { t } from '$lib/trpc/t';
-import { z } from 'zod';
 
 import { logger } from '../middleware/logger';
 import { id, todoItem, todoItemCreate } from '../models/TodoData';
@@ -10,6 +9,20 @@ export const item = t.router({
 		.use(logger)
 		.input(todoItemCreate)
 		.query(async ({ input }) => {
+			//adjust the sortOrder of the other items
+			await prisma.todoItem.updateMany({
+				where: {
+					sortOrder: {
+						gte: input.sortOrder
+					}
+				},
+				data: {
+					sortOrder: {
+						increment: 1
+					}
+				}
+			});
+
 			return await prisma.todoItem.create({
 				data: {
 					title: input.title,
@@ -20,52 +33,114 @@ export const item = t.router({
 				}
 			});
 		}),
-	update: t.procedure.input(todoItem).query(async ({ input }) => {
-		return await prisma.todoItem.update({
-			where: {
-				id: input.id
-			},
-			data: {
-				title: input.title,
-				sortOrder: input.sortOrder,
-				status: input.status,
-				collapsed: input.collapsed,
-				todoTabId: input.todoTabId
-			}
-		});
-	}),
-	updateMany: t.procedure.input(z.array(todoItem)).query(async ({ input }) => {
-		const todoItems = [];
-		for (const item of input) {
-			const newItem = await prisma.todoItem.update({
+	update: t.procedure
+		.input(todoItem)
+		.use(logger)
+		.query(async ({ input }) => {
+			await updateSortOrder(input.id, input.sortOrder);
+			return await prisma.todoItem.update({
 				where: {
-					id: item.id
+					id: input.id
 				},
 				data: {
-					sortOrder: item.sortOrder
+					title: input.title,
+					sortOrder: input.sortOrder,
+					status: input.status,
+					collapsed: input.collapsed,
+					todoTabId: input.todoTabId
 				}
 			});
-			todoItems.push(newItem);
-		}
+		}),
+	delete: t.procedure
+		.use(logger)
+		.input(id)
+		.query(async ({ input }) => {
+			//adjust the sortOrder of the other items
+			const item = await prisma.todoItem.findUniqueOrThrow({
+				where: {
+					id: input
+				}
+			});
 
-		return todoItems;
-	}),
-	delete: t.procedure.input(id).query(async ({ input }) => {
-		await prisma.todoItem.delete({ where: { id: input } });
-	}),
-	getSingle: t.procedure.input(id).query(({ input }) =>
-		prisma.todoItem.findUniqueOrThrow({
-			where: {
-				id: input
-			}
-		})
-	),
-	getByTab: t.procedure.input(id).query(({ input }) =>
-		prisma.todoItem.findMany({
-			where: {
-				todoTabId: input
-			}
-		})
-	),
-	getAll: t.procedure.query(() => prisma.todoItem.findMany())
+			await prisma.todoItem.delete({ where: { id: input } });
+
+			await prisma.todoItem.updateMany({
+				where: {
+					sortOrder: {
+						gt: item.sortOrder
+					}
+				},
+				data: {
+					sortOrder: {
+						decrement: 1
+					}
+				}
+			});
+		}),
+	getSingle: t.procedure
+		.use(logger)
+		.input(id)
+		.query(({ input }) =>
+			prisma.todoItem.findUniqueOrThrow({
+				where: {
+					id: input
+				}
+			})
+		),
+	getByTab: t.procedure
+		.use(logger)
+		.input(id)
+		.query(({ input }) =>
+			prisma.todoItem.findMany({
+				where: {
+					todoTabId: input
+				}
+			})
+		),
+	getAll: t.procedure.use(logger).query(() => prisma.todoItem.findMany())
 });
+
+const updateSortOrder = async (id: number, oldSort: number) => {
+	//adjust the sortOrder of the other items only if it has changed
+	const item = await prisma.todoItem.findUniqueOrThrow({
+		where: {
+			id: id
+		},
+		select: {
+			sortOrder: true
+		}
+	});
+
+	if (item && item.sortOrder === oldSort) return;
+	if (item.sortOrder > oldSort) {
+		await prisma.todoItem.updateMany({
+			where: {
+				sortOrder: {
+					gt: oldSort,
+					lte: item.sortOrder
+				}
+			},
+			data: {
+				sortOrder: {
+					increment: 1
+				}
+			}
+		});
+		return;
+	}
+
+	//item.sortOrder < oldSort
+	await prisma.todoItem.updateMany({
+		where: {
+			sortOrder: {
+				gte: item.sortOrder,
+				lt: oldSort
+			}
+		},
+		data: {
+			sortOrder: {
+				decrement: 1
+			}
+		}
+	});
+};

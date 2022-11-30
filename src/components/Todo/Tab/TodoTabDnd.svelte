@@ -47,23 +47,14 @@
 		let items: TodoItemDndData[] = e.detail.items;
 
 		let newItem = items.filter((item) => item.todoTabId !== todoTabId)[0];
+		//item left the tab
 		if (!isUndefined(newItem)) {
 			TodoItemHistory.addChanged({ old: newItem, new: { ...newItem, todoTabId: todoTabId } });
 			newItem.todoTabId = todoTabId;
-			await postTodoItem(newItem, true);
+			await postTodoItem(newItem, false);
 		}
 
-		//first incorect sortOrder or Item (edge case)
-		let changedItem = items.findIndex((item, index) => item.sortOrder !== index);
-		if (changedItem !== -1) {
-			items = adjustSortOrder(items);
-			for (let item of items.slice(changedItem, items.length)) {
-				await postTodoItem(item, false).catch(() => {
-					item.hidden = true; //for now let's hide invalid items until next refresh
-				});
-			}
-		}
-
+		items = adjustSortOrder(items);
 		todoItems = dndItems = items;
 		isDragging = false;
 	};

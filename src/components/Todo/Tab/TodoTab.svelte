@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { TodoTabFooter, TodoTabHeader } from '$components/Todo';
-	import { deleteTodoItem, postTodoItem, postTodoTab, createTodoItem, postTodoItems } from '$lib/apiCalls/TodoActions';
+	import { createTodoItem, deleteTodoItem, postTodoTab } from '$lib/apiCalls/TodoActions';
 	import { isUndefined, isUndefinedOrEmpty } from '$lib/helpers/jsUtils';
 	import { adjustSortOrder, sortBySortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoItemData, TodoTabData } from '$lib/models/TodoData';
@@ -42,7 +42,6 @@
 				data.todoItems = [newItem, ...data.todoItems];
 				data.todoItems = adjustSortOrder(data.todoItems);
 
-				await postTodoItems(data.todoItems.slice(1, data.todoItems.length), false);
 				//push others back
 				// for (let i = 1; i < data.todoItems.length; i++) {
 				// 	await postTodoItem(data.todoItems[i], false);

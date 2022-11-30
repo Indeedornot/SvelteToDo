@@ -2,7 +2,7 @@
 	import { TodoTab } from '$components/Todo';
 	import { postTodoTab } from '$lib/apiCalls/TodoActions';
 	import { isUndefined } from '$lib/helpers/jsUtils';
-	import { adjustSortOrder, sortBySortOrder } from '$lib/helpers/sortOrder';
+	import { adjustSortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoTabData } from '$lib/models/TodoData';
 	import type { TodoTabDndData, TodoTabDndEvent } from '$lib/models/TodoDndData';
 	import '$lib/styles/Scrollbar.css';
@@ -32,13 +32,7 @@
 		let changedItem = items.findIndex((item, index) => item.sortOrder !== index);
 		if (changedItem !== -1) {
 			items = adjustSortOrder(items);
-			// items[changedItem].todoDisplayId = id; - we dont support moving between displays rn
-
-			for (let item of items.slice(changedItem, items.length)) {
-				await postTodoTab(item).catch(() => {
-					item.hidden = true; //if error, hide item till next refresh
-				});
-			}
+			await postTodoTab(items[changedItem], false);
 		}
 
 		todoTabs = dndTabs = items;

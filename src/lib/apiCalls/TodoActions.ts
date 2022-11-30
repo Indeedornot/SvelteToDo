@@ -197,35 +197,3 @@ export const deleteTodoItem = async (data: TodoItemData, history = false): Promi
 			return Promise.reject(error);
 		});
 };
-
-//for multiple items update
-
-export const postTodoItems = async (data: TodoItemData[]): Promise<TodoItemData[]> => {
-	return trpc()
-		.item.updateMany.query(data)
-		.then((postedItems) => postedItems)
-		.catch((error) => {
-			isSynced.set({ isSync: false, error: error });
-			return Promise.reject(error);
-		});
-};
-
-export const postTodoTabs = async (data: TodoTabData[]): Promise<TodoTabData[]> => {
-	return trpc()
-		.tab.updateMany.query(data)
-		.then((postedTabs) => postedTabs)
-		.catch((error) => {
-			isSynced.set({ isSync: false, error: error });
-			return Promise.reject(error);
-		});
-};
-
-export const postTodoDisplays = async (data: TodoDisplayData[]): Promise<TodoDisplayData[]> => {
-	return trpc()
-		.display.updateMany.query(data)
-		.then((postedDisplays) => postedDisplays)
-		.catch((error) => {
-			isSynced.set({ isSync: false, error: error });
-			return Promise.reject(error);
-		});
-};
