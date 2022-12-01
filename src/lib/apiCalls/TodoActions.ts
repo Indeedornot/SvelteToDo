@@ -1,6 +1,6 @@
 import type { TodoDisplayData, TodoItemData, TodoTabData } from '$lib/models/TodoData';
 import { isSynced } from '$lib/stores/Sync';
-import { TodoDisplayHistory, TodoItemHistory, TodoTabHistory } from '$lib/stores/Todo';
+import { TodoHistory } from '$lib/stores/Todo/TodoHistory';
 import { trpc } from '$lib/trpc/client';
 
 export const getTodoDisplays = async (): Promise<TodoDisplayData[]> => {
@@ -34,7 +34,7 @@ export const postTodoDisplay = async (data: TodoDisplayData, history = false): P
 	await trpc()
 		.display.getSingle.query(data.id)
 		.then((todoDisplay) => {
-			history && TodoDisplayHistory.addChanged({ old: todoDisplay, new: data });
+			history && TodoHistory.Display.addChanged({ old: todoDisplay, new: data });
 		})
 		.catch((error) => {
 			isSynced.set({ isSync: false, error: error });
@@ -53,7 +53,7 @@ export const createTodoDisplay = async (data: TodoDisplayData, history = false):
 	return trpc()
 		.display.create.query(data)
 		.then((postedDisplay) => {
-			history && TodoDisplayHistory.addAdded(postedDisplay);
+			history && TodoHistory.Display.addAdded(postedDisplay);
 			return postedDisplay;
 		})
 		.catch((error) => {
@@ -66,7 +66,7 @@ export const deleteTodoDisplay = async (data: TodoDisplayData, history = false):
 	return trpc()
 		.display.delete.query(data.id)
 		.then(() => {
-			history && TodoDisplayHistory.addRemoved(data);
+			history && TodoHistory.Display.addRemoved(data);
 		})
 		.catch((error) => {
 			isSynced.set({ isSync: false, error: error });
@@ -87,7 +87,7 @@ export const postTodoTab = async (data: TodoTabData, history = false): Promise<T
 	await trpc()
 		.tab.getSingle.query(data.id)
 		.then((todoTab) => {
-			history && TodoTabHistory.addChanged({ old: todoTab, new: data });
+			history && TodoHistory.Tab.addChanged({ old: todoTab, new: data });
 		})
 		.catch((error) => {
 			isSynced.set({ isSync: false, error: error });
@@ -109,7 +109,7 @@ export const createTodoTab = async (data: TodoTabData, history = false): Promise
 	return trpc()
 		.tab.create.query(data)
 		.then((postedTab) => {
-			history && TodoTabHistory.addAdded(postedTab);
+			history && TodoHistory.Tab.addAdded(postedTab);
 			return postedTab;
 		})
 		.catch((error) => {
@@ -122,7 +122,7 @@ export const deleteTodoTab = async (data: TodoTabData, history = false): Promise
 	return trpc()
 		.tab.delete.query(data.id)
 		.then(() => {
-			history && TodoTabHistory.addRemoved(data);
+			history && TodoHistory.Tab.addRemoved(data);
 			console.log('deleteTodoTab', data);
 		})
 		.catch((error) => {
@@ -155,7 +155,7 @@ export const createTodoItem = async (data: TodoItemData, history = false): Promi
 	return trpc()
 		.item.create.query(data)
 		.then((postedItem) => {
-			history && TodoItemHistory.addAdded(postedItem);
+			history && TodoHistory.Item.addAdded(postedItem);
 			return postedItem;
 		})
 		.catch((error) => {
@@ -168,7 +168,7 @@ export const postTodoItem = async (data: TodoItemData, history = false): Promise
 	await trpc()
 		.item.getSingle.query(data.id)
 		.then((todoItem) => {
-			history && TodoItemHistory.addChanged({ old: todoItem, new: data });
+			history && TodoHistory.Item.addChanged({ old: todoItem, new: data });
 		})
 		.catch((error) => {
 			isSynced.set({ isSync: false, error: error });
@@ -177,7 +177,7 @@ export const postTodoItem = async (data: TodoItemData, history = false): Promise
 	return trpc()
 		.item.update.query(data)
 		.then((postedItem) => {
-			history && TodoItemHistory.addAdded(postedItem);
+			history && TodoHistory.Item.addAdded(postedItem);
 			return postedItem;
 		})
 		.catch((error) => {
@@ -190,7 +190,7 @@ export const deleteTodoItem = async (data: TodoItemData, history = false): Promi
 	return trpc()
 		.item.delete.query(data.id)
 		.then(() => {
-			history && TodoItemHistory.addRemoved(data);
+			history && TodoHistory.Item.addRemoved(data);
 		})
 		.catch((error) => {
 			isSynced.set({ isSync: false, error: error });

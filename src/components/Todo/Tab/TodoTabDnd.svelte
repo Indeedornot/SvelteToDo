@@ -5,7 +5,6 @@
 	import { adjustSortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoItemData } from '$lib/models/TodoData';
 	import type { TodoItemDndData, TodoItemDndEvent } from '$lib/models/TodoDndData';
-	import { TodoItemHistory } from '$lib/stores/Todo';
 	import { dndzone } from 'svelte-dnd-action';
 
 	export let todoItems: TodoItemData[];
@@ -49,9 +48,8 @@
 		let newItem = items.filter((item) => item.todoTabId !== todoTabId)[0];
 		//item left the tab
 		if (!isUndefined(newItem)) {
-			TodoItemHistory.addChanged({ old: newItem, new: { ...newItem, todoTabId: todoTabId } });
 			newItem.todoTabId = todoTabId;
-			await postTodoItem(newItem, false);
+			await postTodoItem(newItem, true);
 		}
 
 		items = adjustSortOrder(items);

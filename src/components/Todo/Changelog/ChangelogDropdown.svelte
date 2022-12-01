@@ -4,7 +4,7 @@
 	import { clickOutside } from '$lib/helpers/clickOutside';
 	import { createDropdown } from '$lib/helpers/dropdownCtor';
 	import { slide } from '$lib/helpers/slideAnim';
-	import { TodoHistory, type TodoHistoryData } from '$lib/stores/Todo';
+	import { TodoHistory, type TodoHistoryData } from '$lib/stores/Todo/TodoHistory';
 
 	import TodoChangelog from './TodoChangelog.svelte';
 
@@ -14,26 +14,30 @@
 		offset: [0, 5],
 		fallbackPlacements: []
 	});
-
-	const closeTooltip = () => {
-		showTooltip = false;
-	};
-	const toggleTooltip = (event: Event) => {
-		showTooltip = !showTooltip;
-	};
+	const closeTooltip = () => (showTooltip = false);
+	const toggleTooltip = () => (showTooltip = !showTooltip);
+	let buttonRef: HTMLElement;
 
 	let showTooltip = false;
 
-	let history: TodoHistoryData[] = [...$TodoHistory].sort((a, b) => b.date.getTime() - a.date.getTime());
-	$: history = [...$TodoHistory].sort((a, b) => b.date.getTime() - a.date.getTime());
+	let history: TodoHistoryData[] = $TodoHistory;
+	$: history = $TodoHistory;
+
+	const delHistoryItem = (id: number) => {
+		console.log('delHistoryItem', id);
+		TodoHistory.update((history) => {
+			const item = history.find((item) => item.id === id);
+			if (item) item.hidden = true;
+			return history;
+		});
+	};
 </script>
 
 <button
 	use:popperRef
 	use:blurClick={showTooltip}
 	on:click={toggleTooltip}
-	use:clickOutside
-	on:clickoutside={closeTooltip}
+	bind:this={buttonRef}
 	class="flex h-full w-full flex-none 
 			items-center justify-center 
 			rounded border border-muted bg-subtle
@@ -48,6 +52,8 @@
 	<div
 		in:slide={{ duration: 300, axis: 'y' }}
 		out:slide={{ duration: 300, axis: 'y' }}
+		use:clickOutside={[buttonRef]}
+		on:clickOutside={closeTooltip}
 		use:popperContent={extraOpts}
 		class="z-[2] h-[50vh] flex-grow overflow-hidden  border border-subtle text-[16px] text-default shadow-ambient sm:w-[100vw] xs:w-[400px] xs:rounded-md"
 	>
@@ -68,12 +74,19 @@
 				class:overflow-y-auto={showTooltip}
 			>
 				{#each history as historyItem}
-					{#if historyItem.historyType === 'display'}
-						<TodoChangelog title={'Display'} history={historyItem} keys={['title']} />
-					{:else if historyItem.historyType === 'tab'}
-						<TodoChangelog title={'Tab'} history={historyItem} keys={['title']} />
-					{:else}
-						<TodoChangelog title={'Item'} history={historyItem} keys={['title', 'status', 'collapsed']} />
+					{#if !historyItem.hidden}
+						{#if historyItem.historyType === 'display'}
+							<TodoChangelog title={'Display'} history={historyItem} keys={['title']} onDelete={delHistoryItem} />
+						{:else if historyItem.historyType === 'tab'}
+							<TodoChangelog title={'Tab'} history={historyItem} keys={['title']} onDelete={delHistoryItem} />
+						{:else}
+							<TodoChangelog
+								title={'Item'}
+								history={historyItem}
+								keys={['title', 'status', 'collapsed']}
+								onDelete={delHistoryItem}
+							/>
+						{/if}
 					{/if}
 				{/each}
 			</div>
