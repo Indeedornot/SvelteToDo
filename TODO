@@ -1,13 +1,11 @@
 
 Todo:
   ☐ Maybe add visibility for child items removed for tab and display in a history
-  ☐ Add support for touch for dnd
-  ☐ Add a text somewhere that user is desynchronised.
   ☐ Work on scalability more 
     Add a way to limit the number of items displayed
-    Keep an eye on prisma and sqlite timeouts
 
 Not considered anymore:
+  ☐ Add support for touch for dnd @started(22-12-01 22:54)
 
   ☐ Add animations for add and remove 
   ☐ Rewrite animations in css 
@@ -22,6 +20,12 @@ BackBurner:
   ☐ Export styles in some way 
 
 Done:
+  ✔ Add a text somewhere that user is desynchronised. @done(22-12-01 22:54)
+
+  ✔ StatusDropdown lower in hierarchy should be behind the higher ones  collapsing @done(22-12-01 22:53)
+
+  ✔ Keep an eye on prisma and sqlite timeouts @done(22-12-01 22:45)
+
   ✔ Make TodoDisplayTitles editable @started(22-11-29 16:38) @done(22-11-29 16:56) @lasted(19m)
 
   ✔ Pass error message to IsSynced @done(22-11-29 16:22)

@@ -12,19 +12,16 @@
 		fallbackPlacements: []
 	});
 
-	const closeTooltip = () => {
-		showTooltip = false;
-	};
-	const toggleTooltip = () => {
-		showTooltip = !showTooltip;
-	};
-	//#endregion
+	const closeTooltip = () => (showTooltip = false);
+	const toggleTooltip = () => (showTooltip = !showTooltip);
+	let buttonRef: HTMLElement;
 
 	export let onDelete: () => void;
 	const onDel = () => {
 		closeTooltip();
 		onDelete();
 	};
+
 	let showTooltip = false;
 </script>
 
@@ -32,8 +29,7 @@
 	use:popperRef
 	use:blurClick={showTooltip}
 	on:click={toggleTooltip}
-	use:clickOutside
-	on:clickoutside={closeTooltip}
+	bind:this={buttonRef}
 	class="flex flex-none items-center whitespace-nowrap rounded 
 	bg-neutral-muted p-[1px] 
 	hover:bg-neutral-emphasis hover:text-default focus:text-default"
@@ -49,6 +45,8 @@
 		border border-muted bg-subtle text-[12px] 
 		text-default shadow-ambient 
 		child-hover:bg-neutral-subtle"
+		use:clickOutside={[buttonRef]}
+		on:clickOutside={closeTooltip}
 	>
 		<button class="flex items-center justify-center" on:click={onDel}>
 			<Delete size={12} class="inline-block" />

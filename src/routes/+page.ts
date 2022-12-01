@@ -14,7 +14,7 @@ export const load: PageLoad = async (event) => {
 			if (todos.length !== 0) return { todos };
 
 			const todo: TodoDisplayData = { id: -1, title: 'ProjectName', todoTabs: [], sortOrder: 0 };
-			return trpc()
+			return trpc(event)
 				.display.create.query(todo)
 				.then((data) => {
 					todos = [data];

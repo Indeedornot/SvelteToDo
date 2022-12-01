@@ -12,12 +12,9 @@
 		fallbackPlacements: []
 	});
 
-	const closeTooltip = () => {
-		showTooltip = false;
-	};
-	const toggleTooltip = (event: Event) => {
-		showTooltip = !showTooltip;
-	};
+	const closeTooltip = () => (showTooltip = false);
+	const toggleTooltip = () => (showTooltip = !showTooltip);
+	let buttonRef: HTMLElement;
 
 	export let onChoose: (status: string) => void;
 	export let status = '';
@@ -35,8 +32,7 @@
 	use:popperRef
 	use:blurClick={showTooltip}
 	on:click={toggleTooltip}
-	use:clickOutside
-	on:clickoutside={closeTooltip}
+	bind:this={buttonRef}
 	class="flex h-full w-full flex-none items-center whitespace-nowrap 
 	rounded px-1 
 	hover:bg-neutral-emphasis hover:text-default 
@@ -49,11 +45,13 @@
 	{#if showTooltip}
 		<div
 			use:popperContent={extraOpts}
-			in:slide={{ duration: 300, axis: 'y' }}
-			out:slide={{ duration: 300, axis: 'y' }}
-			class="tooltip rounded-md border border-muted 
-			bg-subtle text-[14px] text-default shadow-ambient 
-			child-hover:bg-neutral-subtle"
+			in:slide={{ duration: 300, axis: 'y', z: 1 }}
+			out:slide={{ duration: 300, axis: 'y', z: 0 }}
+			use:clickOutside={[buttonRef]}
+			on:clickOutside={closeTooltip}
+			class="tooltip rounded-md border 
+			border-muted bg-subtle text-[14px] text-default 
+			shadow-ambient child-hover:bg-neutral-subtle"
 		>
 			{#each statuses as stat}
 				<button on:click={() => setStatus(stat)}>{stat}</button>

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { Delete } from '$components/Icons';
 	import { capitalizeStart } from '$lib/helpers/jsUtils';
 	import type { TodoHistoryAll } from '$lib/stores/Todo';
 
@@ -9,17 +10,25 @@
 	export let keys: (keyof T)[];
 
 	export let title: string;
+
+	export let onDelete: (id: number) => void;
+	const delSelf = () => {
+		onDelete(history.id);
+	};
 </script>
 
 <!-- now boxshadow mixes in, otherwise we should be good, change also on hover header's bottom border -->
 <div
 	class="flex w-full flex-none flex-col overflow-hidden rounded-md border border-muted bg-default hover:border-muted hover:shadow-outline-muted"
 >
-	<div
-		class="flex h-[33px] flex-none items-center rounded-t-md border-b-2 border-muted px-2 font-semibold text-default "
-	>
-		Todo{title}
-		{capitalizeStart(history.type)} - {history.date.toLocaleTimeString()}
+	<div class="flex h-[33px] w-full flex-none items-center justify-between rounded-t-md border-b-2 border-muted px-2">
+		<div class="flex h-full flex-none items-center font-semibold text-default ">
+			Todo{title}
+			{capitalizeStart(history.type)} - {history.date.toLocaleTimeString()}
+		</div>
+		<button on:click={delSelf}>
+			<Delete />
+		</button>
 	</div>
 	<div class="flex w-full flex-grow flex-col ">
 		{#each keys as key}

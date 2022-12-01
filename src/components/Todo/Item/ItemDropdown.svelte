@@ -12,12 +12,9 @@
 		fallbackPlacements: []
 	});
 
-	const closeTooltip = () => {
-		showTooltip = false;
-	};
-	const toggleTooltip = (event: Event) => {
-		showTooltip = !showTooltip;
-	};
+	const closeTooltip = () => (showTooltip = false);
+	const toggleTooltip = (event: Event) => (showTooltip = !showTooltip);
+	let buttonRef: HTMLElement;
 
 	export let onDelete: () => void;
 	const onDel = () => {
@@ -32,8 +29,7 @@
 	use:popperRef
 	use:blurClick={showTooltip}
 	on:click={toggleTooltip}
-	use:clickOutside
-	on:clickoutside={closeTooltip}
+	bind:this={buttonRef}
 	class="flex flex-none items-center justify-center whitespace-nowrap rounded p-0.5 
 	hover:bg-neutral-emphasis hover:text-default 
 	focus:bg-neutral-muted focus:text-default"
@@ -45,6 +41,8 @@
 		<div
 			in:slide={{ duration: 300, axis: 'y' }}
 			out:slide={{ duration: 300, axis: 'y' }}
+			use:clickOutside={[buttonRef]}
+			on:clickOutside={closeTooltip}
 			use:popperContent={extraOpts}
 			class="tooltip text-font-primary z-[1] 
 			rounded-md border border-muted bg-subtle text-[14px] text-default 

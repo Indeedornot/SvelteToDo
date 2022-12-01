@@ -3,6 +3,8 @@ import type { TodoDisplayData, TodoItemData, TodoTabData } from '$lib/models/Tod
 //#region Base
 type TodoHistoryBase = {
 	date: Date;
+	hidden: boolean;
+	id: number;
 };
 
 type TodoHistoryChange<T> = TodoHistoryBase & {

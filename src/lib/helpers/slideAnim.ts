@@ -1,6 +1,6 @@
 import { cubicOut } from 'svelte/easing';
 
-export function slide(node: HTMLElement, { delay = 0, duration = 400, easing = cubicOut, axis = 'y' }) {
+export function slide(node: HTMLElement, { delay = 0, duration = 400, easing = cubicOut, axis = 'y', z = NaN }) {
 	const style = getComputedStyle(node);
 	const opacity = +style.opacity;
 	const primary_dimension = axis === 'y' ? 'height' : 'width';
@@ -25,6 +25,7 @@ export function slide(node: HTMLElement, { delay = 0, duration = 400, easing = c
 			`margin-${secondary_dimensions[0].toLowerCase()}: ${t * margin_start_value}px;` +
 			`margin-${secondary_dimensions[1].toLowerCase()}: ${t * margin_end_value}px;` +
 			`border-${secondary_dimensions[0].toLowerCase()}-width: ${t * border_width_start_value}px;` +
-			`border-${secondary_dimensions[1].toLowerCase()}-width: ${t * border_width_end_value}px;`
+			`border-${secondary_dimensions[1].toLowerCase()}-width: ${t * border_width_end_value}px;` +
+			(isNaN(z) ? '' : `z-index: ${z};`)
 	};
 }
