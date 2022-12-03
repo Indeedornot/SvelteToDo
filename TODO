@@ -2,7 +2,9 @@
 Todo:
   ☐ Maybe add visibility for child items removed for tab and display in a history
   ☐ Work on scalability more 
-    Add a way to limit the number of items displayed
+    Add a way to limit the number of items displayed in a sensible way
+      If it cannot be done with virtualization, then add a simple limit
+        Wonder how would i go about it with dnd
 
 Not considered anymore:
   ☐ Add support for touch for dnd @started(22-12-01 22:54)

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { TodoTab } from '$components/Todo';
 	import { postTodoTab } from '$lib/apiCalls/TodoActions';
+	import { dndScroll } from '$lib/helpers/dndScroll';
 	import { isUndefined } from '$lib/helpers/jsUtils';
 	import { adjustSortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoTabData } from '$lib/models/TodoData';
@@ -60,6 +61,7 @@
 	use:dndzone={{ items: dndTabs, type: 'display', dragDisabled: !isDragging, dropFromOthersDisabled: true }}
 	on:consider={handleDndConsider}
 	on:finalize={handleDndFinalize}
+	use:dndScroll={{ centerSize: 100, scrollSpeed: 25 }}
 >
 	{#each dndTabs as todo (todo.dndId)}
 		<TodoTab onDelete={delTodoTab} bind:data={todo} bind:searchQuery={searchQuery} bind:isDragged={isDragging} />
