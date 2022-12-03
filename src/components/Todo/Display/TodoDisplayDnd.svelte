@@ -7,7 +7,7 @@
 	import type { TodoTabData } from '$lib/models/TodoData';
 	import type { TodoTabDndData, TodoTabDndEvent } from '$lib/models/TodoDndData';
 	import '$lib/styles/Scrollbar.css';
-	import { dndzone } from 'svelte-dnd-action';
+	import { SOURCES, TRIGGERS, dndzone } from 'svelte-dnd-action';
 
 	export let todoTabs: TodoTabData[];
 	export let delTodoTab: (todoTabId: number) => void;
@@ -25,6 +25,11 @@
 	const handleDndConsider = (e: TodoTabDndEvent) => {
 		let items: TodoTabDndData[] = e.detail.items;
 		todoTabs = dndTabs = adjustSortOrder(items);
+
+		const { source, trigger } = e.detail.info;
+		if (source === SOURCES.KEYBOARD && trigger === TRIGGERS.DRAG_STOPPED) {
+			isDragging = false;
+		}
 	};
 
 	const handleDndFinalize = async (e: TodoTabDndEvent) => {
@@ -37,7 +42,10 @@
 		}
 
 		todoTabs = dndTabs = items;
-		isDragging = false;
+		const { source } = e.detail.info;
+		if (source === SOURCES.POINTER) {
+			isDragging = false;
+		}
 	};
 
 	$: searchQuery, updateDndItems();
@@ -57,7 +65,7 @@
 </script>
 
 <div
-	class="styled-scrollbar todotabs flex w-full flex-grow overflow-x-auto bg-default py-[8px] sm:px-[16px] md:px-[24px] lg:px-[32px]"
+	class="styled-scrollbar todotabs flex w-full flex-grow overflow-auto bg-default py-[8px] sm:px-[16px] md:px-[24px] lg:px-[32px]"
 	use:dndzone={{ items: dndTabs, type: 'display', dragDisabled: !isDragging, dropFromOthersDisabled: true }}
 	on:consider={handleDndConsider}
 	on:finalize={handleDndFinalize}

@@ -11,5 +11,6 @@ declare namespace svelte.JSX {
 		onstopTyping: (event: CustomEvent<{ text: string }>) => void;
 		onconsider?: (event: CustomEvent<DndEvent<ItemType>> & { target: EventTarget & T }) => void;
 		onfinalize?: (event: CustomEvent<DndEvent<ItemType>> & { target: EventTarget & T }) => void;
+		ondragged?: (event: CustomEvent<{ isDragged: boolean }> & { target: EventTarget & T }) => void;
 	}
 }
