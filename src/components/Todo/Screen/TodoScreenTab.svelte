@@ -17,13 +17,16 @@
 	const postDisplay = () => {
 		postTodoDisplay(data, true).catch();
 	};
+
+	console.log(data);
 </script>
 
-<div
-	class="rounded-t border border-b-0 border-muted bg-default hover:bg-overlay"
-	out:slide={{ axis: 'x', duration: 400 }}
+<div class="rounded-t border border-b-0 border-muted bg-default hover:bg-overlay">
+	<!-- 
+		out:slide={{ axis: 'x', duration: 400 }}
 	in:slide={{ axis: 'x', duration: 400, delay: 50, easing: (t) => (t * t) / 2 }}
->
+
+ -->
 	<div
 		class="flex h-full w-full flex-none flex-row px-3 py-1 transition-all duration-300 ease-linear"
 		class:px-2={chosen}
@@ -44,12 +47,12 @@
 					data.title = e.detail.text;
 					postDisplay();
 				}}
-			>
-				{data.title}
-			</div>
+				content={data.title}
+			/>
 		</button>
 		{#if chosen}
-			<div transition:slide|local={{ axis: 'x' }}>
+			<!-- transition:slide|local={{ axis: 'x' }} -->
+			<div>
 				<button class="flex h-full w-full flex-none items-center whitespace-nowrap pl-1">
 					<ScreenMore onDelete={() => onDelete(data.id)} />
 				</button>

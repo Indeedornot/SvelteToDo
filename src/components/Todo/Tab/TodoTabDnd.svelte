@@ -13,21 +13,8 @@
 	export let searchQuery: string = '';
 	let isDragging: boolean = false;
 
-	let dndItems: TodoItemDndData[] = todoItems.map((item) => {
-		return {
-			...item,
-			dndId: `item-${item.id}`,
-			hidden: isUndefined(item.hidden) ? false : item.hidden
-		};
-	});
-
-	$: searchQuery, updateDndItems();
-	$: if (todoItems.length !== dndItems.length) {
-		updateDndItems();
-	}
-
-	const updateDndItems = () => {
-		dndItems = todoItems.map((item) => {
+	const mapDndItems = () => {
+		return todoItems.map((item) => {
 			return {
 				...item,
 				dndId: `item-${item.id}`,
@@ -35,6 +22,12 @@
 			};
 		});
 	};
+	let dndItems: TodoItemDndData[] = mapDndItems();
+
+	$: searchQuery, (dndItems = mapDndItems());
+	$: if (todoItems.length !== dndItems.length) {
+		dndItems = mapDndItems();
+	}
 
 	const handleDndConsider = (e: TodoItemDndEvent) => {
 		const items: TodoItemDndData[] = e.detail.items;

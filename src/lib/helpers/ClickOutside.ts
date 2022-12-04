@@ -4,8 +4,17 @@ export function clickOutside(node: HTMLElement, exceptions: HTMLElement[] = []) 
 
 	const handleClick = (event: MouseEvent) => {
 		const target = event.target as HTMLElement;
-		if (node && !node.contains(target) && !except.find((x) => x?.contains(target)) && !event.defaultPrevented) {
-			console.log('clickOutside');
+
+		if (
+			node &&
+			//still in dom
+			document.body.contains(target) &&
+			!event.defaultPrevented &&
+			//not a child of node
+			!node.contains(target) &&
+			//not in exceptions
+			!except.find((x) => x?.contains(target))
+		) {
 			node.dispatchEvent(new CustomEvent('clickOutside', { detail: node }));
 		}
 	};

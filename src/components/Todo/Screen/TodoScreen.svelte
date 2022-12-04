@@ -2,21 +2,25 @@
 	import { Plus } from '$components/Icons';
 	import { Changelog } from '$components/Todo';
 	import TodoDisplay from '$components/Todo/Display/TodoDisplay.svelte';
-	import { deleteTodoDisplay, postTodoDisplay, createTodoDisplay } from '$lib/apiCalls/TodoActions';
+	import { createTodoDisplay, deleteTodoDisplay, postTodoDisplay } from '$lib/apiCalls/TodoActions';
 	import { adjustSortOrder, sortBySortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoDisplayData } from '$lib/models/TodoData';
 
-	import TodoScreenTab from './TodoScreenTab.svelte';
+	import TodoScreenTabDnd from './TodoScreenTabDnd.svelte';
 
 	export let data: TodoDisplayData[];
 	let index = 0;
 
 	const delTodoDisplay = (id: number) => {
-		const index = data.findIndex((item) => item.id === id);
-		deleteTodoDisplay(data[index], true)
+		if (data.length === 1) return;
+		const delIndex = data.findIndex((item) => item.id === id);
+		deleteTodoDisplay(data[delIndex], true)
 			.then(() => {
 				data.splice(index, 1);
 				data = adjustSortOrder(data);
+				if (index > 0) {
+					index--;
+				}
 			})
 			.catch();
 	};
@@ -39,10 +43,6 @@
 			.catch();
 	};
 
-	const changeIndex = (newIndex: number) => {
-		index = newIndex;
-	};
-
 	$: data = sortBySortOrder(data);
 </script>
 
@@ -57,35 +57,17 @@
 			</div>
 		</div>
 		<div
-			class="screenTabs styled-scrollbar flex h-[34px] w-full 
-			flex-none flex-row overflow-x-auto text-[14px] text-subtle 
+			class="flex h-[34px] w-full 
+			flex-none flex-row text-[14px] text-subtle 
 			sm:px-[16px] md:px-[24px] lg:px-[32px]"
 		>
-			{#each data as dataDisplay (dataDisplay.id)}
-				<TodoScreenTab
-					bind:data={dataDisplay}
-					onDelete={delTodoDisplay}
-					changeIndex={changeIndex}
-					chosen={index === dataDisplay.sortOrder}
-				/>
-			{/each}
+			<TodoScreenTabDnd onDelete={delTodoDisplay} bind:data={data} bind:index={index} />
 			<button class="hover:text-default" on:click={addTodoDisplay}>
 				<Plus />
 			</button>
 		</div>
 	</div>
 	<div class="flex min-h-0 flex-grow bg-default">
-		<!-- ! HACK - component doesn't update otherwise -->
-		{#each data as dataDisplay (dataDisplay.id)}
-			{#if index === dataDisplay.sortOrder}
-				<TodoDisplay data={dataDisplay} />
-			{/if}
-		{/each}
+		<TodoDisplay data={data.find((item) => item.sortOrder === index)} />
 	</div>
 </div>
-
-<style>
-	.screenTabs > :global(*:not(:last-child)) {
-		margin-right: 0.25rem;
-	}
-</style>

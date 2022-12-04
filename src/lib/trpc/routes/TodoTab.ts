@@ -125,7 +125,7 @@ export const tab = t.router({
 	)
 });
 
-const updateSortOrder = async (id: number, oldSort: number) => {
+const updateSortOrder = async (id: number, newSort: number) => {
 	//adjust the sortOrder of the other items only if it has changed
 	const tab = await prisma.todoTab.findUniqueOrThrow({
 		where: {
@@ -136,13 +136,13 @@ const updateSortOrder = async (id: number, oldSort: number) => {
 		}
 	});
 
-	if (tab && tab.sortOrder === oldSort) return;
-	if (tab.sortOrder > oldSort) {
+	if (tab && tab.sortOrder === newSort) return;
+	if (tab.sortOrder > newSort) {
 		await prisma.todoTab.updateMany({
 			where: {
 				sortOrder: {
-					gt: oldSort,
-					lte: tab.sortOrder
+					gte: newSort,
+					lt: tab.sortOrder
 				}
 			},
 			data: {
@@ -158,8 +158,8 @@ const updateSortOrder = async (id: number, oldSort: number) => {
 	await prisma.todoTab.updateMany({
 		where: {
 			sortOrder: {
-				gte: tab.sortOrder,
-				lt: oldSort
+				gt: tab.sortOrder,
+				lte: newSort
 			}
 		},
 		data: {
