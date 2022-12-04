@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { TodoTab } from '$components/Todo';
 	import { postTodoTab } from '$lib/apiCalls/TodoActions';
-	import { dndScroll } from '$lib/helpers/dndScroll';
+	import { dndScroll } from '$lib/helpers/dnd/dndScroll';
 	import { isUndefined } from '$lib/helpers/jsUtils';
 	import { adjustSortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoTabData } from '$lib/models/TodoData';
@@ -14,13 +14,16 @@
 	export let isDragging = false;
 	export let searchQuery: string;
 
-	let dndTabs: TodoTabDndData[] = todoTabs.map((item) => {
-		return {
-			...item,
-			dndId: `tab-${item.id}`,
-			hidden: isUndefined(item.hidden) ? false : item.hidden
-		};
-	});
+	const mapDndItems = () => {
+		return todoTabs.map((item) => {
+			return {
+				...item,
+				dndId: `tab-${item.id}`,
+				hidden: isUndefined(item.hidden) ? false : item.hidden
+			};
+		});
+	};
+	let dndTabs: TodoTabDndData[] = mapDndItems();
 
 	const handleDndConsider = (e: TodoTabDndEvent) => {
 		let items: TodoTabDndData[] = e.detail.items;
@@ -48,20 +51,10 @@
 		}
 	};
 
-	$: searchQuery, updateDndItems();
+	$: searchQuery, (dndTabs = mapDndItems());
 	$: if (todoTabs.length !== dndTabs.length) {
-		updateDndItems();
+		dndTabs = mapDndItems();
 	}
-
-	const updateDndItems = () => {
-		dndTabs = todoTabs.map((item) => {
-			return {
-				...item,
-				dndId: `tab-${item.id}`,
-				hidden: isUndefined(item.hidden) ? false : item.hidden
-			};
-		});
-	};
 </script>
 
 <div

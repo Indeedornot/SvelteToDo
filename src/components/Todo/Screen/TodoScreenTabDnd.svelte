@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { postTodoDisplay } from '$lib/apiCalls/TodoActions';
-	import { adjustSortOrder } from '$lib/helpers/sortOrder';
+	import { adjustSortOrder } from '$lib/helpers';
 	import type { TodoDisplayData } from '$lib/models/TodoData';
 	import type { TodoDisplayDndData, TodoDisplayDndEvent } from '$lib/models/TodoDndData';
 	import { dndzone } from 'svelte-dnd-action';
@@ -59,7 +59,7 @@
 </script>
 
 <div
-	class="screenTabs styled-scrollbar flex w-full  overflow-x-auto"
+	class="screenTabs styled-scrollbar flex overflow-x-auto"
 	use:dndzone={{ items: dndData }}
 	on:consider={handleDndConsider}
 	on:finalize={handleDndFinalize}

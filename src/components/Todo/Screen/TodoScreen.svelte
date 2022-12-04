@@ -2,8 +2,8 @@
 	import { Plus } from '$components/Icons';
 	import { Changelog } from '$components/Todo';
 	import TodoDisplay from '$components/Todo/Display/TodoDisplay.svelte';
-	import { createTodoDisplay, deleteTodoDisplay, postTodoDisplay } from '$lib/apiCalls/TodoActions';
-	import { adjustSortOrder, sortBySortOrder } from '$lib/helpers/sortOrder';
+	import { createTodoDisplay, deleteTodoDisplay } from '$lib/apiCalls/TodoActions';
+	import { adjustSortOrder, sortBySortOrder } from '$lib/helpers';
 	import type { TodoDisplayData } from '$lib/models/TodoData';
 
 	import TodoScreenTabDnd from './TodoScreenTabDnd.svelte';
@@ -27,6 +27,7 @@
 
 	let adding = false;
 	const addTodoDisplay = async () => {
+		if (adding) return;
 		const newTodoDisplay: TodoDisplayData = {
 			id: -1,
 			title: 'New Display',

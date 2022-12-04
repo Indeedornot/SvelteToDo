@@ -1,4 +1,4 @@
-import { isUndefined } from './jsUtils';
+import { isUndefined } from '$lib/helpers/jsUtils';
 
 //Dndzode x-axis scroll helper
 export function dndScroll(

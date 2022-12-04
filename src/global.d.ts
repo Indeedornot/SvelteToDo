@@ -9,8 +9,9 @@ declare namespace svelte.JSX {
 	interface HTMLAttributes<T> {
 		onclickOutside: () => void;
 		onstopTyping: (event: CustomEvent<{ text: string }>) => void;
-		onconsider?: (event: CustomEvent<DndEvent<ItemType>> & { target: EventTarget & T }) => void;
-		onfinalize?: (event: CustomEvent<DndEvent<ItemType>> & { target: EventTarget & T }) => void;
-		ondragged?: (event: CustomEvent<{ isDragged: boolean }> & { target: EventTarget & T }) => void;
+		onconsider: (event: CustomEvent<DndEvent<ItemType>> & { target: EventTarget & T }) => void;
+		onfinalize: (event: CustomEvent<DndEvent<ItemType>> & { target: EventTarget & T }) => void;
+		ondragged: (event: CustomEvent<{ isDragged: boolean }> & { target: EventTarget & T }) => void;
+		ondndVirtualization: (event: CustomEvent<boolean>) => void;
 	}
 }

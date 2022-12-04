@@ -2,9 +2,8 @@
 	import { Project } from '$components/Icons';
 	import { ScreenMore } from '$components/Todo';
 	import { postTodoDisplay } from '$lib/apiCalls/TodoActions';
-	import { maxLength, stopTyping, truncateEditable } from '$lib/helpers/contentEditable';
-	import { singleLine } from '$lib/helpers/contentEditable/singleLine';
-	import { slide } from '$lib/helpers/slideAnim';
+	import { maxLength, singleLine, stopTyping, truncateEditable } from '$lib/helpers/contentEditable';
+	// import { slide } from '$lib/helpers/slideAnim';
 	import type { TodoDisplayData } from '$lib/models/TodoData';
 	import { TodoDisplayConstr } from '$lib/models/TodoDataConstr';
 	import '$lib/styles/ContentEditable.css';
@@ -17,8 +16,6 @@
 	const postDisplay = () => {
 		postTodoDisplay(data, true).catch();
 	};
-
-	console.log(data);
 </script>
 
 <div class="rounded-t border border-b-0 border-muted bg-default hover:bg-overlay">

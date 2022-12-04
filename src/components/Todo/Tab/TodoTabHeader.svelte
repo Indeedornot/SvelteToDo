@@ -2,7 +2,7 @@
 	import { TabMore } from '$components/Todo';
 	import { maxLength, stopTyping, truncateEditable } from '$lib/helpers/contentEditable';
 	import { singleLine } from '$lib/helpers/contentEditable/singleLine';
-	import { dndHandle } from '$lib/helpers/dndHandle';
+	import { dndHandle } from '$lib/helpers/dnd/dndHandle';
 	import { TodoTabConstr } from '$lib/models/TodoDataConstr';
 	import '$lib/styles/ContentEditable.css';
 	import '$lib/styles/Scrollbar.css';
