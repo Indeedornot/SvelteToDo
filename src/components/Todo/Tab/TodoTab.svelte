@@ -95,28 +95,20 @@
 
 	$: searchQuery, (data.todoItems = getDisplayTodoItems(data.todoItems));
 	$: data.todoItems = sortBySortOrder(data.todoItems);
-
-	let isVisible = false;
 </script>
 
 <div
 	class:hidden={data.hidden}
 	class="isolate flex h-full flex-none flex-col rounded-md border border-subtle bg-inset sm:w-full xs:w-[350px]"
-	use:dndVirtualization
-	on:dndVirtualization={(event) => {
-		isVisible = event.detail;
-	}}
 >
-	{#if isVisible}
-		<TodoTabHeader
-			onDelete={delSelf}
-			onStopTyping={postTodo}
-			bind:title={data.title}
-			bind:isDragged={isDragged}
-			itemCount={visibleItemsCount}
-		/>
-		<TodoTabDnd delTodoItem={delTodoItem} bind:todoItems={data.todoItems} todoTabId={data.id} />
+	<TodoTabHeader
+		onDelete={delSelf}
+		onStopTyping={postTodo}
+		bind:title={data.title}
+		bind:isDragged={isDragged}
+		itemCount={visibleItemsCount}
+	/>
+	<TodoTabDnd delTodoItem={delTodoItem} bind:todoItems={data.todoItems} todoTabId={data.id} />
 
-		<TodoTabFooter onAdd={addTodoItem} />
-	{/if}
+	<TodoTabFooter onAdd={addTodoItem} />
 </div>

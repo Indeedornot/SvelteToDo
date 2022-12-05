@@ -5,6 +5,7 @@
 	import { createTodoDisplay, deleteTodoDisplay } from '$lib/apiCalls/TodoActions';
 	import { adjustSortOrder, sortBySortOrder } from '$lib/helpers';
 	import type { TodoDisplayData } from '$lib/models/TodoData';
+	import { sortOrder } from '$lib/trpc/models/TodoData';
 
 	import TodoScreenTabDnd from './TodoScreenTabDnd.svelte';
 
@@ -16,11 +17,10 @@
 		const delIndex = data.findIndex((item) => item.id === id);
 		deleteTodoDisplay(data[delIndex], true)
 			.then(() => {
-				data.splice(index, 1);
+				data.splice(delIndex, 1);
 				data = adjustSortOrder(data);
-				if (index > 0) {
-					index--;
-				}
+				if (index < data.length) return;
+				else index--;
 			})
 			.catch();
 	};
@@ -58,8 +58,8 @@
 			</div>
 		</div>
 		<div
-			class="flex h-[34px] w-full 
-			flex-none flex-row text-[14px] text-subtle 
+			class="flex h-[34px] w-full flex-none
+			flex-row items-center text-[14px] text-subtle 
 			sm:px-[16px] md:px-[24px] lg:px-[32px]"
 		>
 			<TodoScreenTabDnd onDelete={delTodoDisplay} bind:data={data} bind:index={index} />
@@ -69,6 +69,6 @@
 		</div>
 	</div>
 	<div class="flex min-h-0 flex-grow bg-default">
-		<TodoDisplay data={data.find((item) => item.sortOrder === index)} />
+		<TodoDisplay data={data[index]} />
 	</div>
 </div>

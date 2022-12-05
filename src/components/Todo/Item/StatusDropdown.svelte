@@ -19,7 +19,7 @@
 	export let onChoose: (status: string) => void;
 	export let status = '';
 
-	let showTooltip = false;
+	export let showTooltip = false;
 	let statuses = ['Draft', 'Completed', 'In Progress', 'Archived', 'Abandoned'];
 	const setStatus = (newStatus: string) => {
 		closeTooltip();

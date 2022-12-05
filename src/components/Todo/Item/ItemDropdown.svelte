@@ -22,7 +22,7 @@
 		onDelete();
 	};
 
-	let showTooltip = false;
+	export let showTooltip = false;
 </script>
 
 <button

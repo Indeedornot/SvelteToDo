@@ -40,6 +40,8 @@
 	}
 
 	let isVisible = false;
+	let showingStatus = false;
+	let showingMore = false;
 </script>
 
 <div
@@ -51,23 +53,23 @@
 	use:dndVirtualization
 >
 	{#if isVisible}
-		<div class="box-border flex h-[8px] flex-none touch-none items-end justify-center">
+		<div class="box-border flex h-[8px] flex-none touch-none items-end justify-center ">
 			<div
 				class="box-border flex h-full w-4/12 flex-none 
-			cursor-grab rounded-b bg-default hover:bg-neutral-muted"
+			cursor-grab rounded-b bg-default hover:bg-neutral-muted active:bg-neutral-muted"
 				class:dragging={isDragged}
 				use:dndHandle={isDragged}
-				on:dragged={(e) => (isDragged = e.detail.isDragged)}
+				on:dragged={(e) => (isDragged = e.detail.isDragged && !showingMore && !showingStatus)}
 			/>
 		</div>
 
 		<div class="flex w-full flex-grow flex-col pr-[12px] pl-[8px]">
 			<div class="mb-0.5 box-border flex h-[22px] w-full flex-none flex-row justify-between text-[12px] text-subtle">
 				<div class="rounded">
-					<StatusDropdown bind:status={data.status} onChoose={postTodo} />
+					<StatusDropdown bind:status={data.status} onChoose={postTodo} bind:showTooltip={showingStatus} />
 				</div>
 				<div class="flex aspect-square h-full flex-none items-center justify-center">
-					<ItemMore onDelete={deleteSelf} />
+					<ItemMore onDelete={deleteSelf} bind:showTooltip={showingMore} />
 				</div>
 			</div>
 			<div class="box-border pb-1.5 pt-1">

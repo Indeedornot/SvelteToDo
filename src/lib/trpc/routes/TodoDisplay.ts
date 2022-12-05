@@ -1,4 +1,4 @@
-import prisma from '$lib/server/prisma';
+import prisma from '$lib/trpc/prisma';
 
 import { logger } from '../middleware/logger';
 import { id, todoDisplay, todoDisplayCreate } from '../models/TodoData';

@@ -12,15 +12,18 @@
 	export let title: string;
 	export let isDragged: boolean = false;
 	export let itemCount: number;
+
+	export let showMore = false;
 </script>
 
 <div class="flex h-[42px] touch-none flex-col pb-[2px] text-[16px]">
 	<div class="flex h-[10px] w-full flex-none items-end justify-center pb-[2px]">
 		<div
-			class="box-border flex h-full w-4/12 flex-none cursor-grab rounded-b bg-subtle hover:bg-neutral-muted"
+			class="box-border flex h-full w-4/12 flex-none cursor-grab rounded-b bg-subtle hover:bg-neutral-muted active:bg-neutral-muted"
+			class:bg-neutral-muted={isDragged}
 			class:dragging={isDragged}
 			use:dndHandle={isDragged}
-			on:dragged={(e) => (isDragged = e.detail.isDragged)}
+			on:dragged={(e) => (isDragged = e.detail.isDragged && !showMore)}
 		/>
 	</div>
 	<div class="flex max-h-full w-full flex-shrink-0 flex-grow flex-row items-center px-[12px] pb-1 text-default">
@@ -46,7 +49,7 @@
 		<div
 			class="ml-auto box-border flex aspect-square h-full flex-none items-center justify-center rounded text-default"
 		>
-			<TabMore onDelete={onDelete} />
+			<TabMore onDelete={onDelete} bind:showTooltip={showMore} />
 		</div>
 	</div>
 </div>

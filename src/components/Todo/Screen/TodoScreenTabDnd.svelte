@@ -55,23 +55,26 @@
 		dndData = mapDndItems();
 	}
 
-	$: console.log(index, dndData[index]);
+	let showTooltip = false;
 </script>
 
-<div
-	class="screenTabs styled-scrollbar flex overflow-x-auto"
-	use:dndzone={{ items: dndData }}
-	on:consider={handleDndConsider}
-	on:finalize={handleDndFinalize}
->
-	{#each dndData as dataDisplay (dataDisplay.dndId)}
-		<TodoScreenTab
-			bind:data={dataDisplay}
-			onDelete={onDelete}
-			changeIndex={changeIndex}
-			chosen={index === dataDisplay.sortOrder}
-		/>
-	{/each}
+<div class="flex overflow-hidden rounded-t-md">
+	<div
+		class="screenTabs styled-scrollbar flex overflow-x-auto rounded-t"
+		use:dndzone={{ items: dndData, dragDisabled: showTooltip }}
+		on:consider={handleDndConsider}
+		on:finalize={handleDndFinalize}
+	>
+		{#each dndData as dataDisplay (dataDisplay.dndId)}
+			<TodoScreenTab
+				bind:data={dataDisplay}
+				onDelete={onDelete}
+				changeIndex={changeIndex}
+				chosen={index === dataDisplay.sortOrder}
+				bind:showTooltip={showTooltip}
+			/>
+		{/each}
+	</div>
 </div>
 
 <style>

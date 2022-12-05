@@ -42,11 +42,18 @@
 	const handleDndFinalize = async (e: TodoItemDndEvent) => {
 		let items: TodoItemDndData[] = e.detail.items;
 
-		let newItem = items.filter((item) => item.todoTabId !== todoTabId)[0];
+		let newItem = items.findIndex((item) => item.todoTabId !== todoTabId);
 		//item left the tab
-		if (!isUndefined(newItem)) {
-			newItem.todoTabId = todoTabId;
-			await postTodoItem(newItem, true);
+		if (newItem !== -1) {
+			items[newItem].todoTabId = todoTabId;
+			await postTodoItem(items[newItem], true);
+		}
+
+		let changedItem = items.findIndex((item, index) => item.sortOrder !== index);
+		//item changed position
+		if (changedItem !== -1) {
+			items = adjustSortOrder(items);
+			await postTodoItem(items[changedItem], true);
 		}
 
 		items = adjustSortOrder(items);
