@@ -21,17 +21,15 @@
 	};
 </script>
 
-<div
-	class="rounded-t border border-b-0 border-muted bg-default hover:bg-overlay"
-	use:dndHandle={isDragged}
-	on:dragged={(event) => (isDragged = event.detail.isDragged)}
->
+<div class="rounded-t border border-b-0 border-muted bg-default hover:bg-overlay">
 	<div
 		class="flex h-full w-full flex-none flex-row px-3 py-1 transition-all duration-200 ease-linear"
 		class:px-2={chosen}
 		class:text-default={chosen}
 		class:font-semibold={chosen}
 		class:bg-subtle={chosen}
+		use:dndHandle={isDragged}
+		on:dragged={(event) => (isDragged = event.detail.isDragged)}
 	>
 		<button class="flex flex-none flex-row items-center justify-center" on:click={() => changeIndex(data.sortOrder)}>
 			<Project size={20} class="pr-1" />

@@ -23,7 +23,9 @@ export function dndHandle(node: HTMLElement, isDragged: boolean) {
 		}
 	};
 
-	const onDrag = () => {
+	const onDrag = (e: Event) => {
+		if (!node.isEqualNode(e.target as HTMLElement)) return;
+		//Under the assumption that handle is one element with no children as a part of it
 		dragged.set(true);
 	};
 	const onDragEnd = () => {
