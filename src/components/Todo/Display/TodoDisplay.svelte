@@ -3,7 +3,7 @@
 	import { createTodoTab, deleteTodoTab } from '$lib/apiCalls/TodoActions';
 	import { isUndefinedOrEmpty } from '$lib/helpers/jsUtils';
 	import { adjustSortOrder, sortBySortOrder } from '$lib/helpers/sortOrder';
-	import type { TodoDisplayData, TodoTabData } from '$lib/models/TodoData';
+	import type { TodoDisplayData, TodoTabCreateData, TodoTabData } from '$lib/models/TodoData';
 	import '$lib/styles/Scrollbar.css';
 
 	import TodoDisplayDnd from './TodoDisplayDnd.svelte';
@@ -12,19 +12,17 @@
 	//tabs come unsorted
 	data.todoTabs = sortBySortOrder(data.todoTabs);
 
-	export let isDragging = false;
+	let isDragging = false;
 	let searchQuery: string;
 
 	//#region crud
 	let adding = false;
 	const addTodoTab = async () => {
 		if (adding) return;
-		const todo: TodoTabData = {
-			id: -1,
+		const todo: TodoTabCreateData = {
 			title: 'New Tab',
 			todoDisplayId: data.id,
-			sortOrder: 0,
-			todoItems: []
+			sortOrder: 0
 			//*add to the end
 		};
 

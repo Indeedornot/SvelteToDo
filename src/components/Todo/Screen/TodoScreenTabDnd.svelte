@@ -2,8 +2,9 @@
 	import { postTodoDisplay } from '$lib/apiCalls/TodoActions';
 	import { adjustSortOrder } from '$lib/helpers';
 	import type { TodoDisplayData } from '$lib/models/TodoData';
-	import type { TodoDisplayDndData, TodoDisplayDndEvent } from '$lib/models/TodoDndData';
+	import type { TodoDisplayDndEvent } from '$lib/models/TodoDndData';
 	import { dndzone } from 'svelte-dnd-action';
+	import { flip } from 'svelte/animate';
 
 	import TodoScreenTab from './TodoScreenTab.svelte';
 
@@ -14,30 +15,20 @@
 		index = newIndex;
 	};
 
-	const mapDndItems = () => {
-		return data.map((item) => {
-			return {
-				...item,
-				dndId: `screenTab-${item.id}`
-			};
-		});
-	};
-	let dndData = mapDndItems();
-
 	const handleDndConsider = (e: TodoDisplayDndEvent) => {
-		const items: TodoDisplayDndData[] = e.detail.items;
-		const chosenId = dndData[index].id;
+		const items: TodoDisplayData[] = e.detail.items;
+		const chosenId = data[index].id;
 
-		data = dndData = adjustSortOrder(items);
-		const sortedItem = dndData.find((item) => item.id === chosenId);
+		data = adjustSortOrder(items);
+		const sortedItem = data.find((item) => item.id === chosenId);
 		sortedItem && changeIndex(sortedItem.sortOrder);
 		console.log('consider', index);
 	};
 
 	const handleDndFinalize = async (e: TodoDisplayDndEvent) => {
-		let items: TodoDisplayDndData[] = e.detail.items;
+		let items: TodoDisplayData[] = e.detail.items;
 
-		const chosenId = dndData[index].id;
+		const chosenId = data[index].id;
 
 		let changedItem = items.findIndex((item, index) => item.sortOrder !== index);
 		if (changedItem !== -1) {
@@ -45,34 +36,33 @@
 			await postTodoDisplay(items[changedItem], false);
 		}
 
-		data = dndData = items;
-		const sortedItem = dndData.find((item) => item.id === chosenId);
+		data = items;
+		const sortedItem = data.find((item) => item.id === chosenId);
 		sortedItem && changeIndex(sortedItem.sortOrder);
 		console.log('finalize', index);
 	};
 
-	$: if (data.length !== dndData.length) {
-		dndData = mapDndItems();
-	}
-
-	let showTooltip = false;
+	let isDragging = false;
+	let flipDuration = 300;
 </script>
 
 <div class="flex overflow-hidden rounded-t-md">
 	<div
 		class="screenTabs styled-scrollbar flex overflow-x-auto rounded-t"
-		use:dndzone={{ items: dndData, dragDisabled: showTooltip }}
+		use:dndzone={{ items: data, dragDisabled: !isDragging, type: 'screenTab', flipDurationMs: flipDuration }}
 		on:consider={handleDndConsider}
 		on:finalize={handleDndFinalize}
 	>
-		{#each dndData as dataDisplay (dataDisplay.dndId)}
-			<TodoScreenTab
-				bind:data={dataDisplay}
-				onDelete={onDelete}
-				changeIndex={changeIndex}
-				chosen={index === dataDisplay.sortOrder}
-				bind:showTooltip={showTooltip}
-			/>
+		{#each data as dataDisplay (dataDisplay.id)}
+			<div animate:flip={{ duration: flipDuration }}>
+				<TodoScreenTab
+					bind:data={dataDisplay}
+					onDelete={onDelete}
+					changeIndex={changeIndex}
+					chosen={index === dataDisplay.sortOrder}
+					bind:isDragged={isDragging}
+				/>
+			</div>
 		{/each}
 	</div>
 </div>

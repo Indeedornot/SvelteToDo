@@ -3,27 +3,29 @@
 	import { maxLength, stopTyping, truncateEditable } from '$lib/helpers/contentEditable';
 	import { singleLine } from '$lib/helpers/contentEditable/singleLine';
 	import { dndHandle } from '$lib/helpers/dnd/dndHandle';
+	import type { TabFilterData, sortType } from '$lib/models/FilterData/TabFilterData';
 	import { TodoTabConstr } from '$lib/models/TodoDataConstr';
 	import '$lib/styles/ContentEditable.css';
 	import '$lib/styles/Scrollbar.css';
 
 	export let onDelete: () => void;
 	export let onStopTyping: () => void;
+	export let onSort: (value: sortType) => void;
 	export let title: string;
 	export let isDragged: boolean = false;
+
 	export let itemCount: number;
 
-	export let showMore = false;
+	export let filterData: TabFilterData;
 </script>
 
-<div class="flex h-[42px] touch-none flex-col pb-[2px] text-[16px]">
+<div class="flex h-[42px] touch-none flex-col pb-[2px] text-[16px]" use:dndHandle={true}>
 	<div class="flex h-[10px] w-full flex-none items-end justify-center pb-[2px]">
 		<div
 			class="box-border flex h-full w-4/12 flex-none cursor-grab rounded-b bg-subtle hover:bg-neutral-muted active:bg-neutral-muted"
-			class:bg-neutral-muted={isDragged}
 			class:dragging={isDragged}
 			use:dndHandle={isDragged}
-			on:dragged={(e) => (isDragged = e.detail.isDragged && !showMore)}
+			on:dragged={(e) => (isDragged = e.detail.isDragged)}
 		/>
 	</div>
 	<div class="flex max-h-full w-full flex-shrink-0 flex-grow flex-row items-center px-[12px] pb-1 text-default">
@@ -49,7 +51,7 @@
 		<div
 			class="ml-auto box-border flex aspect-square h-full flex-none items-center justify-center rounded text-default"
 		>
-			<TabMore onDelete={onDelete} bind:showTooltip={showMore} />
+			<TabMore onDelete={onDelete} canShow={!isDragged} bind:filterData={filterData} onSort={onSort} />
 		</div>
 	</div>
 </div>

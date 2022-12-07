@@ -1,30 +1,32 @@
+import { id, todoDisplay, todoDisplayCreate, todoDisplayDataSchema } from '$lib/models/TodoSchema';
 import prisma from '$lib/trpc/prisma';
+import { z } from 'zod';
 
 import { logger } from '../middleware/logger';
-import { id, todoDisplay, todoDisplayCreate } from '../models/TodoData';
 import { t } from '../t';
 
 export const display = t.router({
 	getSingle: t.procedure
 		.use(logger)
 		.input(id)
-		.query(
-			async ({ input }) =>
-				await prisma.todoDisplay.findUniqueOrThrow({
-					where: {
-						id: input
-					},
-					include: {
-						todoTabs: {
-							include: {
-								todoItems: true
-							}
+		.query(async ({ input }) => {
+			const single = await prisma.todoDisplay.findUniqueOrThrow({
+				where: {
+					id: input
+				},
+				include: {
+					todoTabs: {
+						include: {
+							todoItems: true
 						}
 					}
-				})
-		),
+				}
+			});
+
+			return todoDisplayDataSchema.parse(single);
+		}),
 	getAll: t.procedure.query(async () => {
-		return await prisma.todoDisplay.findMany({
+		const many = await prisma.todoDisplay.findMany({
 			include: {
 				todoTabs: {
 					include: {
@@ -33,6 +35,8 @@ export const display = t.router({
 				}
 			}
 		});
+
+		return z.array(todoDisplayDataSchema).parse(many);
 	}),
 	create: t.procedure
 		.use(logger)
@@ -52,7 +56,7 @@ export const display = t.router({
 				}
 			});
 
-			return await prisma.todoDisplay.create({
+			const create = await prisma.todoDisplay.create({
 				data: {
 					title: input.title,
 					sortOrder: input.sortOrder,
@@ -74,13 +78,15 @@ export const display = t.router({
 					}
 				}
 			});
+
+			return todoDisplayDataSchema.parse(create);
 		}),
 	update: t.procedure
 		.use(logger)
 		.input(todoDisplay)
 		.query(async ({ input }) => {
 			await updateSortOrder(input.id, input.sortOrder);
-			return await prisma.todoDisplay.update({
+			const update = await prisma.todoDisplay.update({
 				where: {
 					id: input.id
 				},
@@ -96,6 +102,8 @@ export const display = t.router({
 					}
 				}
 			});
+
+			return todoDisplayDataSchema.parse(update);
 		}),
 	delete: t.procedure
 		.use(logger)

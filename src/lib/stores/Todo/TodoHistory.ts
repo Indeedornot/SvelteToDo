@@ -1,5 +1,5 @@
 import type { TodoDisplayData, TodoItemData, TodoTabData } from '$lib/models/TodoData';
-import { writable } from 'svelte/store';
+import { type Updater, writable } from 'svelte/store';
 
 import type { TodoDisplayChange, TodoItemChange, TodoTabChange } from '.';
 
@@ -10,9 +10,20 @@ export type TodoHistoryData =
 export const createTodoHistory = () => {
 	const { subscribe, set, update } = writable<TodoHistoryData[]>([]);
 
+	const useUpdate = (updater: Updater<TodoHistoryData[]>) => {
+		update(updater);
+
+		update((history) => {
+			if (history.length > 100) {
+				history.pop();
+			}
+			return history;
+		});
+	};
+
 	const Item = {
 		addAdded: (item: TodoItemData) => {
-			update((history) => {
+			useUpdate((history) => {
 				const newHistory: TodoHistoryData = {
 					new: item,
 					type: 'added',
@@ -25,7 +36,7 @@ export const createTodoHistory = () => {
 			});
 		},
 		addChanged: (data: { old: TodoItemData; new: TodoItemData }) => {
-			update((history) => {
+			useUpdate((history) => {
 				const newHistory: TodoHistoryData = {
 					old: data.old,
 					new: data.new,
@@ -41,7 +52,7 @@ export const createTodoHistory = () => {
 		},
 
 		addRemoved: (item: TodoItemData) => {
-			update((history) => {
+			useUpdate((history) => {
 				const newHistory: TodoHistoryData = {
 					old: item,
 					type: 'removed',
@@ -57,7 +68,7 @@ export const createTodoHistory = () => {
 
 	const Tab = {
 		addAdded: (tab: TodoTabData) => {
-			update((history) => {
+			useUpdate((history) => {
 				const newHistory: TodoHistoryData = {
 					new: tab,
 					type: 'added',
@@ -70,7 +81,7 @@ export const createTodoHistory = () => {
 			});
 		},
 		addChanged: (data: { old: TodoTabData; new: TodoTabData }) => {
-			update((history) => {
+			useUpdate((history) => {
 				const newHistory: TodoHistoryData = {
 					old: data.old,
 					new: data.new,
@@ -84,7 +95,7 @@ export const createTodoHistory = () => {
 			});
 		},
 		addRemoved: (tab: TodoTabData) => {
-			update(function (history) {
+			useUpdate(function (history) {
 				const newHistory: TodoHistoryData = {
 					old: tab,
 					type: 'removed',
@@ -100,7 +111,7 @@ export const createTodoHistory = () => {
 
 	const Display = {
 		addChanged: (data: { old: TodoDisplayData; new: TodoDisplayData }) => {
-			update((history) => {
+			useUpdate((history) => {
 				const newHistory: TodoHistoryData = {
 					old: data.old,
 					new: data.new,
@@ -115,7 +126,7 @@ export const createTodoHistory = () => {
 		},
 
 		addRemoved: (display: TodoDisplayData) => {
-			update((history) => {
+			useUpdate((history) => {
 				const newHistory: TodoHistoryData = {
 					old: display,
 					type: 'removed',
@@ -128,7 +139,7 @@ export const createTodoHistory = () => {
 			});
 		},
 		addAdded: (display: TodoDisplayData) => {
-			update((history) => {
+			useUpdate((history) => {
 				const newHistory: TodoHistoryData = {
 					new: display,
 					type: 'added',

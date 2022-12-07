@@ -1,8 +1,7 @@
 
 Todo:
   ☐ Maybe add visibility for child items removed for tab and display in a history
-  ☐ Add sort to todoTab and todoDisplay
-  ☐ Add sorting history and filtering
+  ☐ Add animations to filterDropdown
 
 Not considered anymore:
   ☐ Add animations for add and remove 
@@ -10,14 +9,19 @@ Not considered anymore:
 
 BackBurner:
   ☐ Look at filtering once again
-  ☐ Maybe optimize search to not run filter on items on both display and tabs
-    but we are using .some() so we might be good
 
   ☐ Use Rem - gotta read more 
   ☐ Rewrite stories 
   ☐ Export styles in some way 
 
 Done:
+  ✔ Add sort to todoTab and todoDisplay @done(22-12-07 15:07)
+  ✔ Add sorting history and filtering @done(22-12-05 16:21)
+
+  ✔ Maybe optimize search to not run filter on items on both display and tabs @done(22-12-05 13:06)
+    but we are using .some() so we might be good
+    now does not run on hidden tabs
+
   ✔ Bug when moving to an unloaded dndzode @done(22-12-04 22:54)
   
   ✔ Bug when dragging handle when dropdown open @done(22-12-04 22:54)

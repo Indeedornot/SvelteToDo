@@ -1,7 +1,11 @@
-import type { TodoDisplayData, TodoItemData, TodoTabData } from '$lib/models/TodoData';
-import { isSynced } from '$lib/stores/Sync';
-import { TodoHistory } from '$lib/stores/Todo/TodoHistory';
-import { trpc } from '$lib/trpc/client';
+import type {
+	TodoDisplayCreateData,
+	TodoDisplayData,
+	TodoItemCreateData,
+	TodoItemData,
+	TodoTabCreateData,
+	TodoTabData
+} from '$lib/models/TodoData';
 import {
 	todoDisplay,
 	todoDisplayCreate,
@@ -9,11 +13,15 @@ import {
 	todoItemCreate,
 	todoTab,
 	todoTabCreate
-} from '$lib/trpc/models/TodoData';
+} from '$lib/models/TodoSchema';
+import { isSynced } from '$lib/stores/Sync';
+import { TodoHistory } from '$lib/stores/Todo/TodoHistory';
+import { trpc } from '$lib/trpc/client';
 
 export const getTodoDisplays = async (): Promise<TodoDisplayData[]> => {
 	return trpc()
 		.display.getAll.query()
+		.then((todoDisplays) => todoDisplays)
 		.catch((error) => {
 			isSynced.set({ isSync: false, error: error });
 			return Promise.reject(error);
@@ -52,7 +60,7 @@ export const postTodoDisplay = async (data: TodoDisplayData, history = false): P
 		});
 };
 
-export const createTodoDisplay = async (data: TodoDisplayData, history = false): Promise<TodoDisplayData> => {
+export const createTodoDisplay = async (data: TodoDisplayCreateData, history = false): Promise<TodoDisplayData> => {
 	const body = todoDisplayCreate.parse(data);
 	return trpc()
 		.display.create.query(body)
@@ -122,7 +130,7 @@ export const postTodoTab = async (data: TodoTabData, history = false): Promise<T
 		});
 };
 
-export const createTodoTab = async (data: TodoTabData, history = false): Promise<TodoTabData> => {
+export const createTodoTab = async (data: TodoTabCreateData, history = false): Promise<TodoTabData> => {
 	const body = todoTabCreate.parse(data);
 	return trpc()
 		.tab.create.query(body)
@@ -169,7 +177,7 @@ export const getTodoItem = async (id: number): Promise<TodoItemData> => {
 		});
 };
 
-export const createTodoItem = async (data: TodoItemData, history = false): Promise<TodoItemData> => {
+export const createTodoItem = async (data: TodoItemCreateData, history = false): Promise<TodoItemData> => {
 	const body = todoItemCreate.parse(data);
 	return trpc()
 		.item.create.query(body)

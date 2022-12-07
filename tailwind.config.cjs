@@ -2,22 +2,24 @@
 module.exports = {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
+		extend: {
+			backgroundColor: {
+				default: 'rgb(var(--color-bg-default) / <alpha-value>)',
+				overlay: 'rgb(var(--color-bg-overlay) / <alpha-value>)',
+				inset: 'rgb(var(--color-bg-inset) / <alpha-value>)',
+				subtle: 'rgb(var(--color-bg-subtle) / <alpha-value>)',
+				neutral: {
+					emphasis: 'rgb(var(--color-neutral-emphasis) / <alpha-value>)',
+					muted: 'rgb(var(--color-neutral-muted))',
+					subtle: 'rgb(var(--color-neutral-subtle))'
+				}
+			}
+		},
 		screens: {
 			sm: '0px',
 			xs: '380px',
 			md: '544px',
 			lg: '768px'
-		},
-		backgroundColor: {
-			default: 'rgb(var(--color-bg-default) / <alpha-value>)',
-			overlay: 'rgb(var(--color-bg-overlay) / <alpha-value>)',
-			inset: 'rgb(var(--color-bg-inset) / <alpha-value>)',
-			subtle: 'rgb(var(--color-bg-subtle) / <alpha-value>)',
-			neutral: {
-				emphasis: 'rgb(var(--color-neutral-emphasis) / <alpha-value>)',
-				muted: 'rgb(var(--color-neutral-muted))',
-				subtle: 'rgb(var(--color-neutral-subtle))'
-			}
 		},
 		textColor: {
 			default: 'rgb(var(--color-fg-default) / <alpha-value>)',
@@ -46,6 +48,7 @@ module.exports = {
 		function ({ addVariant }) {
 			addVariant('child', '& > *');
 			addVariant('child-hover', '& > *:hover');
-		}
+		},
+		require('@tailwindcss/forms')
 	]
 };

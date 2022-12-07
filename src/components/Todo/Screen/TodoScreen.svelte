@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { Plus } from '$components/Icons';
-	import { Changelog } from '$components/Todo';
+	import Changelog from '$components/Todo/Changelog/ChangelogDropdown.svelte';
 	import TodoDisplay from '$components/Todo/Display/TodoDisplay.svelte';
 	import { createTodoDisplay, deleteTodoDisplay } from '$lib/apiCalls/TodoActions';
 	import { adjustSortOrder, sortBySortOrder } from '$lib/helpers';
-	import type { TodoDisplayData } from '$lib/models/TodoData';
-	import { sortOrder } from '$lib/trpc/models/TodoData';
+	import type { TodoDisplayCreateData, TodoDisplayData } from '$lib/models/TodoData';
 
 	import TodoScreenTabDnd from './TodoScreenTabDnd.svelte';
 
@@ -28,10 +27,8 @@
 	let adding = false;
 	const addTodoDisplay = async () => {
 		if (adding) return;
-		const newTodoDisplay: TodoDisplayData = {
-			id: -1,
+		const newTodoDisplay: TodoDisplayCreateData = {
 			title: 'New Display',
-			todoTabs: [],
 			sortOrder: data.length
 		};
 		adding = true;
@@ -69,6 +66,10 @@
 		</div>
 	</div>
 	<div class="flex min-h-0 flex-grow bg-default">
-		<TodoDisplay data={data[index]} />
+		{#each data as item, i}
+			{#if i === index}
+				<TodoDisplay bind:data={item} />
+			{/if}
+		{/each}
 	</div>
 </div>

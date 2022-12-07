@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { Dropdown } from '$components/Icons';
+	import { capitalizeStart } from '$lib/helpers';
 	import { blurClick } from '$lib/helpers/button/blurClick';
 	import { clickOutside } from '$lib/helpers/clickOutside.js';
 	import { createDropdown } from '$lib/helpers/dropdownCtor';
 	import { slide } from '$lib/helpers/slideAnim';
+	import { statusType, statusTypeDisplay } from '$lib/models/TodoData';
 
 	const { popperRef, popperContent, extraOpts } = createDropdown({
 		placement: 'bottom-start',
@@ -16,16 +18,18 @@
 	const toggleTooltip = () => (showTooltip = !showTooltip);
 	let buttonRef: HTMLElement;
 
-	export let onChoose: (status: string) => void;
-	export let status = '';
+	export let onChoose: (status: statusType) => void;
+	export let status: statusType;
 
-	export let showTooltip = false;
-	let statuses = ['Draft', 'Completed', 'In Progress', 'Archived', 'Abandoned'];
-	const setStatus = (newStatus: string) => {
+	export let canShow: boolean;
+	let showTooltip = false;
+	const setStatus = (newStatus: statusType) => {
 		closeTooltip();
 		status = newStatus;
 		onChoose && onChoose(newStatus);
 	};
+
+	$: if (!canShow) showTooltip = false;
 </script>
 
 <button
@@ -38,7 +42,7 @@
 	hover:bg-neutral-emphasis hover:text-default 
 	focus:bg-neutral-muted focus:text-default"
 >
-	<span class="pr-1">{status}</span>
+	<span class="pr-1">{statusTypeDisplay[status]}</span>
 	<Dropdown size={16} />
 </button>
 <div class="relative">
@@ -46,15 +50,14 @@
 		<div
 			use:popperContent={extraOpts}
 			in:slide={{ duration: 300, axis: 'y', z: 1 }}
-			out:slide={{ duration: 300, axis: 'y', z: 0 }}
 			use:clickOutside={[buttonRef]}
 			on:clickOutside={closeTooltip}
 			class="tooltip rounded-md border 
 			border-muted bg-subtle text-[14px] text-default 
 			shadow-ambient child-hover:bg-neutral-subtle"
 		>
-			{#each statuses as stat}
-				<button on:click={() => setStatus(stat)}>{stat}</button>
+			{#each Object.entries(statusType) as [_, value]}
+				<button on:click={() => setStatus(value)}>{statusTypeDisplay[value]}</button>
 			{/each}
 		</div>
 	{/if}

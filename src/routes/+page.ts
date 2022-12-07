@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 
-import type { TodoDisplayData } from '$lib/models/TodoData';
+import type { TodoDisplayCreateData, TodoDisplayData } from '$lib/models/TodoData';
 import { trpc } from '$lib/trpc/client';
 
 import type { PageLoad } from './$types';
@@ -13,7 +13,7 @@ export const load: PageLoad = async (event) => {
 			todos = data;
 			if (todos.length !== 0) return { todos };
 
-			const todo: TodoDisplayData = { id: -1, title: 'ProjectName', todoTabs: [], sortOrder: 0 };
+			const todo: TodoDisplayCreateData = { title: 'ProjectName', sortOrder: 0 };
 			return trpc(event)
 				.display.create.query(todo)
 				.then((data) => {

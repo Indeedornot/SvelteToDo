@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Delete } from '$components/Icons';
+	import { dndVirtualization } from '$lib/helpers/dnd';
 	import { capitalizeStart } from '$lib/helpers/jsUtils';
 	import type { TodoHistoryAll } from '$lib/stores/Todo';
 
@@ -17,7 +18,6 @@
 	};
 </script>
 
-<!-- now boxshadow mixes in, otherwise we should be good, change also on hover header's bottom border -->
 <div
 	class="flex w-full flex-none flex-col overflow-hidden rounded-md border border-muted bg-default hover:border-muted hover:shadow-outline-muted"
 >
@@ -30,7 +30,7 @@
 			<Delete />
 		</button>
 	</div>
-	<div class="flex w-full flex-grow flex-col ">
+	<div class="flex w-full flex-grow flex-col">
 		{#each keys as key}
 			<div class="group flex w-full flex-row border-b-2 border-muted">
 				<div

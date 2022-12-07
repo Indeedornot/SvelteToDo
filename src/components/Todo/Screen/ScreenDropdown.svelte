@@ -15,14 +15,15 @@
 	const closeTooltip = () => (showTooltip = false);
 	const toggleTooltip = () => (showTooltip = !showTooltip);
 	let buttonRef: HTMLElement;
+	export let canShow: boolean;
+	let showTooltip = false;
+	$: if (!canShow) showTooltip = false;
 
 	export let onDelete: () => void;
 	const onDel = () => {
 		closeTooltip();
 		onDelete();
 	};
-
-	export let showTooltip = false;
 </script>
 
 <button
@@ -40,7 +41,6 @@
 	<div
 		use:popperContent={extraOpts}
 		in:slide={{ duration: 300, axis: 'y' }}
-		out:slide={{ duration: 300, axis: 'y' }}
 		class="tooltip z-[1] rounded-md 
 		border border-muted bg-subtle text-[12px] 
 		text-default shadow-ambient 

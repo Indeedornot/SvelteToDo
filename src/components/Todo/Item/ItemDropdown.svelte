@@ -22,7 +22,10 @@
 		onDelete();
 	};
 
-	export let showTooltip = false;
+	export let canShow: boolean;
+	let showTooltip = false;
+
+	$: if (!canShow) showTooltip = false;
 </script>
 
 <button
@@ -40,7 +43,6 @@
 	{#if showTooltip}
 		<div
 			in:slide={{ duration: 300, axis: 'y' }}
-			out:slide={{ duration: 300, axis: 'y' }}
 			use:clickOutside={[buttonRef]}
 			on:clickOutside={closeTooltip}
 			use:popperContent={extraOpts}

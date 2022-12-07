@@ -1,8 +1,9 @@
+import { id, todoTab, todoTabCreate, todoTabDataSchema } from '$lib/models/TodoSchema';
 import prisma from '$lib/trpc/prisma';
 import { t } from '$lib/trpc/t';
+import { z } from 'zod';
 
 import { logger } from '../middleware/logger';
-import { id, todoTab, todoTabCreate } from '../models/TodoData';
 
 export const tab = t.router({
 	create: t.procedure
@@ -23,7 +24,7 @@ export const tab = t.router({
 				}
 			});
 
-			return await prisma.todoTab.create({
+			const create = await prisma.todoTab.create({
 				data: {
 					title: input.title,
 					sortOrder: input.sortOrder,
@@ -41,13 +42,15 @@ export const tab = t.router({
 					todoItems: true
 				}
 			});
+
+			return todoTabDataSchema.parse(create);
 		}),
 	update: t.procedure
 		.use(logger)
 		.input(todoTab)
 		.query(async ({ input }) => {
 			await updateSortOrder(input.id, input.sortOrder);
-			return await prisma.todoTab.update({
+			const update = await prisma.todoTab.update({
 				where: {
 					id: input.id
 				},
@@ -60,6 +63,8 @@ export const tab = t.router({
 					todoItems: true
 				}
 			});
+
+			return todoTabDataSchema.parse(update);
 		}),
 	delete: t.procedure
 		.use(logger)
@@ -93,36 +98,42 @@ export const tab = t.router({
 	getSingle: t.procedure
 		.use(logger)
 		.input(id)
-		.query(({ input }) =>
-			prisma.todoTab.findUniqueOrThrow({
+		.query(async ({ input }) => {
+			const single = await prisma.todoTab.findUniqueOrThrow({
 				where: {
 					id: input
 				},
 				include: {
 					todoItems: true
 				}
-			})
-		),
+			});
+
+			return todoTabDataSchema.parse(single);
+		}),
 	getByDisplay: t.procedure
 		.use(logger)
 		.input(id)
-		.query(({ input }) =>
-			prisma.todoTab.findMany({
+		.query(async ({ input }) => {
+			const many = await prisma.todoTab.findMany({
 				where: {
 					todoDisplayId: input
 				},
 				include: {
 					todoItems: true
 				}
-			})
-		),
-	getAll: t.procedure.use(logger).query(() =>
-		prisma.todoTab.findMany({
+			});
+
+			return z.array(todoTabDataSchema).parse(many);
+		}),
+	getAll: t.procedure.use(logger).query(async () => {
+		const many = await prisma.todoTab.findMany({
 			include: {
 				todoItems: true
 			}
-		})
-	)
+		});
+
+		return z.array(todoTabDataSchema).parse(many);
+	})
 });
 
 const updateSortOrder = async (id: number, newSort: number) => {

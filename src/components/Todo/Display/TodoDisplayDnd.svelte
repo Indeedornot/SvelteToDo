@@ -1,33 +1,22 @@
 <script lang="ts">
 	import { TodoTab } from '$components/Todo';
 	import { postTodoTab } from '$lib/apiCalls/TodoActions';
+	import { adjustSortOrder, isUndefined } from '$lib/helpers';
 	import { dndScroll } from '$lib/helpers/dnd/dndScroll';
-	import { isUndefined } from '$lib/helpers/jsUtils';
-	import { adjustSortOrder } from '$lib/helpers/sortOrder';
 	import type { TodoTabData } from '$lib/models/TodoData';
-	import type { TodoTabDndData, TodoTabDndEvent } from '$lib/models/TodoDndData';
+	import type { TodoTabDndEvent } from '$lib/models/TodoDndData';
 	import '$lib/styles/Scrollbar.css';
 	import { SOURCES, TRIGGERS, dndzone } from 'svelte-dnd-action';
+	import { flip } from 'svelte/animate';
 
 	export let todoTabs: TodoTabData[];
 	export let delTodoTab: (todoTabId: number) => void;
 	export let isDragging = false;
 	export let searchQuery: string;
 
-	const mapDndItems = () => {
-		return todoTabs.map((item) => {
-			return {
-				...item,
-				dndId: `tab-${item.id}`,
-				hidden: isUndefined(item.hidden) ? false : item.hidden
-			};
-		});
-	};
-	let dndTabs: TodoTabDndData[] = mapDndItems();
-
 	const handleDndConsider = (e: TodoTabDndEvent) => {
-		let items: TodoTabDndData[] = e.detail.items;
-		todoTabs = dndTabs = adjustSortOrder(items);
+		let items: TodoTabData[] = e.detail.items;
+		todoTabs = adjustSortOrder(items);
 
 		const { source, trigger } = e.detail.info;
 		if (source === SOURCES.KEYBOARD && trigger === TRIGGERS.DRAG_STOPPED) {
@@ -36,7 +25,7 @@
 	};
 
 	const handleDndFinalize = async (e: TodoTabDndEvent) => {
-		let items: TodoTabDndData[] = e.detail.items;
+		let items: TodoTabData[] = e.detail.items;
 
 		let changedItem = items.findIndex((item, index) => item.sortOrder !== index);
 		if (changedItem !== -1) {
@@ -44,28 +33,33 @@
 			await postTodoTab(items[changedItem], false);
 		}
 
-		todoTabs = dndTabs = items;
+		todoTabs = items;
 		const { source } = e.detail.info;
 		if (source === SOURCES.POINTER) {
 			isDragging = false;
 		}
 	};
 
-	$: searchQuery, (dndTabs = mapDndItems());
-	$: if (todoTabs.length !== dndTabs.length) {
-		dndTabs = mapDndItems();
-	}
+	let flipDuration = 300;
 </script>
 
 <div
 	class="styled-scrollbar todotabs flex w-full flex-grow overflow-auto bg-default py-[8px] sm:px-[16px] md:px-[24px] lg:px-[32px]"
-	use:dndzone={{ items: dndTabs, type: 'display', dragDisabled: !isDragging, dropFromOthersDisabled: true }}
+	use:dndzone={{
+		items: todoTabs,
+		type: 'display',
+		dragDisabled: !isDragging,
+		dropFromOthersDisabled: true,
+		flipDurationMs: flipDuration
+	}}
 	on:consider={handleDndConsider}
 	on:finalize={handleDndFinalize}
 	use:dndScroll={{ centerSize: 100, scrollSpeed: 25 }}
 >
-	{#each dndTabs as todo (todo.dndId)}
-		<TodoTab onDelete={delTodoTab} bind:data={todo} bind:searchQuery={searchQuery} bind:isDragged={isDragging} />
+	{#each todoTabs as todo (todo.id)}
+		<div animate:flip={{ duration: flipDuration }}>
+			<TodoTab onDelete={delTodoTab} bind:data={todo} bind:searchQuery={searchQuery} bind:isDragged={isDragging} />
+		</div>
 	{/each}
 </div>
 

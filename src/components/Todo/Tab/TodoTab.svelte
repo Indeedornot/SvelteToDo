@@ -2,8 +2,8 @@
 	import { TodoTabFooter, TodoTabHeader } from '$components/Todo';
 	import { createTodoItem, deleteTodoItem, postTodoTab } from '$lib/apiCalls/TodoActions';
 	import { adjustSortOrder, isUndefined, isUndefinedOrEmpty, sortBySortOrder } from '$lib/helpers';
-	import { dndVirtualization } from '$lib/helpers/dnd';
-	import type { TodoItemData, TodoTabData } from '$lib/models/TodoData';
+	import { type TabFilterData, sortType } from '$lib/models/FilterData/TabFilterData';
+	import { type TodoItemCreateData, type TodoItemData, type TodoTabData, statusType } from '$lib/models/TodoData';
 	import '$lib/styles/ContentEditable.css';
 	import '$lib/styles/Scrollbar.css';
 
@@ -16,20 +16,19 @@
 	//tabs come unsorted
 	data.todoItems = sortBySortOrder(data.todoItems);
 
+	let filterData: TabFilterData;
 	export let onDelete: (id: number) => void;
 	export let searchQuery: string = '';
 	export let isDragged = false;
-
 	let visibleItemsCount = data.todoItems.length;
 
 	//#region crud
 	let adding = false;
 	const addTodoItem = async () => {
 		if (adding) return;
-		let todo: TodoItemData = {
-			id: -1,
+		let todo: TodoItemCreateData = {
 			title: 'New Todo Item',
-			status: 'Draft',
+			status: statusType.draft,
 			todoTabId: data.id,
 			sortOrder: 0,
 			collapsed: false
@@ -41,11 +40,6 @@
 			.then(async (newItem) => {
 				data.todoItems = [newItem, ...data.todoItems];
 				data.todoItems = adjustSortOrder(data.todoItems);
-
-				//push others back
-				// for (let i = 1; i < data.todoItems.length; i++) {
-				// 	await postTodoItem(data.todoItems[i], false);
-				// }
 				adding = false;
 			})
 			.catch();
@@ -70,31 +64,64 @@
 	};
 	//#endregion
 
-	const getDisplayTodoItems = (items: TodoItemData[]) => {
-		let itemsCopy = [...items];
+	const getVisibility = (todoItems: TodoItemData[]) => {
+		const query = searchQuery?.toLowerCase();
+		const isValidQuery = !isUndefinedOrEmpty(query);
+		const containsQuery = (item: TodoItemData) => {
+			return !isValidQuery || item.title.toLowerCase().includes(query);
+		};
+
+		const isFilteredOut = (item: TodoItemData) => {
+			return filterData && !filterData?.itemData.statuses[item.status];
+		};
+
+		let itemsCopy = [...todoItems];
 		itemsCopy = adjustSortOrder(itemsCopy);
 
-		if (isUndefinedOrEmpty(searchQuery)) {
-			visibleItemsCount = itemsCopy.length;
-			itemsCopy.forEach((item) => {
-				item.hidden = false;
-			});
+		if (data.hidden) return itemsCopy;
 
-			return itemsCopy;
+		if (!isValidQuery && !filterData) {
+			visibleItemsCount = itemsCopy.length;
+			return itemsCopy.map((item) => {
+				item.hidden = false;
+				return item;
+			});
 		}
 
 		visibleItemsCount = 0;
 		itemsCopy.forEach((item) => {
-			let hidden = !item.title.toLowerCase().includes(searchQuery.toLowerCase());
-			item.hidden = hidden;
-			visibleItemsCount += hidden ? 0 : 1;
+			if (!containsQuery(item) || isFilteredOut(item)) item.hidden = true;
+			else {
+				item.hidden = false;
+				visibleItemsCount++;
+			}
 		});
 
 		return itemsCopy;
 	};
 
-	$: searchQuery, (data.todoItems = getDisplayTodoItems(data.todoItems));
-	$: data.todoItems = sortBySortOrder(data.todoItems);
+	const filter = (sort: sortType, todoItems: TodoItemData[]) => {
+		const todoItemsCopy = [...todoItems];
+
+		switch (sort) {
+			case sortType.status:
+				todoItemsCopy.sort((a, b) => a.status.localeCompare(b.status));
+				break;
+			case sortType.created:
+				todoItemsCopy.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
+				break;
+			case sortType.updated:
+				todoItemsCopy.sort((a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt));
+				break;
+			case sortType.none:
+			default:
+				break;
+		}
+
+		return adjustSortOrder(todoItemsCopy);
+	};
+
+	$: searchQuery, filterData, (data.todoItems = sortBySortOrder(getVisibility(data.todoItems)));
 </script>
 
 <div
@@ -107,6 +134,12 @@
 		bind:title={data.title}
 		bind:isDragged={isDragged}
 		itemCount={visibleItemsCount}
+		bind:filterData={filterData}
+		onSort={(value) => {
+			console.log('sort', value);
+			data.todoItems = filter(value, data.todoItems);
+			console.table(data.todoItems);
+		}}
 	/>
 	<TodoTabDnd delTodoItem={delTodoItem} bind:todoItems={data.todoItems} todoTabId={data.id} />
 

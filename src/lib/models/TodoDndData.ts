@@ -1,10 +1,7 @@
 import type { TodoDisplayData, TodoItemData, TodoTabData } from '$lib/models/TodoData';
 
-export type TodoTabDndData = TodoTabData & { dndId: string; hidden: boolean };
-export type TodoTabDndEvent = CustomEvent<DndEvent<TodoTabDndData>>;
+export type TodoTabDndEvent = CustomEvent<DndEvent<TodoTabData>>;
 
-export type TodoItemDndData = TodoItemData & { dndId: string; hidden: boolean };
-export type TodoItemDndEvent = CustomEvent<DndEvent<TodoItemDndData>>;
+export type TodoItemDndEvent = CustomEvent<DndEvent<TodoItemData>>;
 
-export type TodoDisplayDndData = TodoDisplayData & { dndId: string };
-export type TodoDisplayDndEvent = CustomEvent<DndEvent<TodoDisplayDndData>>;
+export type TodoDisplayDndEvent = CustomEvent<DndEvent<TodoDisplayData>>;

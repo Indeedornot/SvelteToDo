@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { Delete, More } from '$components/Icons';
+	import { clickOutside, createDropdown, slide } from '$lib/helpers';
 	import { blurClick } from '$lib/helpers/button/blurClick';
-	import { clickOutside } from '$lib/helpers/clickOutside';
-	import { createDropdown } from '$lib/helpers/dropdownCtor';
-	import { slide } from '$lib/helpers/slideAnim';
+	import type { TabFilterData, sortType } from '$lib/models/FilterData/TabFilterData';
+	import { statusType } from '$lib/models/TodoData';
+
+	import FilterOption from './FilterOption.svelte';
 
 	const { popperRef, popperContent, extraOpts } = createDropdown({
 		placement: 'bottom-end',
@@ -11,10 +13,12 @@
 		offset: [0, 3],
 		fallbackPlacements: []
 	});
-
 	const closeTooltip = () => (showTooltip = false);
 	const toggleTooltip = () => (showTooltip = !showTooltip);
 	let buttonRef: HTMLElement;
+	let showTooltip = false;
+	export let canShow: boolean;
+	$: if (!canShow) showTooltip = false;
 
 	export let onDelete: () => void;
 	const onDel = () => {
@@ -22,7 +26,8 @@
 		onDelete();
 	};
 
-	export let showTooltip = false;
+	export let filterData: TabFilterData;
+	export let onSort: (value: sortType) => void;
 </script>
 
 <button
@@ -42,25 +47,25 @@
 		<div
 			use:popperContent={extraOpts}
 			in:slide={{ duration: 300, axis: 'y' }}
-			out:slide={{ duration: 300, axis: 'y' }}
 			use:clickOutside={[buttonRef]}
 			on:clickOutside={closeTooltip}
-			class="tooltip rounded-md border 
-			border-muted bg-subtle text-[14px] text-default shadow-ambient child-hover:bg-neutral-subtle"
+			class="tooltip z-[1] rounded-md border
+			border-muted bg-subtle text-[16px] text-default shadow-ambient child-hover:bg-neutral-subtle"
 		>
-			<button class="flex items-center justify-center" on:click={onDel}>
-				<Delete size={14} class="inline-block" />
-				<span class="pb-[2px] pl-[2px]">Delete</span>
+			<button class="dropdown-item flex items-center justify-center" on:click={onDel}>
+				<Delete size={14} />
+				<span class="pl-[4px]">Delete</span>
 			</button>
+			<FilterOption bind:filterData={filterData} onSort={onSort} />
 		</div>
 	{/if}
 </div>
 
 <style>
-	.tooltip > * {
+	.tooltip > :global(.dropdown-item) {
 		text-align: left;
 		margin: 0px;
-		padding: 4px 12px 4px 12px;
+		padding: 5px 14px;
 		width: 100%;
 	}
 </style>

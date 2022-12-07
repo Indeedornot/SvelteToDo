@@ -23,10 +23,10 @@ export function dndHandle(node: HTMLElement, isDragged: boolean) {
 		}
 	};
 
-	const onDrag = (e: Event) => {
+	const onDrag = () => {
 		dragged.set(true);
 	};
-	const onDragEnd = (e: Event) => {
+	const onDragEnd = () => {
 		dragged.set(false);
 	};
 

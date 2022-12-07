@@ -7,7 +7,7 @@
 	import { dndHandle } from '$lib/helpers/dnd/dndHandle';
 	import { dndVirtualization } from '$lib/helpers/dnd/dndVirtualization';
 	import { isUndefined } from '$lib/helpers/jsUtils';
-	import type { TodoItemData } from '$lib/models/TodoData';
+	import type { TodoItemData, statusType } from '$lib/models/TodoData';
 	import { TodoItemConstr } from '$lib/models/TodoDataConstr';
 	import '$lib/styles/ContentEditable.css';
 
@@ -19,7 +19,9 @@
 	let multiLine: boolean = false;
 
 	const postTodo = () => {
-		postTodoItem(data, true).catch((error) => console.log(error));
+		postTodoItem(data, true)
+			.then((postedItem) => (data = postedItem))
+			.catch((error) => console.log(error));
 	};
 
 	const collapse = () => {
@@ -40,8 +42,16 @@
 	}
 
 	let isVisible = false;
-	let showingStatus = false;
-	let showingMore = false;
+
+	let stoppedTyping = false;
+	let blurred = false;
+
+	$: {
+		if (stoppedTyping && blurred) {
+			postTodo();
+			stoppedTyping = blurred = false;
+		}
+	}
 </script>
 
 <div
@@ -59,17 +69,24 @@
 			cursor-grab rounded-b bg-default hover:bg-neutral-muted active:bg-neutral-muted"
 				class:dragging={isDragged}
 				use:dndHandle={isDragged}
-				on:dragged={(e) => (isDragged = e.detail.isDragged && !showingMore && !showingStatus)}
+				on:dragged={(e) => (isDragged = e.detail.isDragged)}
 			/>
 		</div>
 
 		<div class="flex w-full flex-grow flex-col pr-[12px] pl-[8px]">
 			<div class="mb-0.5 box-border flex h-[22px] w-full flex-none flex-row justify-between text-[12px] text-subtle">
 				<div class="rounded">
-					<StatusDropdown bind:status={data.status} onChoose={postTodo} bind:showTooltip={showingStatus} />
+					<StatusDropdown
+						status={data.status}
+						onChoose={(newStatus) => {
+							data.status = newStatus;
+							postTodo();
+						}}
+						canShow={!isDragged}
+					/>
 				</div>
 				<div class="flex aspect-square h-full flex-none items-center justify-center">
-					<ItemMore onDelete={deleteSelf} bind:showTooltip={showingMore} />
+					<ItemMore onDelete={deleteSelf} canShow={!isDragged} />
 				</div>
 			</div>
 			<div class="box-border pb-1.5 pt-1">
@@ -110,8 +127,10 @@
 						use:stopTyping
 						on:stopTyping={(event) => {
 							data.title = event.detail.text;
-							postTodo();
+							stoppedTyping = true;
 						}}
+						on:focus={() => (blurred = false)}
+						on:blur={() => (blurred = true)}
 					/>
 				</div>
 			</div>
