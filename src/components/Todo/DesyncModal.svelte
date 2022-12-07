@@ -1,7 +1,6 @@
 <script type="ts">
 	import { Warning } from '$components/Icons';
 	import { delayEnabled } from '$lib/helpers/button/delayEnabled';
-	import { isUndefinedOrEmpty } from '$lib/helpers/jsUtils';
 	import type { SyncData } from '$lib/stores/Sync';
 
 	export let isSynced: SyncData;

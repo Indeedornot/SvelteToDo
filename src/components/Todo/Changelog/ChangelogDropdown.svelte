@@ -1,36 +1,22 @@
 <script lang="ts">
-	import { Filter, History } from '$components/Icons';
-	import { blurClick } from '$lib/helpers/button/blurClick';
-	import { clickOutside } from '$lib/helpers/clickOutside';
-	import { createDropdown } from '$lib/helpers/dropdownCtor';
-	import { slide } from '$lib/helpers/slideAnim';
+	import { History } from '$components/Icons';
+	import { slide } from '$lib/helpers';
+	import { blurClick } from '$lib/helpers/button';
 	import { type HistoryFilterData, sortType } from '$lib/models/FilterData/HistoryFilterData';
 	import { TodoHistory, type TodoHistoryData } from '$lib/stores/Todo/TodoHistory';
 	import { flip } from 'svelte/animate';
 
+	import DropdownBase from '../DropdownBase.svelte';
 	import FilterDropdown from './FilterDropdown.svelte';
 	import TodoChangelog from './TodoChangelog.svelte';
 
-	const { popperRef, popperContent, extraOpts } = createDropdown({
-		placement: 'bottom-end',
-		strategy: 'absolute',
-		offset: [0, 5],
-		fallbackPlacements: []
-	});
-
-	const closeTooltip = () => (showTooltip = false);
 	const toggleTooltip = () => (showTooltip = !showTooltip);
-	let buttonRef: HTMLElement;
-
 	let showTooltip = true;
 	let filterOpts: HistoryFilterData;
 
-	let history: TodoHistoryData[] = $TodoHistory;
-	$: history = $TodoHistory;
-
-	const filterHistory = () => {
-		if (!filterOpts) return history;
-		const historyCopy = [...history];
+	const filterHistory = (historyData: TodoHistoryData[]) => {
+		if (!filterOpts) return historyData;
+		const historyCopy = [...historyData];
 		const filtered = historyCopy.filter((item) => filterOpts.historyData[item.historyType][item.type]);
 		switch (filterOpts.sort) {
 			case sortType.type:
@@ -43,8 +29,11 @@
 		}
 	};
 
-	let historyFiltered: TodoHistoryData[] = filterHistory();
-	$: filterOpts, history, (historyFiltered = filterHistory());
+	let history: TodoHistoryData[] = $TodoHistory;
+	$: history = $TodoHistory;
+
+	let historyFiltered: TodoHistoryData[] = filterHistory(history);
+	$: filterOpts, (historyFiltered = filterHistory(history));
 
 	const delHistoryItem = (id: number) => {
 		console.log('delHistoryItem', id);
@@ -56,29 +45,34 @@
 	};
 </script>
 
-<button
-	use:popperRef
-	use:blurClick={showTooltip}
-	on:click={toggleTooltip}
-	bind:this={buttonRef}
-	class="flex h-full w-full flex-none 
+<DropdownBase
+	bind:showTooltip={showTooltip}
+	options={{
+		placement: 'bottom-end',
+		strategy: 'absolute',
+		offset: [0, 5],
+		fallbackPlacements: []
+	}}
+	zIndex={2}
+>
+	<button
+		slot="button"
+		use:blurClick={showTooltip}
+		on:click={toggleTooltip}
+		class="flex h-full w-full flex-none 
 			items-center justify-center 
 			rounded border border-muted bg-subtle
 			p-1.5 text-subtle
 			hover:bg-neutral-emphasis hover:text-default 
 			focus:bg-neutral-muted focus:text-default"
->
-	<History />
-</button>
-
-{#if showTooltip}
+	>
+		<History />
+	</button>
 	<div
+		slot="dropdown"
 		in:slide={{ duration: 300, axis: 'y' }}
 		out:slide={{ duration: 300, axis: 'y' }}
-		use:clickOutside={[buttonRef]}
-		on:clickOutside={closeTooltip}
-		use:popperContent={extraOpts}
-		class="z-[2] flex h-[50vh] overflow-hidden border border-subtle text-[16px] text-default shadow-ambient sm:w-[100vw] xs:w-[400px] xs:rounded-md"
+		class="flex h-[50vh] overflow-hidden border border-subtle text-[16px] text-default shadow-ambient sm:w-[100vw] xs:w-[400px] xs:rounded-md"
 	>
 		<div class="flex h-full w-full flex-col bg-default">
 			<div
@@ -120,7 +114,7 @@
 			</div>
 		</div>
 	</div>
-{/if}
+</DropdownBase>
 
 <style>
 	.changelogs > :global(*) {

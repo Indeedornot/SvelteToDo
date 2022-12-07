@@ -66,10 +66,6 @@
 		</div>
 	</div>
 	<div class="flex min-h-0 flex-grow bg-default">
-		{#each data as item, i}
-			{#if i === index}
-				<TodoDisplay bind:data={item} />
-			{/if}
-		{/each}
+		<TodoDisplay bind:data={data[index]} />
 	</div>
 </div>

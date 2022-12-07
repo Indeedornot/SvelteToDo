@@ -23,7 +23,7 @@
 
 <div class="rounded-t border border-b-0 border-muted bg-default hover:bg-overlay">
 	<div
-		class="flex h-full w-full flex-none flex-row px-3 py-1 transition-all duration-200 ease-linear"
+		class="flex h-full w-full flex-none flex-row px-3 py-1 transition-all duration-200 ease-linear hover:cursor-grab"
 		class:px-2={chosen}
 		class:text-default={chosen}
 		class:font-semibold={chosen}
@@ -50,9 +50,9 @@
 		{#if chosen}
 			<!--  -->
 			<div transition:slide|local={{ axis: 'x', duration: 550 }}>
-				<button class="flex h-full w-full flex-none items-center whitespace-nowrap pl-1">
+				<div class="flex h-full w-full flex-none items-center whitespace-nowrap pl-1">
 					<ScreenMore canShow={!isDragged} onDelete={() => onDelete(data.id)} />
-				</button>
+				</div>
 			</div>
 		{/if}
 	</div>

@@ -1,59 +1,55 @@
 <script lang="ts">
 	import { Delete, More } from '$components/Icons';
 	import { blurClick } from '$lib/helpers/button/blurClick';
-	import { clickOutside } from '$lib/helpers/clickOutside';
-	import { createDropdown } from '$lib/helpers/dropdownCtor';
 	import { slide } from '$lib/helpers/slideAnim';
 
-	const { popperRef, popperContent, extraOpts } = createDropdown({
-		placement: 'bottom-start',
-		strategy: 'absolute',
-		offset: [-30, 0],
-		fallbackPlacements: []
-	});
+	import DropdownBase from '../DropdownBase.svelte';
 
-	const closeTooltip = () => (showTooltip = false);
-	const toggleTooltip = () => (showTooltip = !showTooltip);
-	let buttonRef: HTMLElement;
 	export let canShow: boolean;
 	let showTooltip = false;
-	$: if (!canShow) showTooltip = false;
 
 	export let onDelete: () => void;
 	const onDel = () => {
-		closeTooltip();
+		showTooltip = false;
 		onDelete();
 	};
 </script>
 
-<button
-	use:popperRef
-	use:blurClick={showTooltip}
-	on:click={toggleTooltip}
-	bind:this={buttonRef}
-	class="flex flex-none items-center whitespace-nowrap rounded 
-	bg-neutral-muted p-[1px] 
-	hover:bg-neutral-emphasis hover:text-default focus:text-default"
+<DropdownBase
+	bind:showTooltip={showTooltip}
+	canShow={canShow}
+	options={{
+		placement: 'bottom-start',
+		strategy: 'absolute',
+		offset: [-30, 0],
+		fallbackPlacements: []
+	}}
+	zIndex={1}
 >
-	<More size={16} />
-</button>
-{#if showTooltip}
+	<button
+		slot="button"
+		use:blurClick={showTooltip}
+		on:click={() => (showTooltip = !showTooltip)}
+		class="flex flex-none items-center whitespace-nowrap rounded bg-neutral-muted p-[1px] 
+	hover:bg-neutral-emphasis hover:text-default focus:text-default"
+	>
+		<More size={16} />
+	</button>
+
 	<div
-		use:popperContent={extraOpts}
+		slot="dropdown"
 		in:slide={{ duration: 300, axis: 'y' }}
-		class="tooltip z-[1] rounded-md 
+		class="tooltip rounded-md 
 		border border-muted bg-subtle text-[12px] 
 		text-default shadow-ambient 
 		child-hover:bg-neutral-subtle"
-		use:clickOutside={[buttonRef]}
-		on:clickOutside={closeTooltip}
 	>
 		<button class="flex items-center justify-center" on:click={onDel}>
 			<Delete size={12} class="inline-block" />
 			<span class="pb-[2px] pl-[2px]">Delete</span>
 		</button>
 	</div>
-{/if}
+</DropdownBase>
 
 <style>
 	.tooltip > * {

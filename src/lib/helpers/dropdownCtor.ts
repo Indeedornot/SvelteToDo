@@ -17,7 +17,7 @@ type Placement =
 	| 'left-start'
 	| 'left-end';
 
-type DropdownProps = {
+export type DropdownProps = {
 	placement: Placement;
 	offset: [x: number, y: number];
 	fallbackPlacements: Placement[];

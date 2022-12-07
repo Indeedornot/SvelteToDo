@@ -1,22 +1,10 @@
 <script lang="ts">
 	import { Dropdown } from '$components/Icons';
-	import { capitalizeStart } from '$lib/helpers';
 	import { blurClick } from '$lib/helpers/button/blurClick';
-	import { clickOutside } from '$lib/helpers/clickOutside.js';
-	import { createDropdown } from '$lib/helpers/dropdownCtor';
 	import { slide } from '$lib/helpers/slideAnim';
 	import { statusType, statusTypeDisplay } from '$lib/models/TodoData';
 
-	const { popperRef, popperContent, extraOpts } = createDropdown({
-		placement: 'bottom-start',
-		strategy: 'absolute',
-		offset: [-1, 2],
-		fallbackPlacements: []
-	});
-
-	const closeTooltip = () => (showTooltip = false);
-	const toggleTooltip = () => (showTooltip = !showTooltip);
-	let buttonRef: HTMLElement;
+	import DropdownBase from '../DropdownBase.svelte';
 
 	export let onChoose: (status: statusType) => void;
 	export let status: statusType;
@@ -24,44 +12,46 @@
 	export let canShow: boolean;
 	let showTooltip = false;
 	const setStatus = (newStatus: statusType) => {
-		closeTooltip();
+		showTooltip = false;
 		status = newStatus;
 		onChoose && onChoose(newStatus);
 	};
-
-	$: if (!canShow) showTooltip = false;
 </script>
 
-<button
-	use:popperRef
-	use:blurClick={showTooltip}
-	on:click={toggleTooltip}
-	bind:this={buttonRef}
-	class="flex h-full w-full flex-none items-center whitespace-nowrap 
+<DropdownBase
+	canShow={canShow}
+	bind:showTooltip={showTooltip}
+	options={{
+		placement: 'bottom-start',
+		strategy: 'absolute',
+		offset: [-1, 2],
+		fallbackPlacements: []
+	}}
+>
+	<button
+		slot="button"
+		use:blurClick={showTooltip}
+		on:click={() => (showTooltip = !showTooltip)}
+		class="flex h-full w-full flex-none items-center whitespace-nowrap 
 	rounded px-1 
 	hover:bg-neutral-emphasis hover:text-default 
 	focus:bg-neutral-muted focus:text-default"
->
-	<span class="pr-1">{statusTypeDisplay[status]}</span>
-	<Dropdown size={16} />
-</button>
-<div class="relative">
-	{#if showTooltip}
-		<div
-			use:popperContent={extraOpts}
-			in:slide={{ duration: 300, axis: 'y', z: 1 }}
-			use:clickOutside={[buttonRef]}
-			on:clickOutside={closeTooltip}
-			class="tooltip rounded-md border 
+	>
+		<span class="pr-1">{statusTypeDisplay[status]}</span>
+		<Dropdown size={16} />
+	</button>
+	<div
+		slot="dropdown"
+		in:slide={{ duration: 300, axis: 'y' }}
+		class="tooltip rounded-md border 
 			border-muted bg-subtle text-[14px] text-default 
 			shadow-ambient child-hover:bg-neutral-subtle"
-		>
-			{#each Object.entries(statusType) as [_, value]}
-				<button on:click={() => setStatus(value)}>{statusTypeDisplay[value]}</button>
-			{/each}
-		</div>
-	{/if}
-</div>
+	>
+		{#each Object.entries(statusType) as [_, value]}
+			<button on:click={() => setStatus(value)}>{statusTypeDisplay[value]}</button>
+		{/each}
+	</div>
+</DropdownBase>
 
 <style>
 	.tooltip > * {
