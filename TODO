@@ -2,6 +2,7 @@
 Todo:
   ☐ Maybe add visibility for child items removed for tab and display in a history
   ☐ Add animations to filterDropdown
+  ☐ Clean up trpc of unused includes from prisma
 
 Not considered anymore:
   ☐ Add animations for add and remove 

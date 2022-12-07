@@ -104,7 +104,11 @@ export const tab = t.router({
 					id: input
 				},
 				include: {
-					todoItems: true
+					todoItems: {
+						orderBy: {
+							sortOrder: 'asc'
+						}
+					}
 				}
 			});
 
@@ -119,7 +123,14 @@ export const tab = t.router({
 					todoDisplayId: input
 				},
 				include: {
-					todoItems: true
+					todoItems: {
+						orderBy: {
+							sortOrder: 'asc'
+						}
+					}
+				},
+				orderBy: {
+					sortOrder: 'asc'
 				}
 			});
 
@@ -129,6 +140,9 @@ export const tab = t.router({
 		const many = await prisma.todoTab.findMany({
 			include: {
 				todoItems: true
+			},
+			orderBy: {
+				sortOrder: 'asc'
 			}
 		});
 

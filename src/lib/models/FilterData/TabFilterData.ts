@@ -1,4 +1,4 @@
-import type { statusType } from '../TodoData';
+import { statusType } from '../TodoData';
 
 export enum sortType {
 	created = 'Created',
@@ -8,9 +8,15 @@ export enum sortType {
 }
 
 export type TabFilterData = {
-	itemData: {
+	statuses: {
+		[status in statusType]: boolean;
+	};
+};
+
+export const getDefaultFilterData = (): TabFilterData => {
+	return {
 		statuses: {
-			[status in statusType]: boolean;
-		};
+			...Object.fromEntries(Object.values(statusType).map((status) => [status, true]))
+		}
 	};
 };

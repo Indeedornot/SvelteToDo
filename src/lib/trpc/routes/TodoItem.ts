@@ -101,13 +101,20 @@ export const item = t.router({
 			const many = await prisma.todoItem.findMany({
 				where: {
 					todoTabId: input
+				},
+				orderBy: {
+					sortOrder: 'asc'
 				}
 			});
 
 			return z.array(todoItemDataSchema).parse(many);
 		}),
 	getAll: t.procedure.use(logger).query(async () => {
-		const many = await prisma.todoItem.findMany();
+		const many = await prisma.todoItem.findMany({
+			orderBy: {
+				sortOrder: 'asc'
+			}
+		});
 		return z.array(todoItemDataSchema).parse(many);
 	})
 });

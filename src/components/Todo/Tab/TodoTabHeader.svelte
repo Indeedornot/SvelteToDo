@@ -11,11 +11,12 @@
 	export let onDelete: () => void;
 	export let onStopTyping: () => void;
 	export let onSort: (value: sortType) => void;
+
 	export let title: string;
 	export let isDragged: boolean = false;
 
+	export let id: number;
 	export let itemCount: number;
-
 	export let filterData: TabFilterData;
 </script>
 
@@ -51,7 +52,7 @@
 		<div
 			class="ml-auto box-border flex aspect-square h-full flex-none items-center justify-center rounded text-default"
 		>
-			<TabMore onDelete={onDelete} canShow={!isDragged} bind:filterData={filterData} onSort={onSort} />
+			<TabMore onDelete={onDelete} canShow={!isDragged} bind:filterData={filterData} onSort={onSort} id={id} />
 		</div>
 	</div>
 </div>

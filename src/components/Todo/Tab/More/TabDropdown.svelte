@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { Delete, More } from '$components/Icons';
+	import { More } from '$components/Icons';
 	import { clickOutside, createDropdown, slide } from '$lib/helpers';
 	import { blurClick } from '$lib/helpers/button/blurClick';
 	import type { TabFilterData, sortType } from '$lib/models/FilterData/TabFilterData';
-	import { statusType } from '$lib/models/TodoData';
 
-	import FilterOption from './FilterOption.svelte';
+	import FilterOption from './TabFilterDropdown.svelte';
+	import TabDelete from './TabDelete.svelte';
 
 	const { popperRef, popperContent, extraOpts } = createDropdown({
 		placement: 'bottom-end',
@@ -26,6 +26,7 @@
 		onDelete();
 	};
 
+	export let id: number;
 	export let filterData: TabFilterData;
 	export let onSort: (value: sortType) => void;
 </script>
@@ -52,11 +53,8 @@
 			class="tooltip z-[1] rounded-md border
 			border-muted bg-subtle text-[16px] text-default shadow-ambient child-hover:bg-neutral-subtle"
 		>
-			<button class="dropdown-item flex items-center justify-center" on:click={onDel}>
-				<Delete size={14} />
-				<span class="pl-[4px]">Delete</span>
-			</button>
-			<FilterOption bind:filterData={filterData} onSort={onSort} />
+			<TabDelete onDelete={onDel} />
+			<FilterOption bind:filterData={filterData} onSort={onSort} id={id} />
 		</div>
 	{/if}
 </div>

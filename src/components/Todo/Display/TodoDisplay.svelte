@@ -9,8 +9,6 @@
 	import TodoDisplayDnd from './TodoDisplayDnd.svelte';
 
 	export let data: TodoDisplayData;
-	//tabs come unsorted
-	data.todoTabs = sortBySortOrder(data.todoTabs);
 
 	let isDragging = false;
 	let searchQuery: string;

@@ -38,8 +38,6 @@
 		},
 		sort: sortType.date
 	};
-
-	$: console.log('filterData', filterOpts);
 </script>
 
 <button
@@ -58,8 +56,8 @@
 		use:clickOutside={[buttonRef]}
 		on:clickOutside={closeTooltip}
 		use:popperContent={extraOpts}
-		class="tooltip styled-scrollbar max-h-[350px] overflow-y-auto
-			rounded-md border border-muted bg-subtle 
+		class="tooltip styled-scrollbar z-[1] max-h-[350px]
+			overflow-y-auto rounded-md border border-muted bg-subtle
 			text-[14px] text-default shadow-ambient child-hover:bg-neutral-subtle"
 	>
 		{#each Object.entries(filterOpts.historyData) as [type, filters]}

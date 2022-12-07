@@ -17,7 +17,14 @@ export const display = t.router({
 				include: {
 					todoTabs: {
 						include: {
-							todoItems: true
+							todoItems: {
+								orderBy: {
+									sortOrder: 'asc'
+								}
+							}
+						},
+						orderBy: {
+							sortOrder: 'asc'
 						}
 					}
 				}
@@ -30,7 +37,14 @@ export const display = t.router({
 			include: {
 				todoTabs: {
 					include: {
-						todoItems: true
+						todoItems: {
+							orderBy: {
+								sortOrder: 'asc'
+							}
+						}
+					},
+					orderBy: {
+						sortOrder: 'asc'
 					}
 				}
 			}
@@ -73,7 +87,14 @@ export const display = t.router({
 				include: {
 					todoTabs: {
 						include: {
-							todoItems: true
+							todoItems: {
+								orderBy: {
+									sortOrder: 'asc'
+								}
+							}
+						},
+						orderBy: {
+							sortOrder: 'asc'
 						}
 					}
 				}
@@ -97,7 +118,14 @@ export const display = t.router({
 				include: {
 					todoTabs: {
 						include: {
-							todoItems: true
+							todoItems: {
+								orderBy: {
+									sortOrder: 'asc'
+								}
+							}
+						},
+						orderBy: {
+							sortOrder: 'asc'
 						}
 					}
 				}

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { TodoItem } from '$components/Todo';
 	import { postTodoItem } from '$lib/apiCalls/TodoActions';
-	import { adjustSortOrder, isUndefined } from '$lib/helpers';
+	import { adjustSortOrder } from '$lib/helpers';
 	import type { TodoItemData } from '$lib/models/TodoData';
 	import type { TodoItemDndEvent } from '$lib/models/TodoDndData';
 	import { SOURCES, TRIGGERS, dndzone } from 'svelte-dnd-action';
@@ -51,14 +51,20 @@
 </script>
 
 <div
-	class="styled-scrollbar flex flex-shrink flex-grow flex-col overflow-auto px-[10px] pt-[2px] child:mb-[8px]"
+	class="styled-scrollbar flex flex-shrink flex-grow flex-col overflow-auto px-[10px] pt-[2px]"
 	use:dndzone={{ items: todoItems, type: 'tab', dragDisabled: !isDragging, flipDurationMs: flipDuration }}
 	on:consider={handleDndConsider}
 	on:finalize={handleDndFinalize}
 >
 	{#each todoItems as todoItem (todoItem.id)}
-		<div animate:flip={{ duration: flipDuration }}>
+		<div animate:flip={{ duration: flipDuration }} class="todoItem">
 			<TodoItem bind:data={todoItem} onDelete={delTodoItem} bind:isDragged={isDragging} />
 		</div>
 	{/each}
 </div>
+
+<style>
+	.todoItem > :global(*:not(.hidden)) {
+		margin-bottom: 8px;
+	}
+</style>

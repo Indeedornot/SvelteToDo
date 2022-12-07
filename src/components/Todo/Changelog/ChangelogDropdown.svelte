@@ -6,6 +6,7 @@
 	import { slide } from '$lib/helpers/slideAnim';
 	import { type HistoryFilterData, sortType } from '$lib/models/FilterData/HistoryFilterData';
 	import { TodoHistory, type TodoHistoryData } from '$lib/stores/Todo/TodoHistory';
+	import { flip } from 'svelte/animate';
 
 	import FilterDropdown from './FilterDropdown.svelte';
 	import TodoChangelog from './TodoChangelog.svelte';
@@ -21,7 +22,7 @@
 	const toggleTooltip = () => (showTooltip = !showTooltip);
 	let buttonRef: HTMLElement;
 
-	let showTooltip = false;
+	let showTooltip = true;
 	let filterOpts: HistoryFilterData;
 
 	let history: TodoHistoryData[] = $TodoHistory;
@@ -77,9 +78,9 @@
 		use:clickOutside={[buttonRef]}
 		on:clickOutside={closeTooltip}
 		use:popperContent={extraOpts}
-		class="z-[2] h-[50vh] flex-grow overflow-hidden border border-subtle text-[16px] text-default shadow-ambient sm:w-[100vw] xs:w-[400px] xs:rounded-md"
+		class="z-[2] flex h-[50vh] overflow-hidden border border-subtle text-[16px] text-default shadow-ambient sm:w-[100vw] xs:w-[400px] xs:rounded-md"
 	>
-		<div class="flex h-full w-full flex-none flex-col bg-default">
+		<div class="flex h-full w-full flex-col bg-default">
 			<div
 				class="flex h-[40px] w-full flex-none items-center justify-between border-b-2 border-default pl-2 text-[20px] font-bold text-default"
 			>
@@ -97,27 +98,25 @@
 				</div>
 			</div>
 
-			<div class="flex w-full flex-shrink-0 flex-grow">
-				<div
-					class="styled-scrollbar scroll changelogs h-full w-full overflow-y-auto bg-neutral-muted px-1.5 pt-1 child:pt-1.5"
-				>
-					{#each historyFiltered as historyItem}
-						{#if !historyItem.hidden}
-							{#if historyItem.historyType === 'display'}
-								<TodoChangelog title={'Display'} history={historyItem} keys={['title']} onDelete={delHistoryItem} />
-							{:else if historyItem.historyType === 'tab'}
-								<TodoChangelog title={'Tab'} history={historyItem} keys={['title']} onDelete={delHistoryItem} />
-							{:else}
-								<TodoChangelog
-									title={'Item'}
-									history={historyItem}
-									keys={['title', 'status', 'collapsed']}
-									onDelete={delHistoryItem}
-								/>
-							{/if}
+			<div
+				class="styled-scrollbar changelogs flex w-full flex-grow flex-col overflow-y-auto bg-neutral-muted px-1.5 pt-1 child:pt-1.5"
+			>
+				{#each historyFiltered.filter((item) => !item.hidden) as historyItem (historyItem.id)}
+					<div animate:flip={{ duration: 300 }}>
+						{#if historyItem.historyType === 'display'}
+							<TodoChangelog title={'Display'} history={historyItem} keys={['title']} onDelete={delHistoryItem} />
+						{:else if historyItem.historyType === 'tab'}
+							<TodoChangelog title={'Tab'} history={historyItem} keys={['title']} onDelete={delHistoryItem} />
+						{:else}
+							<TodoChangelog
+								title={'Item'}
+								history={historyItem}
+								keys={['title', 'status', 'collapsed']}
+								onDelete={delHistoryItem}
+							/>
 						{/if}
-					{/each}
-				</div>
+					</div>
+				{/each}
 			</div>
 		</div>
 	</div>
