@@ -17,7 +17,8 @@
 	const filterHistory = (historyData: TodoHistoryData[]) => {
 		if (!filterOpts) return historyData;
 		const historyCopy = [...historyData];
-		const filtered = historyCopy.filter((item) => filterOpts.historyData[item.historyType][item.type]);
+		const filtered = historyCopy.filter((item) => !item.hidden && filterOpts.historyData[item.historyType][item.type]);
+		visibleItemsCount = filtered.length;
 		switch (filterOpts.sort) {
 			case sortType.type:
 				return filtered.sort((a, b) => a.type.localeCompare(b.type));
@@ -31,6 +32,7 @@
 
 	let history: TodoHistoryData[] = $TodoHistory;
 	$: history = $TodoHistory;
+	let visibleItemsCount = history.length;
 
 	let historyFiltered: TodoHistoryData[] = filterHistory(history);
 	$: filterOpts, (historyFiltered = filterHistory(history));
@@ -39,7 +41,9 @@
 		console.log('delHistoryItem', id);
 		TodoHistory.update((history) => {
 			const item = history.find((item) => item.id === id);
-			if (item) item.hidden = true;
+			if (item) {
+				item.hidden = true;
+			}
 			return history;
 		});
 	};
@@ -84,7 +88,7 @@
 						class="mx-1 mt-1 flex w-fit items-center justify-center truncate
 							rounded-full bg-neutral-muted py-[2px] px-[4px] text-[16px] 
 							font-semibold leading-tight text-default"
-						>{history.length}
+						>{visibleItemsCount}
 					</span>
 				</div>
 				<div class="mr-2.5">
