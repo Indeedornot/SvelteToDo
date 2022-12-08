@@ -6,8 +6,6 @@
 	export let showTooltip: boolean;
 	export let zIndex: number = 0;
 	$: if (!canShow && showTooltip) {
-		console.log('dropdown', 'canShow', canShow, 'showTooltip', showTooltip);
-
 		showTooltip = false;
 	}
 

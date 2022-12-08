@@ -31,6 +31,7 @@
 		offset: [0, 3],
 		fallbackPlacements: []
 	}}
+	zIndex={1}
 >
 	<button
 		slot="button"
@@ -46,8 +47,8 @@
 	<div
 		slot="dropdown"
 		in:slide={{ duration: 300, axis: 'y' }}
-		class="tooltip z-[1] rounded-md border
-			border-muted bg-subtle text-[16px] text-default shadow-ambient child-hover:bg-neutral-subtle"
+		class="tooltip rounded-md border
+			border-muted bg-subtle text-[16px] text-default shadow-ambient [&_.dropdown-item:hover]:bg-neutral-subtle"
 	>
 		<TabDelete onDelete={onDel} />
 		<FilterOption bind:filterData={filterData} onSort={onSort} id={id} />
@@ -55,7 +56,7 @@
 </DropdownBase>
 
 <style>
-	.tooltip > :global(.dropdown-item) {
+	.tooltip :global(.dropdown-item) {
 		text-align: left;
 		margin: 0px;
 		padding: 5px 14px;
