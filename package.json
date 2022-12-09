@@ -13,8 +13,6 @@
 		"lint:fix": "prettier --plugin-search-dir . --check . && eslint .",
 		"lint:format": "prettier --config prettier.config.cjs --write --plugin-search-dir=. .",
 		"lint": "npm run lint:format && npm run lint:fix",
-		"storybook": "start-storybook -p 6006 --no-open",
-		"build-storybook": "build-storybook",
 		"prisma:migrate:dev": "prisma migrate dev",
 		"prisma:migrate:reset": "prisma migrate reset --force",
 		"test": "jest",
