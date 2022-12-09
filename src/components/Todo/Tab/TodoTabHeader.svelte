@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { TabMore } from '$components/Todo';
-	import { maxLength, stopTyping, truncateEditable } from '$lib/helpers/contentEditable';
-	import { singleLine } from '$lib/helpers/contentEditable/singleLine';
+	import { maxLength, singleLine, stopTyping, truncateEditable } from '$lib/helpers/contentEditable';
 	import { dndHandle } from '$lib/helpers/dnd/dndHandle';
 	import type { TabFilterData, sortType } from '$lib/models/FilterData/TabFilterData';
 	import { TodoTabConstr } from '$lib/models/TodoDataConstr';

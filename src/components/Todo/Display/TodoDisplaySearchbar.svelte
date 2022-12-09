@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { Filter, Plus } from '$components/Icons';
-	import { maxLength, truncateEditable } from '$lib/helpers/contentEditable';
-	import { singleLine } from '$lib/helpers/contentEditable/singleLine';
+	import { maxLength, singleLine, truncateEditable } from '$lib/helpers/contentEditable';
 	import { TodoTabConstr } from '$lib/models/TodoDataConstr';
 	import { isSynced } from '$lib/stores/Sync';
 	import '$lib/styles/ContentEditable.css';
@@ -29,7 +28,7 @@
 	</div>
 	<div class="durtation-200 mr-[5px] flex h-full flex-grow items-center transition-colors ease-linear">
 		<div
-			class="single-line content-editable bg-transparent w-full text-ellipsis px-[8px]"
+			class="single-line content-editable w-full text-ellipsis bg-transparent px-[8px]"
 			placeholder="Filter by keyword or by field"
 			contenteditable="true"
 			bind:this={searchInput}

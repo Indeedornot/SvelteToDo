@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { maxLength, stopTyping, truncateEditable } from '$lib/helpers/contentEditable';
-	import { singleLine } from '$lib/helpers/contentEditable/singleLine';
+	import { maxLength, singleLine, stopTyping, truncateEditable } from '$lib/helpers/contentEditable';
 	import { TodoDisplayConstr } from '$lib/models/TodoDataConstr';
 	import '$lib/styles/Scrollbar.css';
 
@@ -9,10 +8,10 @@
 </script>
 
 <div
-	class="header flex h-[103px] w-full flex-none items-center bg-primary text-[20px] sm:pl-[12px] md:pl-[20px] lg:pl-[28px]"
+	class="header bg-primary flex h-[103px] w-full flex-none items-center text-[20px] sm:pl-[12px] md:pl-[20px] lg:pl-[28px]"
 >
 	<div
-		class="single-line content-editable text-ellipsis rounded py-[16px] pl-[4px] pr-[24px] transition-colors duration-200 ease-linear hover:bg-secondary focus:bg-secondary"
+		class="single-line content-editable hover:bg-secondary focus:bg-secondary text-ellipsis rounded py-[16px] pl-[4px] pr-[24px] transition-colors duration-200 ease-linear"
 		contenteditable="true"
 		spellcheck="false"
 		use:stopTyping

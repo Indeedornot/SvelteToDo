@@ -1,5 +1,4 @@
 export * from './clickOutside';
-export * from './contentEditable';
 export * from './dropdownCtor';
 export * from './jsUtils';
 export * from './optionalProperty';
