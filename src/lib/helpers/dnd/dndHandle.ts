@@ -1,5 +1,6 @@
 export function dndHandle(node: HTMLElement, isDragged: boolean) {
 	node.ariaLabel = 'drag-handle';
+	node.tabIndex = isDragged ? -1 : 0;
 
 	const dragged = {
 		set(value: boolean) {
@@ -8,24 +9,9 @@ export function dndHandle(node: HTMLElement, isDragged: boolean) {
 		}
 	};
 
-	const dragKeys = {
-		move: ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Tab'],
-		start: ['Enter', ' ']
-	};
-
-	const onDragKeyboard = (e: KeyboardEvent) => {
-		if (dragKeys.start.includes(e.key) && !isDragged) {
-			dragged.set(true);
-		} else if (dragKeys.move.includes(e.key)) {
-			e.preventDefault();
-		} else {
-			dragged.set(false);
-		}
-	};
-
 	const onDrag = (e: Event) => {
-		if (!node.isEqualNode(e.target as HTMLElement)) return;
 		//Under the assumption that handle is one element with no children as a part of it
+		if (e.target !== node) return;
 		dragged.set(true);
 	};
 	const onDragEnd = () => {
@@ -34,7 +20,6 @@ export function dndHandle(node: HTMLElement, isDragged: boolean) {
 
 	node.addEventListener('mousedown', onDrag);
 	node.addEventListener('mouseup', onDragEnd);
-	node.addEventListener('keydown', onDragKeyboard);
 	node.addEventListener('touchstart', onDrag);
 	node.addEventListener('touchend', onDragEnd);
 
@@ -42,7 +27,6 @@ export function dndHandle(node: HTMLElement, isDragged: boolean) {
 		destroy() {
 			node.removeEventListener('mousedown', onDrag);
 			node.removeEventListener('mouseup', onDragEnd);
-			node.removeEventListener('keydown', onDragKeyboard);
 			node.removeEventListener('touchstart', onDrag);
 			node.removeEventListener('touchend', onDragEnd);
 		},

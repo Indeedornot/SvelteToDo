@@ -16,7 +16,7 @@
 
 	const handleDndConsider = (e: TodoTabDndEvent) => {
 		let items: TodoTabData[] = e.detail.items;
-		todoTabs = adjustSortOrder(items);
+		todoTabs = items;
 
 		const { source, trigger } = e.detail.info;
 		if (source === SOURCES.KEYBOARD && trigger === TRIGGERS.DRAG_STOPPED) {
@@ -24,13 +24,14 @@
 		}
 	};
 
-	const handleDndFinalize = async (e: TodoTabDndEvent) => {
+	const handleDndFinalize = (e: TodoTabDndEvent) => {
 		let items: TodoTabData[] = e.detail.items;
 
 		let changedItem = items.findIndex((item, index) => item.sortOrder !== index);
+
 		if (changedItem !== -1) {
 			items = adjustSortOrder(items);
-			await postTodoTab(items[changedItem], false);
+			postTodoTab(items[changedItem], false);
 		}
 
 		todoTabs = items;

@@ -7,7 +7,7 @@
 	import { dndHandle } from '$lib/helpers/dnd/dndHandle';
 	import { dndVirtualization } from '$lib/helpers/dnd/dndVirtualization';
 	import { isUndefined } from '$lib/helpers/jsUtils';
-	import type { TodoItemData, statusType } from '$lib/models/TodoData';
+	import type { TodoItemData } from '$lib/models/TodoData';
 	import { TodoItemConstr } from '$lib/models/TodoDataConstr';
 	import '$lib/styles/ContentEditable.css';
 
@@ -46,31 +46,29 @@
 	let stoppedTyping = false;
 	let blurred = false;
 
-	$: {
-		if (stoppedTyping && blurred) {
-			postTodo();
-			stoppedTyping = blurred = false;
-		}
+	$: if (stoppedTyping && blurred) {
+		postTodo();
+		stoppedTyping = blurred = false;
 	}
 </script>
 
 <div
 	class:hidden={data.hidden}
 	class="border-border min-h-[67px] w-full rounded-md border border-subtle bg-subtle"
-	on:dndVirtualization={(event) => {
-		isVisible = event.detail;
-	}}
+	on:dndVirtualization={(event) => (isVisible = event.detail)}
 	use:dndVirtualization
 >
 	{#if isVisible}
 		<div class="box-border flex h-[8px] flex-none touch-none items-end justify-center ">
 			<div
-				class="box-border flex h-full w-4/12 flex-none 
-			cursor-grab rounded-b bg-default hover:bg-neutral-muted active:bg-neutral-muted"
-				class:dragging={isDragged}
+				class="dndHandle box-border flex 
+				h-full w-4/12 flex-none cursor-grab rounded-b 
+				bg-default"
 				use:dndHandle={isDragged}
 				on:dragged={(e) => (isDragged = e.detail.isDragged)}
 			/>
+			<!--  hover:bg-neutral-muted 
+				active:cursor-grabbing active:bg-neutral-muted -->
 		</div>
 
 		<div class="flex w-full flex-grow flex-col pr-[12px] pl-[8px]">
@@ -139,10 +137,6 @@
 </div>
 
 <style>
-	.dragging {
-		cursor: grabbing;
-	}
-
 	[contenteditable='true'].single-line {
 		white-space: nowrap;
 		overflow: hidden;

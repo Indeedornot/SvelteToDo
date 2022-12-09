@@ -66,21 +66,12 @@
 	};
 
 	const getVisibility = (todoItems: TodoItemData[]) => {
-		const query = searchQuery?.toLowerCase();
-		const isValidQuery = !isUndefinedOrEmpty(query);
-
-		const containsQuery = (item: TodoItemData) => {
-			return !isValidQuery || item.title.toLowerCase().includes(query);
-		};
-
-		const isFilteredOut = (item: TodoItemData) => {
-			return filterData && !filterData?.statuses[item.status];
-		};
-
+		if (data.hidden) return todoItems;
 		let itemsCopy = [...todoItems];
 		itemsCopy = adjustSortOrder(itemsCopy);
 
-		if (data.hidden) return itemsCopy;
+		const query = searchQuery?.toLowerCase();
+		const isValidQuery = !isUndefinedOrEmpty(query);
 
 		if (!isValidQuery && !filterData) {
 			visibleItemsCount = itemsCopy.length;
@@ -89,6 +80,14 @@
 				return item;
 			});
 		}
+
+		const containsQuery = (item: TodoItemData) => {
+			return !isValidQuery || item.title.toLowerCase().includes(query);
+		};
+
+		const isFilteredOut = (item: TodoItemData) => {
+			return filterData && !filterData?.statuses[item.status];
+		};
 
 		visibleItemsCount = 0;
 		itemsCopy.forEach((item) => {
@@ -123,7 +122,11 @@
 		return adjustSortOrder(todoItemsCopy);
 	};
 
-	$: searchQuery, filterData, (data.todoItems = sortBySortOrder(getVisibility(data.todoItems)));
+	const updateItems = () => {
+		data.todoItems = getVisibility(data.todoItems);
+	};
+
+	$: searchQuery, filterData, updateItems();
 </script>
 
 <div
@@ -140,7 +143,7 @@
 		id={data.id}
 		bind:isDragged={isDragged}
 	/>
-	<TodoTabDnd delTodoItem={delTodoItem} bind:todoItems={data.todoItems} todoTabId={data.id} />
+	<TodoTabDnd delTodoItem={delTodoItem} bind:todoItems={data.todoItems} todoTabId={data.id} updateItems={updateItems} />
 
 	<TodoTabFooter onAdd={addTodoItem} />
 </div>

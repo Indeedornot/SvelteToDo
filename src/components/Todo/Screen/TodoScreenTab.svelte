@@ -48,7 +48,6 @@
 			/>
 		</button>
 		{#if chosen}
-			<!--  -->
 			<div transition:slide|local={{ axis: 'x', duration: 550 }}>
 				<div class="flex h-full w-full flex-none items-center whitespace-nowrap pl-1">
 					<ScreenMore canShow={!isDragged} onDelete={() => onDelete(data.id)} />

@@ -22,10 +22,9 @@
 		data = adjustSortOrder(items);
 		const sortedItem = data.find((item) => item.id === chosenId);
 		sortedItem && changeIndex(sortedItem.sortOrder);
-		console.log('consider', index);
 	};
 
-	const handleDndFinalize = async (e: TodoDisplayDndEvent) => {
+	const handleDndFinalize = (e: TodoDisplayDndEvent) => {
 		let items: TodoDisplayData[] = e.detail.items;
 
 		const chosenId = data[index].id;
@@ -33,17 +32,16 @@
 		let changedItem = items.findIndex((item, index) => item.sortOrder !== index);
 		if (changedItem !== -1) {
 			items = adjustSortOrder(items);
-			await postTodoDisplay(items[changedItem], false);
+			postTodoDisplay(items[changedItem], false);
 		}
 
 		data = items;
 		const sortedItem = data.find((item) => item.id === chosenId);
 		sortedItem && changeIndex(sortedItem.sortOrder);
-		console.log('finalize', index);
 	};
 
 	let isDragging = false;
-	let flipDuration = 300;
+	let flipDuration = 150;
 </script>
 
 <div class="flex overflow-hidden rounded-t-md">
