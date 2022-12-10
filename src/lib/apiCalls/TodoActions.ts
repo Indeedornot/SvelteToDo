@@ -207,10 +207,7 @@ export const postTodoItem = async (data: TodoItemData, history = false): Promise
 	const body = todoItem.parse(data);
 	return trpc()
 		.item.update.query(body)
-		.then((postedItem) => {
-			history && TodoHistory.Item.addAdded(postedItem);
-			return postedItem;
-		})
+		.then((postedItem) => postedItem)
 		.catch((error) => {
 			isSynced.set({ isSync: false, error: error });
 			return Promise.reject(error);
