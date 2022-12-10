@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-auto';
+import vercel from '@sveltejs/adapter-vercel';
 
 import preprocess from 'svelte-preprocess';
 
@@ -13,24 +13,9 @@ const config = {
 	],
 
 	kit: {
-		adapter: adapter(),
+		adapter: vercel(),
 		alias: {
 			$components: './src/components'
-		}
-	},
-	vitePlugin: {
-		experimental: {
-			inspector: {
-				// change shortcut
-				toggleKeyCombo: 'control-spacebar',
-				// hold and release key to toggle inspector mode
-				// holdMode: true,
-				// show or hide the inspector option
-				showToggleButton: 'always',
-				// inspector position
-				toggleButtonPos: 'top-right',
-				holdMode: true
-			}
 		}
 	}
 };
