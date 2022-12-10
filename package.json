@@ -16,7 +16,6 @@
 	},
 	"devDependencies": {
 		"@babel/preset-env": "^7.20.2",
-		"@prisma/client": "^4.7.1",
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/adapter-vercel": "1.0.0-next.85",
 		"@sveltejs/kit": "1.0.0-next.577",
@@ -28,6 +27,7 @@
 		"@types/sortablejs": "^1.15.0",
 		"@typescript-eslint/eslint-plugin": "^5.46.0",
 		"@typescript-eslint/parser": "^5.46.0",
+		"@vercel/analytics": "^0.1.6",
 		"autoprefixer": "^10.4.13",
 		"babel-jest": "^29.3.1",
 		"cuid": "^2.1.8",
