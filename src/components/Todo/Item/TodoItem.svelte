@@ -14,14 +14,12 @@
 	export let data: TodoItemData;
 	if (isUndefined(data.hidden)) data.hidden = false;
 
-	export let onDelete: (id: number) => void;
+	export let onDelete: (id: string) => void;
 	export let isDragged: boolean = false;
 	let multiLine: boolean = false;
 
 	const postTodo = () => {
-		postTodoItem(data, true)
-			.then((postedItem) => (data = postedItem))
-			.catch((error) => console.log(error));
+		postTodoItem(data, true);
 	};
 
 	const collapse = () => {

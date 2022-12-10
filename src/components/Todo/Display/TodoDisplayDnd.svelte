@@ -10,7 +10,7 @@
 	import { flip } from 'svelte/animate';
 
 	export let todoTabs: TodoTabData[];
-	export let delTodoTab: (todoTabId: number) => void;
+	export let delTodoTab: (todoTabId: string) => void;
 	export let isDragging = false;
 	export let searchQuery: string;
 

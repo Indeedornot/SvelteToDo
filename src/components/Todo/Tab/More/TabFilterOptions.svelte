@@ -3,7 +3,7 @@
 	import { statusType, statusTypeDisplay } from '$lib/models/TodoData';
 
 	export let filterData: TabFilterData;
-	export let id: number;
+	export let id: string;
 </script>
 
 <details class="border-b-2 border-muted">

@@ -17,7 +17,7 @@
 		onDelete();
 	};
 
-	export let id: number;
+	export let id: string;
 	export let filterData: TabFilterData;
 	export let onSort: (value: sortType) => void;
 </script>

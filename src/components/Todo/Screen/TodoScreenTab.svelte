@@ -12,7 +12,7 @@
 	export let data: TodoDisplayData;
 	export let chosen: boolean;
 	export let changeIndex: (id: number) => void;
-	export let onDelete: (id: number) => void;
+	export let onDelete: (id: string) => void;
 
 	export let isDragged: boolean = false;
 

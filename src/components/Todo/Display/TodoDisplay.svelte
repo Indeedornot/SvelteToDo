@@ -35,7 +35,7 @@
 			adding = false;
 		});
 	};
-	const delTodoTab = (todoTabId: number) => {
+	const delTodoTab = (todoTabId: string) => {
 		const index = data.todoTabs.findIndex((item) => item.id === todoTabId);
 		deleteTodoTab(data.todoTabs[index], true)
 			.then(() => {

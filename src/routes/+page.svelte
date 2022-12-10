@@ -1,16 +1,20 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { DesyncModal, TodoScreen } from '$components/Todo';
-	import type { TodoDisplayData } from '$lib/models/TodoData';
+	import * as dbCalls from '$lib/apiCalls/TodoActions';
+	import type { TodoDisplayCreateData, TodoDisplayData } from '$lib/models/TodoData';
 	import { isSynced } from '$lib/stores/Sync';
 
 	import type { PageData } from './$types';
 
-	export let data: PageData;
+	export const prerender = false;
 
-	let todoData: TodoDisplayData[] = data.todos;
+	export let data: PageData;
 </script>
 
 <div class="h-full w-full">
-	<TodoScreen data={todoData} />
-	<DesyncModal isSynced={$isSynced} />
+	{#if data.todos}
+		<TodoScreen data={data.todos} />
+		<DesyncModal isSynced={$isSynced} />
+	{/if}
 </div>

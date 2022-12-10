@@ -8,8 +8,8 @@
 	import { flip } from 'svelte/animate';
 
 	export let todoItems: TodoItemData[];
-	export let todoTabId: number;
-	export let delTodoItem: (id: number) => void;
+	export let todoTabId: string;
+	export let delTodoItem: (id: string) => void;
 	export let updateItems: () => void;
 	let isDragging: boolean = false;
 	let flipDuration = 150;

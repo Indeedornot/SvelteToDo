@@ -14,7 +14,7 @@
 	export let onSort: (value: sortType) => void;
 
 	export let filterData: TabFilterData = getDefaultFilterData();
-	export let id: number;
+	export let id: string;
 </script>
 
 <DropdownBase

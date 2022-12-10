@@ -14,7 +14,7 @@
 	export let title: string;
 	export let isDragged: boolean = false;
 
-	export let id: number;
+	export let id: string;
 	export let itemCount: number;
 	export let filterData: TabFilterData;
 </script>

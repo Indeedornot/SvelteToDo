@@ -11,7 +11,7 @@
 	export let data: TodoDisplayData[];
 	let index = 0;
 
-	const delTodoDisplay = (id: number) => {
+	const delTodoDisplay = (id: string) => {
 		if (data.length === 1) return;
 		const delIndex = data.findIndex((item) => item.id === id);
 		deleteTodoDisplay(data[delIndex], true)

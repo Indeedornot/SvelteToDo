@@ -1,42 +1,55 @@
-import type { Optional } from '$lib/helpers';
-
 export type TodoDisplayData = {
-	id: number;
+	id: string;
 	title: string;
 	todoTabs: TodoTabData[];
 	sortOrder: number;
-	createdAt: string;
-	updatedAt: string;
+	createdAt: Date;
+	updatedAt: Date;
 };
 
 export type TodoTabData = {
-	id: number;
+	id: string;
 	title: string;
 	sortOrder: number;
-	todoDisplayId: number;
+	todoDisplayId: string;
 	todoItems: TodoItemData[];
-	createdAt: string;
-	updatedAt: string;
+	createdAt: Date;
+	updatedAt: Date;
 	hidden?: boolean;
 };
 
 export type TodoItemData = {
-	id: number;
+	id: string;
 	title: string;
 	sortOrder: number;
 	status: statusType;
-	todoTabId: number;
-	createdAt: string;
-	updatedAt: string;
+	todoTabId: string;
+	createdAt: Date;
+	updatedAt: Date;
 	collapsed: boolean;
 	hidden?: boolean;
 };
 
-export type TodoDisplayCreateData = Optional<Omit<TodoDisplayData, 'id' | 'createdAt' | 'updatedAt'>, 'todoTabs'>;
+export type TodoDisplayCreateData = {
+	title: string;
+	sortOrder: number;
+	todoTabs?: TodoTabCreateData[];
+};
 
-export type TodoTabCreateData = Optional<Omit<TodoTabData, 'id' | 'createdAt' | 'updatedAt'>, 'todoItems'>;
+export type TodoTabCreateData = {
+	title: string;
+	sortOrder: number;
+	todoItems?: TodoItemCreateData[];
+	todoDisplayId: string;
+};
 
-export type TodoItemCreateData = Omit<TodoItemData, 'id' | 'createdAt' | 'updatedAt'>;
+export type TodoItemCreateData = {
+	title: string;
+	sortOrder: number;
+	status: statusType;
+	collapsed: boolean;
+	todoTabId: string;
+};
 
 export enum statusType {
 	draft = 'draft',

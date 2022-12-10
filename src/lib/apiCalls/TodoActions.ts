@@ -1,3 +1,4 @@
+import { browser } from '$app/environment';
 import type {
 	TodoDisplayCreateData,
 	TodoDisplayData,
@@ -6,41 +7,34 @@ import type {
 	TodoTabCreateData,
 	TodoTabData
 } from '$lib/models/TodoData';
-import {
-	todoDisplay,
-	todoDisplayCreate,
-	todoItem,
-	todoItemCreate,
-	todoTab,
-	todoTabCreate
-} from '$lib/models/TodoSchema';
 import { isSynced } from '$lib/stores/Sync';
 import { TodoHistory } from '$lib/stores/Todo/TodoHistory';
-import { trpc } from '$lib/trpc/client';
+
+import * as dbCalls from './db/dbutilities';
+
+export const middleware = () => {
+	if(!browser) return {};
+	return this; 
+}
 
 export const getTodoDisplays = async (): Promise<TodoDisplayData[]> => {
-	return trpc()
-		.display.getAll.query()
-		.then((todoDisplays) => todoDisplays)
-		.catch((error) => {
-			isSynced.set({ isSync: false, error: error });
-			return Promise.reject(error);
-		});
+	return dbCalls.getTodoDisplays(true).catch((error) => {
+		isSynced.set({ isSync: false, error: error });
+		return Promise.reject(error);
+	});
 };
 
-export const getTodoDisplay = async (id: number): Promise<TodoDisplayData> => {
-	return trpc()
-		.display.getSingle.query(id)
-		.catch((error) => {
-			isSynced.set({ isSync: false, error: error });
-			return Promise.reject(error);
-		});
+export const getTodoDisplay = async (id: string): Promise<TodoDisplayData> => {
+	return dbCalls.getTodoDisplay(id, true).catch((error) => {
+		isSynced.set({ isSync: false, error: error });
+		return Promise.reject(error);
+	});
 };
 
-export const postTodoDisplay = async (data: TodoDisplayData, history = false): Promise<TodoDisplayData> => {
+export const postTodoDisplay = async (data: TodoDisplayData, history = false): Promise<void> => {
 	if (history) {
-		await trpc()
-			.display.getSingle.query(data.id)
+		await dbCalls
+			.getTodoDisplay(data.id, false)
 			.then((todoDisplay) => {
 				TodoHistory.Display.addChanged({ old: todoDisplay, new: data });
 			})
@@ -50,20 +44,15 @@ export const postTodoDisplay = async (data: TodoDisplayData, history = false): P
 			});
 	}
 
-	const body = todoDisplay.parse(data);
-	return trpc()
-		.display.update.query(body)
-		.then((postedDisplay) => postedDisplay)
-		.catch((error) => {
-			isSynced.set({ isSync: false, error: error });
-			return Promise.reject(error);
-		});
+	return dbCalls.updateTodoDisplay(data).catch((error) => {
+		isSynced.set({ isSync: false, error: error });
+		return Promise.reject(error);
+	});
 };
 
 export const createTodoDisplay = async (data: TodoDisplayCreateData, history = false): Promise<TodoDisplayData> => {
-	const body = todoDisplayCreate.parse(data);
-	return trpc()
-		.display.create.query(body)
+	return dbCalls
+		.addTodoDisplay(data)
 		.then((postedDisplay) => {
 			history && TodoHistory.Display.addAdded(postedDisplay);
 			return postedDisplay;
@@ -75,8 +64,8 @@ export const createTodoDisplay = async (data: TodoDisplayCreateData, history = f
 };
 
 export const deleteTodoDisplay = async (data: TodoDisplayData, history = false): Promise<void> => {
-	return trpc()
-		.display.delete.query(data.id)
+	return dbCalls
+		.deleteTodoDisplay(data.id)
 		.then(() => {
 			history && TodoHistory.Display.addRemoved(data);
 		})
@@ -87,28 +76,24 @@ export const deleteTodoDisplay = async (data: TodoDisplayData, history = false):
 };
 
 //tabs
-export const getTodoTab = async (id: number): Promise<TodoTabData> => {
-	return trpc()
-		.tab.getSingle.query(id)
-		.catch((error) => {
-			isSynced.set({ isSync: false, error: error });
-			return Promise.reject(error);
-		});
+export const getTodoTab = async (id: string): Promise<TodoTabData> => {
+	return dbCalls.getTodoTab(id, true).catch((error) => {
+		isSynced.set({ isSync: false, error: error });
+		return Promise.reject(error);
+	});
 };
 
-export const getTodoTabs = async (todoDisplayId: number): Promise<TodoTabData[]> => {
-	return trpc()
-		.tab.getByDisplay.query(todoDisplayId)
-		.catch((error) => {
-			isSynced.set({ isSync: false, error: error });
-			return Promise.reject(error);
-		});
+export const getTodoTabs = async (todoDisplayId: string): Promise<TodoTabData[]> => {
+	return dbCalls.getTodoTabsByDisplay(todoDisplayId, true).catch((error) => {
+		isSynced.set({ isSync: false, error: error });
+		return Promise.reject(error);
+	});
 };
 
-export const postTodoTab = async (data: TodoTabData, history = false): Promise<TodoTabData> => {
+export const postTodoTab = async (data: TodoTabData, history = false): Promise<void> => {
 	if (history) {
-		await trpc()
-			.tab.getSingle.query(data.id)
+		await dbCalls
+			.getTodoTab(data.id, false)
 			.then((todoTab) => {
 				TodoHistory.Tab.addChanged({ old: todoTab, new: data });
 			})
@@ -118,22 +103,15 @@ export const postTodoTab = async (data: TodoTabData, history = false): Promise<T
 			});
 	}
 
-	const body = todoTab.parse(data);
-	return trpc()
-		.tab.update.query(body)
-		.then((postedTab) => {
-			return postedTab;
-		})
-		.catch((error) => {
-			isSynced.set({ isSync: false, error: error });
-			return Promise.reject(error);
-		});
+	return dbCalls.updateTodoTab(data).catch((error) => {
+		isSynced.set({ isSync: false, error: error });
+		return Promise.reject(error);
+	});
 };
 
 export const createTodoTab = async (data: TodoTabCreateData, history = false): Promise<TodoTabData> => {
-	const body = todoTabCreate.parse(data);
-	return trpc()
-		.tab.create.query(body)
+	return dbCalls
+		.addTodoTab(data)
 		.then((postedTab) => {
 			history && TodoHistory.Tab.addAdded(postedTab);
 			return postedTab;
@@ -145,8 +123,8 @@ export const createTodoTab = async (data: TodoTabCreateData, history = false): P
 };
 
 export const deleteTodoTab = async (data: TodoTabData, history = false): Promise<void> => {
-	return trpc()
-		.tab.delete.query(data.id)
+	return dbCalls
+		.deleteTodoTab(data.id)
 		.then(() => {
 			history && TodoHistory.Tab.addRemoved(data);
 			console.log('deleteTodoTab', data);
@@ -158,29 +136,23 @@ export const deleteTodoTab = async (data: TodoTabData, history = false): Promise
 };
 
 //items
-export const getTodoItems = async (todoTabId: number): Promise<TodoItemData[]> => {
-	return trpc()
-		.item.getByTab.query(todoTabId)
-		.catch((error) => {
-			isSynced.set({ isSync: false, error: error });
-			return Promise.reject(error);
-		});
+export const getTodoItems = async (todoTabId: string): Promise<TodoItemData[]> => {
+	return dbCalls.getTodoItemsByTab(todoTabId).catch((error) => {
+		isSynced.set({ isSync: false, error: error });
+		return Promise.reject(error);
+	});
 };
 
-export const getTodoItem = async (id: number): Promise<TodoItemData> => {
-	return trpc()
-		.item.getSingle.query(id)
-		.then((data) => data)
-		.catch((error) => {
-			isSynced.set({ isSync: false, error: error });
-			return Promise.reject(error);
-		});
+export const getTodoItem = async (id: string): Promise<TodoItemData> => {
+	return dbCalls.getTodoItem(id).catch((error) => {
+		isSynced.set({ isSync: false, error: error });
+		return Promise.reject(error);
+	});
 };
 
 export const createTodoItem = async (data: TodoItemCreateData, history = false): Promise<TodoItemData> => {
-	const body = todoItemCreate.parse(data);
-	return trpc()
-		.item.create.query(body)
+	return dbCalls
+		.addTodoItem(data)
 		.then((postedItem) => {
 			history && TodoHistory.Item.addAdded(postedItem);
 			return postedItem;
@@ -191,10 +163,10 @@ export const createTodoItem = async (data: TodoItemCreateData, history = false):
 		});
 };
 
-export const postTodoItem = async (data: TodoItemData, history = false): Promise<TodoItemData> => {
+export const postTodoItem = async (data: TodoItemData, history = false): Promise<void> => {
 	if (history) {
-		await trpc()
-			.item.getSingle.query(data.id)
+		await dbCalls
+			.getTodoItem(data.id)
 			.then((todoItem) => {
 				TodoHistory.Item.addChanged({ old: todoItem, new: data });
 			})
@@ -204,22 +176,15 @@ export const postTodoItem = async (data: TodoItemData, history = false): Promise
 			});
 	}
 
-	const body = todoItem.parse(data);
-	return trpc()
-		.item.update.query(body)
-		.then((postedItem) => {
-			history && TodoHistory.Item.addAdded(postedItem);
-			return postedItem;
-		})
-		.catch((error) => {
-			isSynced.set({ isSync: false, error: error });
-			return Promise.reject(error);
-		});
+	return dbCalls.updateTodoItem(data).catch((error) => {
+		isSynced.set({ isSync: false, error: error });
+		return Promise.reject(error);
+	});
 };
 
 export const deleteTodoItem = async (data: TodoItemData, history = false): Promise<void> => {
-	return trpc()
-		.item.delete.query(data.id)
+	return dbCalls
+		.deleteTodoItem(data.id)
 		.then(() => {
 			history && TodoHistory.Item.addRemoved(data);
 		})

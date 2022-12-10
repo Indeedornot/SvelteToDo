@@ -12,7 +12,7 @@
 	export let data: TodoTabData;
 	if (isUndefined(data.hidden)) data.hidden = false; //for searchQuery filtering
 
-	export let onDelete: (id: number) => void;
+	export let onDelete: (id: string) => void;
 	let filterData: TabFilterData;
 	let visibleItemsCount = data.todoItems.length;
 	export let searchQuery: string = '';
@@ -42,7 +42,7 @@
 			.catch();
 	};
 
-	const delTodoItem = (id: number) => {
+	const delTodoItem = (id: string) => {
 		const index = data.todoItems.findIndex((item) => item.id === id);
 		deleteTodoItem(data.todoItems[index], true)
 			.then(() => {
@@ -109,10 +109,10 @@
 				todoItemsCopy.sort((a, b) => a.status.localeCompare(b.status));
 				break;
 			case sortType.created:
-				todoItemsCopy.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
+				todoItemsCopy.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 				break;
 			case sortType.updated:
-				todoItemsCopy.sort((a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt));
+				todoItemsCopy.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
 				break;
 			case sortType.none:
 			default:

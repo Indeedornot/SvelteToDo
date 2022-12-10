@@ -10,7 +10,7 @@
 
 	export let data: TodoDisplayData[];
 	export let index = 0;
-	export let onDelete: (id: number) => void;
+	export let onDelete: (id: string) => void;
 	const changeIndex = (newIndex: number) => {
 		index = newIndex;
 	};
