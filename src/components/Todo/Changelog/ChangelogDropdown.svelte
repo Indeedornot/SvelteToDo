@@ -11,7 +11,7 @@
 	import TodoChangelog from './TodoChangelog.svelte';
 
 	const toggleTooltip = () => (showTooltip = !showTooltip);
-	let showTooltip = true;
+	let showTooltip = false;
 	let filterOpts: HistoryFilterData;
 
 	const filterHistory = (historyData: TodoHistoryData[]) => {
